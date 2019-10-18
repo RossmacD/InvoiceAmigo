@@ -21,7 +21,7 @@ class CreateInvoicesTable extends Migration
             $table->date('due_date');
             $table->enum('status', ['unseen', 'seen','unpaid','paid']);
             $table->enum('currency', ['eur', 'gbp','usd']);
-            $table->text('notes');
+            $table->text('note');
             $table->timestamps();
         });
     }
