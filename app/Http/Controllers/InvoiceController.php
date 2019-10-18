@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Invoice;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -13,7 +14,10 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        $invoices = Invoice::orderBy('created_at','desc')->paginate(10);
+        return view('invoices.index', [
+            'invoices'=>$invoices,
+            ]);
     }
 
     /**
