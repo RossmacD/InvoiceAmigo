@@ -17,3 +17,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('/invoices','InvoiceController@index')->name('invoices.index');
+Route::get('/invoices/create','InvoiceController@create')->name('invoices.create');
+Route::post('/invoices','InvoiceController@store')->name('invoices.store');
+Route::get('/invoices/{id}','InvoiceController@show')->name('invoices.show');
+Route::get('/invoices/{id}/edit','InvoiceController@edit')->name('invoices.edit');
+Route::put('/invoices/{id}','InvoiceController@update')->name('invoices.update');
+Route::delete('/invoices','InvoiceController@destroy')->name('invoices.destroy');
