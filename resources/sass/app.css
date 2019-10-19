@@ -4,14 +4,7 @@
   right: 18px;
   min-width: 30%;
   position: fixed;
-  -webkit-animation: slide 0.5s forwards;
-          animation: slide 0.5s forwards;
-}
-
-@-webkit-keyframes slide {
-  100% {
-    top: 30px;
-  }
+  animation: slide 0.5s forwards;
 }
 
 @keyframes slide {
@@ -27,4 +20,3 @@
     right: 10px;
   }
 }
-

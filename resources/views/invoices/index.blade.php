@@ -5,7 +5,7 @@
     <ul class="list-group py-3 mb-3">
         @forelse($invoices as $invoice)
             <li class="list-group-item my-2">
-                <h5>{{ $invoice->title }}</h5>
+                <h5>{{ $invoice->invoice_number }}</h5>
                 <p>{{ Str::limit($invoice->note,10) }}</p>
                 <small class="float-right">{{ $invoice->created_at->diffForHumans() }}</small>
                 <a href="{{route('invoice.show',$invoice->id)}}">Read More</a>

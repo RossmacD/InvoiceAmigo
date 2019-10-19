@@ -148,5 +148,22 @@
     <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @if(session('status')) {{-- <- If session key exists --}}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{session('status')}} {{-- <- Display the session value --}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<script>
+    //close the alert after 3 seconds.
+    $(document).ready(function(){
+       setTimeout(function() {
+          $(".alert").alert('close');
+       }, 3000);
+    });
+</script>
   </body>
 </html>
