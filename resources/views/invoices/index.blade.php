@@ -8,7 +8,7 @@
                 <h5>{{ $invoice->invoice_number }}</h5>
                 <p>{{ Str::limit($invoice->note,10) }}</p>
                 <small class="float-right">{{ $invoice->created_at->diffForHumans() }}</small>
-                <a href="{{route('invoice.show',$invoice->id)}}">Read More</a>
+                <a href="{{route('invoices.show',$invoice->id)}}">Read More</a>
             </li>
         @empty
             <h4 class="text-center">No Invoices Found!</h4>
