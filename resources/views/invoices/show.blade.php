@@ -1,7 +1,15 @@
 @extends('layouts.app')
 @section('content')
-    <h3 class="text-center">{{$invoice->invoice_number}}</h3>
-    <p>{{$invoice->notes}}</p>
+    <h2 class="">Invoice Number: {{$invoice->invoice_number}}</h2>
+    <hr>
+    <h4>Invoice date:</h4><p> {{$invoice->invoice_date}}</p>
+    <h4>Due date:</h4><p>{{$invoice->due_date}}</p>
+    <hr>
+    <h5>Current Status:</h5><p>{{$invoice->status}}</p>
+    <h5>Currency:</h5><p>{{$invoice->currency}}</p>
+    <hr>
+    <h3>Notes:</h3>
+    <p>{{$invoice->note}}</p>
     <br>
     <a href="{{route('invoices.edit',$invoice->id)}}" class="btn btn-primary float-left">Update</a>
     <a href="#" class="btn btn-danger float-right" data-toggle="modal" data-target="#delete-modal">Delete</a>

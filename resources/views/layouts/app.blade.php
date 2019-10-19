@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -128,18 +129,16 @@
     
     @include('inc.navbar')
 
-    <main role="main">
-        <div class="container mt-5">
+    <main role="main" class="container">
+        {{-- <div class="container mt-5">
             <div class="row">
                 <!-- Buttons -->
                 @yield('buttons')
             </div>
-        </div>
-        <div class="container mt-1">
-            <div class="row">
+        </div> --}}
+        <div class="mt-4">
                 <!-- Content -->
                 @yield('content')
-            </div>
         </div>
     </main>
 

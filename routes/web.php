@@ -25,4 +25,4 @@ Route::post('/invoices','InvoiceController@store')->name('invoices.store');
 Route::get('/invoices/{id}','InvoiceController@show')->name('invoices.show');
 Route::get('/invoices/{id}/edit','InvoiceController@edit')->name('invoices.edit');
 Route::put('/invoices/{id}','InvoiceController@update')->name('invoices.update');
-Route::delete('/invoices','InvoiceController@destroy')->name('invoices.destroy');
+Route::delete('/invoices/{id}','InvoiceController@destroy')->name('invoices.destroy');

@@ -74,7 +74,10 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+        return view('invoices.show',[
+            'invoice'=>$invoice
+            ]);
     }
 
     /**
@@ -85,7 +88,10 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+        return view('invoices.edit',[
+            'invoice'=>$invoice
+            ]);
     }
 
     /**
@@ -97,7 +103,31 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'invoice_number' => 'required|numeric|integer',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after:invoice_date',
+            'currency' => 'in:eur,gbp,usd',
+            'note'  => 'nullable|string|max:1000',
+        ];
+        //custom validation error messages
+        $messages = [
+            //'invoice_number.unique' => 'Invoice title should be unique', //syntax: field_name.rule
+        ];
+        //First Validate the form data
+        $request->validate($rules,$messages);
+        //Create a Todo
+        $invoice =  Invoice::findOrFail($id);
+        $invoice->invoice_number = $request->invoice_number;
+        $invoice->invoice_date = $request->invoice_date;
+        $invoice->due_date = $request->due_date;
+        $invoice->currency = $request->currency;
+        $invoice->note = $request->note;
+        $invoice->save(); // save it to the database.
+        //Redirect to a specified route with flash message.
+        return redirect()
+            ->route('invoices.show',$id)
+            ->with('status','Updated the Invoice!');
     }
 
     /**
@@ -108,6 +138,10 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+        $invoice->delete();
+        return redirect()
+            ->route('invoices.index')
+            ->with('status','Deleted the selected Invoice');
     }
 }

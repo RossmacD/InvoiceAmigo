@@ -2,6 +2,7 @@
 
 @section('content')
     <h2 class="text-center">All Invoices</h2>
+    <a href="{{route('invoices.create')}}" class="btn btn-primary ">New Invoice</a>
     <ul class="list-group py-3 mb-3">
         @forelse($invoices as $invoice)
             <li class="list-group-item my-2">

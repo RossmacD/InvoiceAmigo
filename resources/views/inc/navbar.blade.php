@@ -7,7 +7,15 @@
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{{route('invoices.index')}}" class="nav-link">Invoices</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('invoices.create')}}" class="nav-link">New Invoice</a>
+                </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
             <!-- Authentication Links -->
             @if (Route::has('login'))
             @guest
@@ -34,10 +42,11 @@
             @endguest
             @endif
         </ul>
-        <form class="form-inline mt-2 mt-md-0">
+        
+        {{-- <form class="form-inline mt-2 mt-md-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        </form> --}}
     </div>
   </nav>
 </header>
