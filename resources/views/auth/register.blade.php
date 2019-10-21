@@ -68,6 +68,11 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                              <button href="{{url('/redirect')}}" class="btn btn-primary">Register with Google</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

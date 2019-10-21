@@ -64,12 +64,10 @@
                                 @endif
                             </div>
                         </div>
-                        <br />
-                        <p style="margin-left:265px">OR</p>
-                        <br />
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                              <a href="{{url('/redirect')}}" class="btn btn-primary">Login with Google</a>
+                        
+                        <div class="form-group row mb-0">
+                            <div class="col-md-5 offset-md-5"">
+                              <button href="{{url('/redirect')}}" class="btn btn-primary">Login with Google</button>
                             </div>
                         </div>
                     </form>
