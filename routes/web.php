@@ -26,3 +26,6 @@ Route::get('/invoices/{id}','InvoiceController@show')->name('invoices.show');
 Route::get('/invoices/{id}/edit','InvoiceController@edit')->name('invoices.edit');
 Route::put('/invoices/{id}','InvoiceController@update')->name('invoices.update');
 Route::delete('/invoices/{id}','InvoiceController@destroy')->name('invoices.destroy');
+
+Route::get('/redirect', 'SocialAuthGoogleController@redirect');
+Route::get('/callback', 'SocialAuthGoogleController@callback');
