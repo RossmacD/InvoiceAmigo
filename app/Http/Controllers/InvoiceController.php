@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use App\Invoice;
 use Illuminate\Http\Request;
 
@@ -18,7 +18,9 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::orderBy('created_at','desc')->paginate(10);
+        $user=Auth::user();
+        $invoices=$user->invoices()->orderBy('created_at','desc')->paginate(10);
+        //$invoices = Invoice::orderBy('created_at','desc')->paginate(10);
         return view('invoices.index', [
             'invoices'=>$invoices,
             ]);
@@ -63,6 +65,7 @@ class InvoiceController extends Controller
     $invoice->due_date = $request->due_date;
     $invoice->currency = $request->currency;
     $invoice->note = $request->note;
+    $invoice->user_id=Auth::id();
     $invoice->save(); // save it to the database.
     //Redirect to a specified route with flash message.
     return redirect()
