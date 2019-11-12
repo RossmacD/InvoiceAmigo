@@ -11,7 +11,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('stripePayment');
 });
 
 Auth::routes();
@@ -29,3 +29,5 @@ Route::delete('/invoices/{id}','InvoiceController@destroy')->name('invoices.dest
 
 Route::get('/redirect', 'SocialAuthGoogleController@redirect');
 Route::get('/callback', 'SocialAuthGoogleController@callback');
+
+Route::get('/stripe','StripePaymentController@index')->name('stripePayment');
