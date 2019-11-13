@@ -1,6 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+ .StripeElement {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: white;
+
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+</style>
 
 <h1>Billing Info:</h1>
 <p>Name: {{$user->name}}</p>
@@ -39,6 +69,20 @@
       var stripe = Stripe('{{ config("services.stripe.stripe_key") }}');
       var elements = stripe.elements();
       var style = {
+        base: {
+          color: '#32325d',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          borderStyle: 'solid',
+          borderWidth: '1px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
        };
       var card = elements.create("card", { style: style });
       var cardButton = document.getElementById('card-button');
