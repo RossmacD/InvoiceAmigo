@@ -50,7 +50,10 @@ $intent = \Stripe\PaymentIntent::create([
     //Initialise Stripe elemnts
       var stripe = Stripe('{{ config("services.stripe.stripe_key") }}');
       var elements = stripe.elements();
-      var card = elements.create("card");
+      var style = {
+
+       };
+      var card = elements.create("card", { style: style });
       var cardButton = document.getElementById('card-button');
       var cardElement=document.getElementById("card-element");
       card.mount(cardElement);
@@ -82,7 +85,8 @@ $intent = \Stripe\PaymentIntent::create([
             console.log(result.error.message);
           } else {
             // The payment has succeeded. Display a success message.
-            console.log("Hell yeah");
+            
+            //document.location.href ="/success"
           }
         });
       });
@@ -91,11 +95,7 @@ $intent = \Stripe\PaymentIntent::create([
 
       //SHIT
     // // Set up Stripe.js and Elements to use in checkout form
-    //   var style = {
-    //     base: {
-    //       color: "#32325d",
-    //     }
-    //   };
+    // 
 
     //   //Create card form and mount element
     //   //var card = elements.create("card", { style: style });

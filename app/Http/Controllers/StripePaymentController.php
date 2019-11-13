@@ -23,6 +23,10 @@ class StripePaymentController extends Controller
      */
     public function index()
     {
-        return view('stripePayment');
+        return view('stripe.index');
+    }
+
+    public function success(){
+        return view('stripe.success');
     }
 }
