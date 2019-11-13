@@ -57,7 +57,6 @@ $intent = \Stripe\PaymentIntent::create([
       var cardButton = document.getElementById('card-button');
       var cardElement=document.getElementById("card-element");
       card.mount(cardElement);
-      
 
       //Add a listener to validate card
       card.addEventListener('change', function(event) {
@@ -85,24 +84,11 @@ $intent = \Stripe\PaymentIntent::create([
             console.log(result.error.message);
           } else {
             // The payment has succeeded. Display a success message.
-            
+            console.log('Success')
             //document.location.href ="/success"
           }
         });
       });
 
-
-
-      //SHIT
-    // // Set up Stripe.js and Elements to use in checkout form
-    // 
-
-    //   //Create card form and mount element
-    //   //var card = elements.create("card", { style: style });
-      
-      
-      
-
-    
   </script>
  @endsection
