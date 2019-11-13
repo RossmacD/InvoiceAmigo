@@ -1,21 +1,12 @@
 @extends('layouts.app')
 
-@section('headScripts')
-
-<?php 
-use Stripe\Stripe;
-//Set the api key
-Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
-$intent = \Stripe\PaymentIntent::create([
-    'amount' => 42069,
-    'currency' => 'eur',
-]);   
- 
-?>
-@endsection
-
 @section('content')
-<div class="card text-center">
+
+<h1>Billing Info:</h1>
+<p>Name: {{$user->name}}</p>
+<p>Email: {{$user->email}}</p>
+
+<div class="card ">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
@@ -24,9 +15,10 @@ $intent = \Stripe\PaymentIntent::create([
       </ul>
     </div>
     <div class="card-body">
-      <h5 class="card-title">Cost: <?= $intent->amount?></h5>
+
+      <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount/100, 2, '.', '')?></h5>
       <p class="card-text"></p>
-      <div class="w-50 mx-auto">
+      <div class="w-50 ">
       <label for="card-element">
           Credit or debit card
           </label>
@@ -39,19 +31,14 @@ $intent = \Stripe\PaymentIntent::create([
            <button id="card-button">Pay Now</button>
       </div>
     </div>
-
-         
-          
-      
   @endsection
 
   @section('scripts')
   <script>
-    //Initialise Stripe elemnts
+      //Initialise Stripe elemnts
       var stripe = Stripe('{{ config("services.stripe.stripe_key") }}');
       var elements = stripe.elements();
       var style = {
-
        };
       var card = elements.create("card", { style: style });
       var cardButton = document.getElementById('card-button');
@@ -66,8 +53,7 @@ $intent = \Stripe\PaymentIntent::create([
         } else {
           displayError.textContent = '';
         }
-    });
-
+      });
       var clientSecret='<?= $intent->client_secret?>';
       //Submit Clients
       cardButton.addEventListener('click', function(ev) {
@@ -75,7 +61,8 @@ $intent = \Stripe\PaymentIntent::create([
           payment_method: {
             card: card,
             billing_details: {
-              name: 'Jenny Rosen'
+              name: '{{$user->name}}',
+              email: '{{$user->email}}'
             }
           }
         }).then(function(result) {
@@ -84,11 +71,11 @@ $intent = \Stripe\PaymentIntent::create([
             console.log(result.error.message);
           } else {
             // The payment has succeeded. Display a success message.
-            console.log('Success')
+            console.log('Success');
+            document.location.href = "{{URL::to('success')}}";
             //document.location.href ="/success"
           }
         });
       });
-
   </script>
  @endsection
