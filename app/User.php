@@ -13,6 +13,10 @@ class User extends Authenticatable
     public function invoices(){
         return $this->hasMany('App\invoice','user_id');
     }
+
+    public function products(){
+        return $this->hasMany('App\product','user_id');
+    }
     /**
      * The attributes that are mass assignable.
      *
