@@ -20,7 +20,6 @@ class InvoiceController extends Controller
     {
         $user=Auth::user();
         $invoices=$user->invoices()->orderBy('created_at','desc')->paginate(10);
-        //$invoices = Invoice::orderBy('created_at','desc')->paginate(10);
         return view('invoices.index', [
             'invoices'=>$invoices,
             ]);

@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -27,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //Fixes error in migrate -
         Schema::defaultStringLength(191);
+        
     }
 }
