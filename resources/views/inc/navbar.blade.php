@@ -7,50 +7,7 @@
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-        {{-- <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="{{route('invoices.index')}}" class="nav-link">Invoices</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('invoices.create') }}" class="nav-link">New Invoice</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('products.index')}}" class="nav-link">Products</a>
-                </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <!-- Authentication Links -->
-            @if (Route::has('login'))
-            @guest
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                </li>
-                @if (Route::has('register'))
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                    </li>
-                @endif
-            @else
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
-
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </li>
-            @endguest
-            @endif
-        </ul> --}}
-
-        {{-- <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form> --}}
-
+        
         <ul class="navbar-nav ml-auto">
               @auth
                   <li class="nav-item">
@@ -62,6 +19,9 @@
                   <li class="nav-item">
                       <a href="{{route('products.index')}}" class="nav-link">Products</a>
                   </li>
+                  <li class="nav-item">
+                        <a href="{{route('stripe.index')}}" class="nav-link">Stripe</a>
+                    </li>
                   <li class="nav-item dropdown">
                       <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                           {{ Auth::user()->name }} <span class="caret"></span>
