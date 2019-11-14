@@ -1,1 +1,1 @@
-.alert{z-index:99;top:60px;right:18px;min-width:30%;position:fixed;animation:slide 0.5s forwards}@keyframes slide{100%{top:30px}}@media screen and (max-width: 668px){.alert{left:10px;right:10px}}
+.alert{z-index:99;min-width:30%;animation:slide 0.5s forwards}@keyframes slide{100%{top:30px}}@media screen and (max-width: 668px){.alert{left:10px;right:10px}}
