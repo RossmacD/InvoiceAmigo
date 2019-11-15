@@ -20,8 +20,12 @@ class InvoiceController extends Controller
     {
         $user=Auth::user();
         $invoices=$user->invoices()->orderBy('created_at','desc')->paginate(10);
+        foreach ($invoices as $invoice){
+            $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
+        }
         return view('invoices.index', [
             'invoices'=>$invoices,
+            'user' =>$user,
             ]);
     }
 

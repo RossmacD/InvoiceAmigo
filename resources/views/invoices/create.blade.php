@@ -45,8 +45,8 @@
             @endif
         </div>
         <div class="form-group">
-            <label for="body">Invoice Notes</label>
-            <textarea name="body" id="body" rows="4" class="form-control {{ $errors->has('note') ? 'is-invalid' : '' }}" placeholder="Enter Note">{{ old('note') }}</textarea>
+            <label for="note">Invoice Notes</label>
+            <textarea name="note" id="note" rows="4" class="form-control {{ $errors->has('note') ? 'is-invalid' : '' }}" placeholder="Enter Note">{{ old('note') }}</textarea>
             @if($errors->has('note')) {{-- <-check if we have a validation error --}}
                 <span class="invalid-feedback">
                     {{ $errors->first('note') }} {{-- <- Display the First validation error --}}
