@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <h3 class="text-center">Create Todo</h3>
+    <h3 class="text-center">Create Invoice</h3>
     <form action="{{ route('invoices.store') }}" method="post">
         @csrf
         <div class="form-group">

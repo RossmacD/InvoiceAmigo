@@ -1,4 +1,4 @@
-.alert {
+@import url(https://fonts.googleapis.com/css?family=Montserrat&display=swap);.alert {
   z-index: 99;
   min-width: 30%;
   -webkit-animation: slide 0.5s forwards;

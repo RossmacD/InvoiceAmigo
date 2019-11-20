@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <h3 class="text-center">Edit Todo</h3>
+    <h3 class="text-center">Edit Invoice</h3>
     <form action="{{ route('invoices.update',$invoice->id) }}" method="post">
         @csrf
         @method('PUT')
