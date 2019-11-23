@@ -18,6 +18,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->string('product_name');
             $table->string('product_description');
             $table->bigInteger('product_cost');
+            $table->bigInteger('product_quantity');
             $table->bigInteger('invoice_id');
             $table->timestamps();
         });

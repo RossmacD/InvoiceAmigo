@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Auth;
 use App\Invoice;
+use App\InvoiceItems;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
 
 class InvoiceController extends Controller
 {
@@ -18,15 +22,15 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $user=Auth::user();
-        $invoices=$user->invoices()->orderBy('created_at','desc')->paginate(10);
-        foreach ($invoices as $invoice){
+        $user = Auth::user();
+        $invoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(10);
+        foreach ($invoices as $invoice) {
             $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
         }
         return view('invoices.index', [
-            'invoices'=>$invoices,
-            'user' =>$user,
-            ]);
+            'invoices' => $invoices,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -48,32 +52,84 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         //validation rules
-    $rules = [
-        'invoice_number' => 'required|numeric|integer',
-        'invoice_date' => 'required|date',
-        'due_date' => 'required|date|after:invoice_date',
-        'currency' => 'in:eur,gbp,usd',
-        'note'  => 'nullable|string|max:1000',
-    ];
-    //custom validation error messages
-    $messages = [
-        //'invoice_number.unique' => 'Invoice title should be unique', //syntax: field_name.rule
-    ];
-    //First Validate the form data
-    $request->validate($rules,$messages);
-    //Create a Todo
-    $invoice = new Invoice;
-    $invoice->invoice_number = $request->invoice_number;
-    $invoice->invoice_date = $request->invoice_date;
-    $invoice->due_date = $request->due_date;
-    $invoice->currency = $request->currency;
-    $invoice->note = $request->note;
-    $invoice->user_id=Auth::id();
-    $invoice->save(); // save it to the database.
-    //Redirect to a specified route with flash message.
-    return redirect()
-        ->route('invoices.index')
-        ->with('status','Created a new Invoice!');
+        $rules = [
+            'invoice_number' => 'required|numeric|integer',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after:invoice_date',
+            'currency' => 'in:eur,gbp,usd',
+            'note'  => 'nullable|string|max:1000',
+            'product.*.name' => 'required|string',
+            'product.*.description' => 'required|string',
+            'product.*.quantity' => 'required|numeric',
+            'product.*.cost' => 'required|numeric',
+        ];
+        //dd($request);
+        //custom validation error messages
+        $messages = [
+            'product.*.name.required' => 'Name Required', //syntax: field_name.rule
+            'product.*.description.required' => 'Description Required',
+            'product.*.quantity.required' => 'Quantity Required',
+            'product.*.cost.required' => 'Cost Required',
+            'product.*.name.max:1000' => 'Must be less than 1000 characters', //syntax: field_name.rule
+
+
+        ];
+        //First Validate the form data
+        $request->validate($rules, $messages);
+        
+        //Create a Todo
+        $invoice = new Invoice;
+        $invoice->invoice_number = $request->invoice_number;
+        $invoice->invoice_date = $request->invoice_date;
+        $invoice->due_date = $request->due_date;
+        $invoice->currency = $request->currency;
+        $invoice->note = $request->note;
+        $invoice->user_id = Auth::id();
+        $invoice->save(); // save it to the database.
+
+        $itemAmount = $request->input('product');
+        $count=0;
+        foreach ($itemAmount as $invoiceItemPost) {
+            
+            $invoiceItem = new InvoiceItems;
+            $invoiceItem->product_name = $invoiceItemPost['name'];
+            $invoiceItem->product_description = $invoiceItemPost['description']  ;
+            $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
+            $invoiceItem->product_cost = $invoiceItemPost['cost'];
+            $invoiceItem->invoice_id = $invoice->id;
+            $invoiceItem->save();
+            $count++;
+        }
+
+
+
+
+
+
+
+
+
+
+        //InvoiceItem::create( $arrData )
+        //InvoiceItems::Create(
+        //foreach ($request->get('product') as $invoiceItem) {
+        // 'product_name' => $request->[];
+        // 'product_description'=> $request->product_name[],
+        // 'product_cost',
+        // 'product_quantity',
+        // 'invoice_id'=>$request->user()->id,
+        //}
+
+
+        // );
+        // foreach($request->product_name as $invoiceItem){
+
+        // }
+
+        //Redirect to a specified route with flash message.
+        return redirect()
+            ->route('invoices.index')
+            ->with('status', 'Created a new Invoice!');
     }
 
     /**
@@ -85,9 +141,9 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-        return view('invoices.show',[
-            'invoice'=>$invoice
-            ]);
+        return view('invoices.show', [
+            'invoice' => $invoice
+        ]);
     }
 
     /**
@@ -99,9 +155,9 @@ class InvoiceController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::findOrFail($id);
-        return view('invoices.edit',[
-            'invoice'=>$invoice
-            ]);
+        return view('invoices.edit', [
+            'invoice' => $invoice
+        ]);
     }
 
     /**
@@ -125,7 +181,7 @@ class InvoiceController extends Controller
             //'invoice_number.unique' => 'Invoice title should be unique', //syntax: field_name.rule
         ];
         //First Validate the form data
-        $request->validate($rules,$messages);
+        $request->validate($rules, $messages);
         //Create a Todo
         $invoice =  Invoice::findOrFail($id);
         $invoice->invoice_number = $request->invoice_number;
@@ -136,8 +192,8 @@ class InvoiceController extends Controller
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
         return redirect()
-            ->route('invoices.show',$id)
-            ->with('status','Updated the Invoice!');
+            ->route('invoices.show', $id)
+            ->with('status', 'Updated the Invoice!');
     }
 
     /**
@@ -152,6 +208,6 @@ class InvoiceController extends Controller
         $invoice->delete();
         return redirect()
             ->route('invoices.index')
-            ->with('status','Deleted the selected Invoice');
+            ->with('status', 'Deleted the selected Invoice');
     }
 }

@@ -48,6 +48,7 @@ class ProductController extends Controller
     $rules = [
         'product_name' => 'required|string',
         'product_description' => 'required|string',
+        'product_quantity'=> 'nullable|numeric',
         'product_cost' => 'required|numeric',
     ];
     //custom validation error messages
