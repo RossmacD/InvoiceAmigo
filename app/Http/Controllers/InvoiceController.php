@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Invoice;
 use App\InvoiceItems;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -87,10 +88,10 @@ class InvoiceController extends Controller
         $invoice->user_id = Auth::id();
         $invoice->save(); // save it to the database.
 
+        //Get the arrays from the form
         $itemAmount = $request->input('product');
-        $count=0;
+        //Creates a Invoice Item for everything within the array
         foreach ($itemAmount as $invoiceItemPost) {
-            
             $invoiceItem = new InvoiceItems;
             $invoiceItem->product_name = $invoiceItemPost['name'];
             $invoiceItem->product_description = $invoiceItemPost['description']  ;
@@ -98,33 +99,13 @@ class InvoiceController extends Controller
             $invoiceItem->product_cost = $invoiceItemPost['cost'];
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->save();
-            $count++;
+            if(false){
+                $product=new Product;
+                $product=$invoiceItem;
+                $product->save();
+            }
         }
 
-
-
-
-
-
-
-
-
-
-        //InvoiceItem::create( $arrData )
-        //InvoiceItems::Create(
-        //foreach ($request->get('product') as $invoiceItem) {
-        // 'product_name' => $request->[];
-        // 'product_description'=> $request->product_name[],
-        // 'product_cost',
-        // 'product_quantity',
-        // 'invoice_id'=>$request->user()->id,
-        //}
-
-
-        // );
-        // foreach($request->product_name as $invoiceItem){
-
-        // }
 
         //Redirect to a specified route with flash message.
         return redirect()

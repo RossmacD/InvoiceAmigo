@@ -79,7 +79,15 @@
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="myAddedRows">
+                    <script>
+                        count=1;
+                        function myTableRowAdd(){
+                            newInnerHTML='<tr><th scope="row">'+(count+1)+'</th><td><input type="type" name="product['+count+'][name]" id="product['+count+'][name]" placeholder="Product Name"class="form-control {{ $errors->has("product.'+count+'.name") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.name") }}">@if($errors->has("product.'+count+'.name"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.name") }}</span>@endif</td><td><input type="type" name="product['+count+'][description]" id="product['+count+'][description]" placeholder="Product Description"class="form-control {{ $errors->has("product.'+count+'.description") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.description")}}">@if($errors->has("product.'+count+'.description"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.description") }}</span>@endif</td><td><input type="number" name="product['+count+'][quantity]" id="product['+count+'][quantity]"class="form-control {{ $errors->has("product.'+count+'.quantity") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.quantity")}}" placeholder="0">@if($errors->has("product.'+count+'.quantity"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.quantity") }}</span>@endif</td><td><input type="number" name="product['+count+'][cost]" id="product['+count+'][cost]"class="form-control {{ $errors->has("product.'+count+'.cost") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.cost") }}" placeholder="0">@if($errors->has("product.'+count+'.cost"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.cost") }}</span>@endif</td></tr>';
+                            $("#myAddedRows").append(newInnerHTML);
+                            count++;
+                        }
+                    </script>
                     <tr>
                         <th scope="row">1</th>
                         <td>
@@ -125,18 +133,14 @@
                         </td>
 
                     </tr>
-                    <tr>
-                        <td><button class="btn btn-success">+</button></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    
                     @isset($errors)
                     {{-- {{dd($errors)}} --}}
                     @endisset
                 </tbody>
+                
             </table>
+            <button class="btn btn-success" onclick="myTableRowAdd();return false;">+</button>
         </div>
     </div>
     <hr>
