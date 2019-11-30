@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\User;
 use App\Invoice;
 use App\InvoiceItems;
 use App\Product;
@@ -24,7 +25,7 @@ class InvoiceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $invoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(10);
+        $invoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(16);
         foreach ($invoices as $invoice) {
             $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
         }
@@ -41,7 +42,8 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        return view('invoices.create');
+        $user = Auth::user();
+        return view('invoices.create', ['user' => $user]);
     }
 
     /**
@@ -64,21 +66,22 @@ class InvoiceController extends Controller
             'product.*.quantity' => 'required|numeric',
             'product.*.cost' => 'required|numeric',
         ];
-        //dd($request);
+       
         //custom validation error messages
         $messages = [
             'product.*.name.required' => 'Name Required', //syntax: field_name.rule
             'product.*.description.required' => 'Description Required',
             'product.*.quantity.required' => 'Quantity Required',
             'product.*.cost.required' => 'Cost Required',
-            'product.*.name.max:1000' => 'Must be less than 1000 characters', //syntax: field_name.rule
+            'product.*.name.max:1000' => 'Must be less than 1000 characters',
 
 
         ];
-        //First Validate the form data
+        //Validate the form data
         $request->validate($rules, $messages);
-        
-        //Create a Todo
+        //Get the arrays from the form
+        $itemAmount = $request->input('product');
+        //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
         $invoice->invoice_date = $request->invoice_date;
@@ -86,27 +89,37 @@ class InvoiceController extends Controller
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
         $invoice->user_id = Auth::id();
-        $invoice->save(); // save it to the database.
+        $total_cost=0;
+        foreach ($itemAmount as $invoiceItemPost) {
+            $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
+        }
+        $invoice->total_cost=$total_cost;
+        //$client_id= User::where('email', $request->client_email)->firstOrFail();
+        $client = User::where('email', strtolower($request->client_email))->firstOrFail();
+        $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
+        
+        $invoice->save(); 
 
-        //Get the arrays from the form
-        $itemAmount = $request->input('product');
         //Creates a Invoice Item for everything within the array
         foreach ($itemAmount as $invoiceItemPost) {
             $invoiceItem = new InvoiceItems;
             $invoiceItem->product_name = $invoiceItemPost['name'];
-            $invoiceItem->product_description = $invoiceItemPost['description']  ;
+            $invoiceItem->product_description = $invoiceItemPost['description'];
             $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
             $invoiceItem->product_cost = $invoiceItemPost['cost'];
             $invoiceItem->invoice_id = $invoice->id;
-            $invoiceItem->save();
-            if(false){
-                $product=new Product;
-                $product=$invoiceItem;
+            
+            //Save as a Invoice line as product
+            if ($invoiceItemPost['save'] == 'save_as_product') {
+                $product = new Product;
+                $product->user_id = Auth::id();
+                $product->product_name = $invoiceItemPost['name'];
+                $product->product_description = $invoiceItemPost['description'];
+                $product->product_cost = $invoiceItemPost['cost'];
                 $product->save();
             }
+            $invoiceItem->save();
         }
-
-
         //Redirect to a specified route with flash message.
         return redirect()
             ->route('invoices.index')

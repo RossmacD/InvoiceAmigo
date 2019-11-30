@@ -22,6 +22,7 @@ class CreateInvoicesTable extends Migration
             $table->enum('status', ['unseen','unpaid','paid']);
             $table->enum('currency', ['eur', 'gbp','usd']);
             $table->text('note')->nullable();
+            $table->bigInteger('total_cost');
             $table->timestamps();
         });
     }

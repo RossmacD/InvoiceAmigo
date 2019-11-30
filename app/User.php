@@ -12,6 +12,7 @@ class User extends Authenticatable
 
     public function invoices(){
         return $this->hasMany('App\invoice','user_id');
+        //return $this->hasMany('App\invoice', 'user_id')->where();
     }
 
     public function products(){
@@ -43,4 +44,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    // protected $attributes = [
+    //     'currency' => 'eur',
+    // ];
 }
