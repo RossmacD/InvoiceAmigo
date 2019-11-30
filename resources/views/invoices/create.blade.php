@@ -64,7 +64,7 @@
                     {{ $errors->first('due_date') }}
                 </span>
                 @endif
-            </div>
+            </div> 
         </div>
     </div>
     <h2>Products</h2>

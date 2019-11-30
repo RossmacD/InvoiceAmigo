@@ -11,8 +11,20 @@ class User extends Authenticatable
     use Notifiable;
 
     public function invoices(){
-        return $this->hasMany('App\invoice','user_id');
+        $incoming= $this->incomingInvoices();
+        $outgoing=$this->outgoingInvoices();
+        return $outgoing->union($incoming);
+        //return $this->hasMany('App\invoice','user_id') ;
         //return $this->hasMany('App\invoice', 'user_id')->where();
+    }
+
+    public function incomingInvoices(){
+        return $this->hasMany('App\invoice','client_id');
+    }
+
+    public function outgoingInvoices()
+    {
+        return $this->hasMany('App\invoice', 'user_id');
     }
 
     public function products(){

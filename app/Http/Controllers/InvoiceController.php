@@ -94,6 +94,7 @@ class InvoiceController extends Controller
             $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
         }
         $invoice->total_cost=$total_cost;
+
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
         $client = User::where('email', strtolower($request->client_email))->firstOrFail();
         $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
