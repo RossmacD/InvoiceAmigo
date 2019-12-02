@@ -41,3 +41,6 @@ Route::get('/stripe','StripePaymentController@index')->name('stripe.index');
 Route::get('/success','StripePaymentController@success')->name('stripe.success');
 Route::post('/stripe/webhooks', 'StripePaymentController@webhooks')->name('stripe.webhooks');
 Route::get('/pay/{id}', 'StripePaymentController@paySingleInvoice')->name('stripe.paySingleInvoice');
+
+Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteController@index'));
+Route::get('searchajax',array('as'=>'searchajax','uses'=>'AutoCompleteController@autoComplete'));
