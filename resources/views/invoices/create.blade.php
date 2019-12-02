@@ -109,9 +109,9 @@
                                 class="form-control {{ $errors->has('product.0.name') ? 'is-invalid' : '' }}"
                                 value="{{ old('product.0.name') }}">
                             @if($errors->has('product.0.name'))
-                            <span class="invalid-feedback">
-                                {{ $errors->first('product.0.name') }}
-                            </span>
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.0.name') }}
+                                </span>
                             @endif
                         </td>
                         <td>
@@ -120,9 +120,9 @@
                                 class="form-control {{ $errors->has('product.0.description') ? 'is-invalid' : '' }}"
                                 value="{{ old('product.0.description')}}">
                             @if($errors->has('product.0.description'))
-                            <span class="invalid-feedback">
-                                {{ $errors->first('product.0.description') }}
-                            </span>
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.0.description') }}
+                                </span>
                             @endif
                         </td>
                         <td>
@@ -130,9 +130,9 @@
                                 class="form-control {{ $errors->has('product.0.quantity') ? 'is-invalid' : '' }}"
                                 value="{{ old('product.0.quantity')}}" placeholder="0">
                             @if($errors->has('product.0.quantity'))
-                            <span class="invalid-feedback">
-                                {{ $errors->first('product.0.quantity') }}
-                            </span>
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.0.quantity') }}
+                                </span>
                             @endif
                         </td>
                         <td>
@@ -140,11 +140,13 @@
                                 class="form-control {{ $errors->has('product.0.cost') ? 'is-invalid' : '' }}"
                                 value="{{ old('product.0.cost') }}" placeholder="0">
                             @if($errors->has('product.0.cost'))
-                            <span class="invalid-feedback">
-                                {{ $errors->first('product.0.cost') }}
-                            </span>
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.0.cost') }}
+                                </span>
                             @endif
                         </td>
+
+
                         <td>
                             <input type="checkbox" name="product[0][save]" id="product[0][save]" value="save_as_product"/>Save
                             <button type="button" class="btn btn-danger btn-sm">Delete</button>

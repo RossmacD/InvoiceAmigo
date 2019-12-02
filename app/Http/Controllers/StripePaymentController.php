@@ -36,7 +36,7 @@ class StripePaymentController extends Controller
     }
 
     public function success(){
-        
+
 
         return view('stripe.success');
     }
@@ -52,5 +52,40 @@ class StripePaymentController extends Controller
         ]); 
 
         return view('stripe.paySingleInvoice', ['intent'=>$intent,'user'=>$user, 'invoice' => $invoice]);
+    }
+
+    public function webhooks($_payload){
+        //return view('stripe.webhooks');
+        //$payload = @file_get_contents('php://input');
+        $payload=$_payload;
+        $event = null;
+
+        try {
+            $event = Stripe\Stripe\Event::constructFrom(
+                json_decode($payload, true)
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return Response::make("", 400);
+        }
+
+        // Handle the event
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
+                handlePaymentIntentSucceeded($paymentIntent);
+                break;
+            case 'payment_method.attached':
+                $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
+                handlePaymentMethodAttached($paymentMethod);
+                break;
+                // ... handle other event types
+            default:
+                // Unexpected event type
+                return Response::make("", 400);
+        }
+
+     return response(null, 200);
+
     }
 }

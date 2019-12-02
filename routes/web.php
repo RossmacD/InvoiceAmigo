@@ -39,5 +39,5 @@ Route::get('/callback', 'SocialAuthGoogleController@callback');
 
 Route::get('/stripe','StripePaymentController@index')->name('stripe.index');
 Route::get('/success','StripePaymentController@success')->name('stripe.success');
-Route::get('/stripe/webhooks', 'StripePaymentController@webhook')->name('stripe.webhook');
+Route::post('/stripe/webhooks', 'StripePaymentController@webhooks')->name('stripe.webhooks');
 Route::get('/pay/{id}', 'StripePaymentController@paySingleInvoice')->name('stripe.paySingleInvoice');

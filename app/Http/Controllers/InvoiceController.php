@@ -93,7 +93,7 @@ class InvoiceController extends Controller
         foreach ($itemAmount as $invoiceItemPost) {
             $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
         }
-        $invoice->total_cost=$total_cost;
+        $invoice->total_cost=$total_cost*10;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
         $client = User::where('email', strtolower($request->client_email))->firstOrFail();

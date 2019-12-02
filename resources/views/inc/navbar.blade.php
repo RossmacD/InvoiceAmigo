@@ -18,9 +18,9 @@
                 <li class="nav-item">
                     <a href="{{route('products.index')}}" class="nav-link">Products</a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{route('stripe.index')}}" class="nav-link">Stripe</a>
-                </li>
+                </li> --}}
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
