@@ -1,5 +1,60 @@
 @extends('layouts.app')
 @section('content')
+<!-- <script>
+  $( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $( "#client_email" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script> -->
+
+  <script>
+     $(document).ready(function() {
+      src = "{{ route('searchajax') }}";
+       $("#product1name").autocomplete({
+          source: function(request, response) {
+              $.ajax({
+                  url: src,
+                  dataType: "json",
+                  data: {
+                      term : request.term
+                  },
+                  success: function(data) {
+                      response(data);
+
+                  }
+              });
+          },
+          minLength: 1,
+
+      });
+  });
+  </script>
+
 <h2 class="">Create Invoice</h2>
 <form action="{{ route('invoices.store') }}" method="post">
     @csrf
@@ -64,7 +119,7 @@
                     {{ $errors->first('due_date') }}
                 </span>
                 @endif
-            </div> 
+            </div>
         </div>
     </div>
     <h2>Products</h2>
@@ -91,21 +146,21 @@
                             myTableRowAdd();
                         }
 
-                        
+
                         function myTableRowAdd(){
                              newInnerHTML='<tr><th scope="row">'+(count+1)+'</th><td><input type="type" name="product['+count+'][name]" id="product['+count+'][name]" placeholder="Product Name"class="form-control {{ $errors->has("product.'+count+'.name") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.name") }}">@if($errors->has("product.'+count+'.name"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.name") }}</span>@endif</td><td><input type="type" name="product['+count+'][description]" id="product['+count+'][description]" placeholder="Product Description"class="form-control {{ $errors->has("product.'+count+'.description") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.description")}}">@if($errors->has("product.'+count+'.description"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.description") }}</span>@endif</td><td><input type="number" name="product['+count+'][quantity]" id="product['+count+'][quantity]"class="form-control {{ $errors->has("product.'+count+'.quantity") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.quantity")}}" placeholder="0">@if($errors->has("product.'+count+'.quantity"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.quantity") }}</span>@endif</td><td><input type="number" name="product['+count+'][cost]" id="product['+count+'][cost]"class="form-control {{ $errors->has("product.'+count+'.cost") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.cost") }}" placeholder="0">@if($errors->has("product.'+count+'.cost"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.cost") }}</span>@endif</td></tr>';
                              $('#myAddedRows').append(newInnerHTML);
                             count++;
                             //$('#formCount').val(count);
                         }
-                        
+
                     </script>
 
 
                     <tr id="invoiceItem0">
                         <th scope="row">1</th>
                         <td>
-                            <input type="type" name="product[0][name]" id="product[0][name]" placeholder="Product Name"
+                            <input type="type" name="product[0][name]" id="product1name" placeholder="Product Name"
                                 class="form-control {{ $errors->has('product.0.name') ? 'is-invalid' : '' }}"
                                 value="{{ old('product.0.name') }}">
                             @if($errors->has('product.0.name'))
@@ -183,4 +238,9 @@
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
+
+
+
+
 @endsection
