@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<!-- <script>
+
+{{-- <script>
   $( function() {
     var availableTags = [
       "ActionScript",
@@ -30,35 +31,88 @@
       source: availableTags
     });
   } );
-  </script> -->
+  </script>  --}}
 
-  <script>
-     $(document).ready(function() {
-      src = "{{ route('searchajax') }}";
-       $("#product1name").autocomplete({
-          source: function(request, response) {
-              $.ajax({
-                  url: src,
-                  dataType: "json",
-                  data: {
-                      term : request.term
-                  },
-                  success: function(data) {
-                      response(data);
+<script>
 
-                  }
-              });
-          },
-          minLength: 1,
+    //Generate Invoice Lines
+    count=0;
+    removed=0;
+    addedIds=[];
 
-      });
-  });
-  </script>
+    function myTableRowAdd(){
+        newInnerHTML=`
+        <tr id="invoiceItem${count}">
+            <th scope="row">${count+1}</th>
+            <td>
+                <input type="type" name="product[${count}][name]" id="product${count}name" placeholder="Product Name" class="form-control">
+            </td>
+            <td>
+                <input type="type" name="product[${count}][description]" id="product${count}description" placeholder="Product Description" class="form-control">
+            </td>
+            <td>
+                <input type="number" name="product[${count}][quantity]" id="product${count}quantity" class="form-control" value="1" placeholder="Qty">
+            </td>
+            <td>
+                <input type="number" name="product[${count}][cost]" id="product${count}cost" class="form-control" placeholder="Cost">
+            </td>
+            <td>
+                <input type="checkbox" name="product[${count}][save]" id="product${count}save" value="save_as_product" />Save
+                <button type="button" class="btn btn-danger btn-sm" onclick="myTableDelete(${count})">Delete</button>
+            </td>
+        </tr>
+        `;
+        addedIds.push(count);
+        $('#myAddedRows').append(newInnerHTML);
+        //Search Ajax for product by name
+        $(document).ready(function() {
+            src = "{{ route('searchajax') }}";
+            $(`#product${count}name`).autocomplete({
+                    source: function(request, response) {
+                    $.ajax({
+                        url: src,
+                        dataType: "json",
+                        data: {
+                        term : request.term
+                    },
+                    success: function(data) {
+                    response(data);
+                }
+            });
+        },
+            minLength: 0,
+            delay: 0,
+            }).blur(function(){
+                $(this).autocomplete('enable');
+            })
+            .focus(function () {
+                $(this).autocomplete('search', '');
+            });;
+        });
+        count++;
+    }
+
+    function myTableDelete(_id){
+        $( `#invoiceItem${_id}` ).remove();
+            //addedIds.remove(_id);
+        addedIds = jQuery.grep(addedIds, function(value) {
+            return value != _id;
+        });
+    }
+
+
+    function appendSubmit(){
+        for(i=0;i<addedIds.length;i++){
+            $(invoiceForm).append(`<input type="hidden" name="addedId[${i}]" value="${addedIds[i]}" />`);
+        }
+    return true;
+    }
+</script>
+
 
 <h2 class="">Create Invoice</h2>
-<form action="{{ route('invoices.store') }}" method="post">
+<form action="{{ route('invoices.store') }}" method="post" id="invoiceForm">
     @csrf
-
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
@@ -122,9 +176,12 @@
             </div>
         </div>
     </div>
-    <h2>Products</h2>
+
+
     <input type="hidden" id="formCount" name="formCount" value="0" />
     <p>{{old('formCount')}}</p>
+    {{-- Invoice Item generation --}}
+    <h2>Products</h2>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-hover">
@@ -140,78 +197,71 @@
                     </tr>
                 </thead>
                 <tbody id="myAddedRows">
-                    <script>
-                        count=0;
-                        for(i=0;i<{{old('formCount',0)}};i++){
-                            myTableRowAdd();
-                        }
-
-
-                        function myTableRowAdd(){
-                             newInnerHTML='<tr><th scope="row">'+(count+1)+'</th><td><input type="type" name="product['+count+'][name]" id="product['+count+'][name]" placeholder="Product Name"class="form-control {{ $errors->has("product.'+count+'.name") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.name") }}">@if($errors->has("product.'+count+'.name"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.name") }}</span>@endif</td><td><input type="type" name="product['+count+'][description]" id="product['+count+'][description]" placeholder="Product Description"class="form-control {{ $errors->has("product.'+count+'.description") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.description")}}">@if($errors->has("product.'+count+'.description"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.description") }}</span>@endif</td><td><input type="number" name="product['+count+'][quantity]" id="product['+count+'][quantity]"class="form-control {{ $errors->has("product.'+count+'.quantity") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.quantity")}}" placeholder="0">@if($errors->has("product.'+count+'.quantity"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.quantity") }}</span>@endif</td><td><input type="number" name="product['+count+'][cost]" id="product['+count+'][cost]"class="form-control {{ $errors->has("product.'+count+'.cost") ? "is-invalid" : "" }}"value="{{ old("product.'+count+'.cost") }}" placeholder="0">@if($errors->has("product.'+count+'.cost"))<span class="invalid-feedback">{{ $errors->first("product.'+count+'.cost") }}</span>@endif</td></tr>';
-                             $('#myAddedRows').append(newInnerHTML);
+                   
+                    @if(old('addedId') !== null)
+                        @foreach (old('addedId') as $itemId)
+                <tr id="invoiceItem{{$itemId}}">
+                            <th scope="row">{{$itemId+1}}</th>
+                            <td>
+                                <input type="type" name="product[{{$itemId}}][name]" id="product{{$itemId}}name" placeholder="Product Name"
+                                    class="form-control {{ $errors->has('product.'.$itemId.'.name') ? 'is-invalid' : '' }}"
+                                    value="{{ old('product.'.$itemId.'.name') }}">
+                                @if($errors->has('product.'.$itemId.'.name'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.'.$itemId.'.name') }}
+                                </span>
+                                @endif
+                            </td>
+                            <td>
+                                <input type="type" name="product[{{$itemId}}][description]" id="product{{$itemId}}description" placeholder="Product Description"
+                                    class="form-control {{ $errors->has('product.'.$itemId.'.description') ? 'is-invalid' : '' }}"
+                                    value="{{ old('product.'.$itemId.'.description')}}">
+                                @if($errors->has('product.'.$itemId.'.description'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.'.$itemId.'.description') }}
+                                </span>
+                                @endif
+                            </td>
+                            <td>
+                                <input type="number" name="product[{{$itemId}}][quantity]" id="product{{$itemId}}quantity"
+                                    class="form-control {{ $errors->has('product.'.$itemId.'.quantity') ? 'is-invalid' : '' }}"
+                                    value="{{ old('product.'.$itemId.'.quantity')}}" placeholder="0">
+                                @if($errors->has('product.'.$itemId.'.quantity'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.'.$itemId.'.quantity') }}
+                                </span>
+                                @endif
+                            </td>
+                            <td>
+                                <input type="number" name="product[{{$itemId}}][cost]" id="product{{$itemId}}cost"
+                                    class="form-control {{ $errors->has('product.'.$itemId.'.cost') ? 'is-invalid' : '' }}"
+                                    value="{{ old('product.'.$itemId.'.cost') }}" placeholder="0">
+                                @if($errors->has('product.'.$itemId.'.cost'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('product.'.$itemId.'.cost') }}
+                                </span>
+                                @endif
+                            </td>
+                        
+                        
+                            <td>
+                                <input type="checkbox" name="product[{{$itemId}}][save]" id="product{{$itemId}}save" value="save_as_product" />Save
+                                <button type="button" class="btn btn-danger btn-sm" onclick="myTableDelete({{$itemId}})">Delete</button>
+                            </td>
+                        </tr> 
+                        <script>
+                            addedIds.push(count);
                             count++;
-                            //$('#formCount').val(count);
-                        }
-
-                    </script>
-
-
-                    <tr id="invoiceItem0">
-                        <th scope="row">1</th>
-                        <td>
-                            <input type="type" name="product[0][name]" id="product1name" placeholder="Product Name"
-                                class="form-control {{ $errors->has('product.0.name') ? 'is-invalid' : '' }}"
-                                value="{{ old('product.0.name') }}">
-                            @if($errors->has('product.0.name'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.0.name') }}
-                                </span>
-                            @endif
-                        </td>
-                        <td>
-                            <input type="type" name="product[0][description]" id="product[0][description]"
-                                placeholder="Product Description"
-                                class="form-control {{ $errors->has('product.0.description') ? 'is-invalid' : '' }}"
-                                value="{{ old('product.0.description')}}">
-                            @if($errors->has('product.0.description'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.0.description') }}
-                                </span>
-                            @endif
-                        </td>
-                        <td>
-                            <input type="number" name="product[0][quantity]" id="product[0][quantity]"
-                                class="form-control {{ $errors->has('product.0.quantity') ? 'is-invalid' : '' }}"
-                                value="{{ old('product.0.quantity')}}" placeholder="0">
-                            @if($errors->has('product.0.quantity'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.0.quantity') }}
-                                </span>
-                            @endif
-                        </td>
-                        <td>
-                            <input type="number" name="product[0][cost]" id="product[0][cost]"
-                                class="form-control {{ $errors->has('product.0.cost') ? 'is-invalid' : '' }}"
-                                value="{{ old('product.0.cost') }}" placeholder="0">
-                            @if($errors->has('product.0.cost'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.0.cost') }}
-                                </span>
-                            @endif
-                        </td>
-
-
-                        <td>
-                            <input type="checkbox" name="product[0][save]" id="product[0][save]" value="save_as_product"/>Save
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                        </td>
-                    </tr>
+                        </script>
+                        @endforeach
+                    @endif
+                    
                 </tbody>
             </table>
             <button class="btn btn-success" onclick="myTableRowAdd();return false;">+</button>
         </div>
     </div>
+
     <hr>
     <div class="form-group">
         <label for="note">Invoice Notes</label>
@@ -238,7 +288,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary"onclick="appendSubmit()">Create</button>
 </form>
 
 

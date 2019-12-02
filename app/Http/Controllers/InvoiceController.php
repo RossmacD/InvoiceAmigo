@@ -54,6 +54,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         //validation rules
         $rules = [
             'invoice_number' => 'required|numeric|integer',
@@ -107,17 +108,19 @@ class InvoiceController extends Controller
             $invoiceItem->product_name = $invoiceItemPost['name'];
             $invoiceItem->product_description = $invoiceItemPost['description'];
             $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
-            $invoiceItem->product_cost = $invoiceItemPost['cost'];
+            $invoiceItem->product_cost = $invoiceItemPost['cost']*10;
             $invoiceItem->invoice_id = $invoice->id;
             
             //Save as a Invoice line as product
-            if ($invoiceItemPost['save'] == 'save_as_product') {
-                $product = new Product;
-                $product->user_id = Auth::id();
-                $product->product_name = $invoiceItemPost['name'];
-                $product->product_description = $invoiceItemPost['description'];
-                $product->product_cost = $invoiceItemPost['cost'];
-                $product->save();
+            if(isset($invoiceItemPost['save'])){
+                if ($invoiceItemPost['save'] == 'save_as_product') {
+                    $product = new Product;
+                    $product->user_id = Auth::id();
+                    $product->product_name = $invoiceItemPost['name'];
+                    $product->product_description = $invoiceItemPost['description'];
+                    $product->product_cost = $invoiceItemPost['cost']*10;
+                    $product->save();
+                }
             }
             $invoiceItem->save();
         }
