@@ -34,12 +34,12 @@
   </script>  --}}
 
 <script>
-
     //Generate Invoice Lines
     count=0;
     removed=0;
     addedIds=[];
 
+    //Add a row to the table
     function myTableRowAdd(){
         newInnerHTML=`
         <tr id="invoiceItem${count}">
@@ -92,6 +92,7 @@
         count++;
     }
 
+    //Delete a row from the table
     function myTableDelete(_id){
         $( `#invoiceItem${_id}` ).remove();
             //addedIds.remove(_id);
@@ -100,7 +101,7 @@
         });
     }
 
-
+    //Append JS data for flashing
     function appendSubmit(){
         for(i=0;i<addedIds.length;i++){
             $(invoiceForm).append(`<input type="hidden" name="addedId[${i}]" value="${addedIds[i]}" />`);
@@ -198,61 +199,90 @@
                 </thead>
                 <tbody id="myAddedRows">
                    
+
+                    {{-- Flash in session data and validate --}}
                     @if(old('addedId') !== null)
-                        @foreach (old('addedId') as $itemId)
-                <tr id="invoiceItem{{$itemId}}">
-                            <th scope="row">{{$itemId+1}}</th>
-                            <td>
-                                <input type="type" name="product[{{$itemId}}][name]" id="product{{$itemId}}name" placeholder="Product Name"
-                                    class="form-control {{ $errors->has('product.'.$itemId.'.name') ? 'is-invalid' : '' }}"
-                                    value="{{ old('product.'.$itemId.'.name') }}">
-                                @if($errors->has('product.'.$itemId.'.name'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.'.$itemId.'.name') }}
-                                </span>
-                                @endif
-                            </td>
-                            <td>
-                                <input type="type" name="product[{{$itemId}}][description]" id="product{{$itemId}}description" placeholder="Product Description"
-                                    class="form-control {{ $errors->has('product.'.$itemId.'.description') ? 'is-invalid' : '' }}"
-                                    value="{{ old('product.'.$itemId.'.description')}}">
-                                @if($errors->has('product.'.$itemId.'.description'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.'.$itemId.'.description') }}
-                                </span>
-                                @endif
-                            </td>
-                            <td>
-                                <input type="number" name="product[{{$itemId}}][quantity]" id="product{{$itemId}}quantity"
-                                    class="form-control {{ $errors->has('product.'.$itemId.'.quantity') ? 'is-invalid' : '' }}"
-                                    value="{{ old('product.'.$itemId.'.quantity')}}" placeholder="0">
-                                @if($errors->has('product.'.$itemId.'.quantity'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.'.$itemId.'.quantity') }}
-                                </span>
-                                @endif
-                            </td>
-                            <td>
-                                <input type="number" name="product[{{$itemId}}][cost]" id="product{{$itemId}}cost"
-                                    class="form-control {{ $errors->has('product.'.$itemId.'.cost') ? 'is-invalid' : '' }}"
-                                    value="{{ old('product.'.$itemId.'.cost') }}" placeholder="0">
-                                @if($errors->has('product.'.$itemId.'.cost'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('product.'.$itemId.'.cost') }}
-                                </span>
-                                @endif
-                            </td>
                         
-                        
-                            <td>
-                                <input type="checkbox" name="product[{{$itemId}}][save]" id="product{{$itemId}}save" value="save_as_product" />Save
-                                <button type="button" class="btn btn-danger btn-sm" onclick="myTableDelete({{$itemId}})">Delete</button>
-                            </td>
-                        </tr> 
-                        <script>
-                            addedIds.push(count);
-                            count++;
-                        </script>
+                        @foreach (old('addedId') as $oldItemId)
+                            
+                            <tr id="invoiceItem{{$loop->index}}">
+                                <th scope="row">{{$loop->index+1}}</th>
+                                <td>
+                                    <input type="type" name="product[{{$loop->index}}][name]" id="product{{$loop->index}}name" placeholder="Product Name"
+                                        class="form-control {{ $errors->has('product.'.$oldItemId.'.name') ? 'is-invalid' : '' }}"
+                                        value="{{ old('product.'.$oldItemId.'.name') }}">
+                                    @if($errors->has('product.'.$oldItemId.'.name'))
+                                    <span class="invalid-feedback">
+                                        {{ $errors->first('product.'.$oldItemId.'.name') }}
+                                    </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <input type="type" name="product[{{$loop->index}}][description]" id="product{{$loop->index}}description" placeholder="Product Description"
+                                        class="form-control {{ $errors->has('product.'.$oldItemId.'.description') ? 'is-invalid' : '' }}"
+                                        value="{{ old('product.'.$oldItemId.'.description')}}">
+                                    @if($errors->has('product.'.$oldItemId.'.description'))
+                                    <span class="invalid-feedback">
+                                        {{ $errors->first('product.'.$oldItemId.'.description') }}
+                                    </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <input type="number" name="product[{{$loop->index}}][quantity]" id="product{{$loop->index}}quantity"
+                                        class="form-control {{ $errors->has('product.'.$oldItemId.'.quantity') ? 'is-invalid' : '' }}"
+                                        value="{{ old('product.'.$oldItemId.'.quantity')}}" placeholder="0">
+                                    @if($errors->has('product.'.$oldItemId.'.quantity'))
+                                    <span class="invalid-feedback">
+                                        {{ $errors->first('product.'.$oldItemId.'.quantity') }}
+                                    </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <input type="number" name="product[{{$loop->index}}][cost]" id="product{{$loop->index}}cost"
+                                        class="form-control {{ $errors->has('product.'.$oldItemId.'.cost') ? 'is-invalid' : '' }}"
+                                        value="{{ old('product.'.$oldItemId.'.cost') }}" placeholder="0">
+                                    @if($errors->has('product.'.$oldItemId.'.cost'))
+                                    <span class="invalid-feedback">
+                                        {{ $errors->first('product.'.$oldItemId.'.cost') }}
+                                    </span>
+                                    @endif
+                                </td>
+                            
+                            
+                                <td>
+                                    <input type="checkbox" name="product[{{$loop->index}}][save]" id="product{{$loop->index}}save" value="save_as_product" />Save
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="myTableDelete({{$loop->index}})">Delete</button>
+                                </td>
+                            </tr> 
+                            <script>
+                                //Update JS to match
+                                addedIds.push(count);
+                                $(document).ready(function() {
+                                src = "{{ route('searchajax') }}";
+                                $(`#product${count}name`).autocomplete({
+                                    source: function(request, response) {
+                                        $.ajax({
+                                            url: src,
+                                            dataType: "json",
+                                            data: {
+                                                term : request.term
+                                            },
+                                                success: function(data) {
+                                                    response(data);
+                                                }
+                                            });
+                                        },
+                                        minLength: 0,
+                                        delay: 0,
+                                    }).blur(function(){
+                                        $(this).autocomplete('enable');
+                                    })
+                                    .focus(function () {
+                                        $(this).autocomplete('search', '');
+                                    });;
+                                });
+                                count++;
+                            </script>
                         @endforeach
                     @endif
                     
@@ -288,7 +318,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary"onclick="appendSubmit()">Create</button>
+    <button type="submit" class="btn btn-primary"onclick="appendSubmit()">Send</button>
 </form>
 
 
