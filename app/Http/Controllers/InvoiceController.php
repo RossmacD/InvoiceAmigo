@@ -94,7 +94,7 @@ class InvoiceController extends Controller
         foreach ($itemAmount as $invoiceItemPost) {
             $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
         }
-        $invoice->total_cost=$total_cost*10;
+        $invoice->total_cost=$total_cost*100;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
         $client = User::where('email', strtolower($request->client_email))->firstOrFail();
@@ -108,7 +108,7 @@ class InvoiceController extends Controller
             $invoiceItem->product_name = $invoiceItemPost['name'];
             $invoiceItem->product_description = $invoiceItemPost['description'];
             $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
-            $invoiceItem->product_cost = $invoiceItemPost['cost']*10;
+            $invoiceItem->product_cost = $invoiceItemPost['cost']*100;
             $invoiceItem->invoice_id = $invoice->id;
             
             //Save as a Invoice line as product
@@ -118,7 +118,7 @@ class InvoiceController extends Controller
                     $product->user_id = Auth::id();
                     $product->product_name = $invoiceItemPost['name'];
                     $product->product_description = $invoiceItemPost['description'];
-                    $product->product_cost = $invoiceItemPost['cost']*10;
+                    $product->product_cost = $invoiceItemPost['cost']*100;
                     $product->save();
                 }
             }
