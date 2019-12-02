@@ -17,25 +17,7 @@
         @if (!$invoice->outgoing)
         <a class="float-right btn btn-success" href="{{route('stripe.paySingleInvoice',$invoice->id)}}">Pay Now</a>  
         @else
-        <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-        <div id="qrcode"></div>
-        <script type="text/javascript">
-            new QRCode(document.getElementById("qrcode"), {
-            text: "http://localhost:8000",
-            width: 100,
-            height: 100,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-            });
-        </script>
-        <style>
-        #qrcode {
-        width:100px;
-        height:100px;
-        margin-top:15px;
-        }
-        </style>
+        
         @endif
         
 

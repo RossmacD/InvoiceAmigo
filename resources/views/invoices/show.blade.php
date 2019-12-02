@@ -11,6 +11,28 @@
     <h3>Notes:</h3>
     <p>{{$invoice->note}}</p>
     <br>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <div id="qrcode"></div>
+    <script type="text/javascript">
+        new QRCode(document.getElementById("qrcode"), {
+                text: `http://192.168.5.207:8000/pay/{{$invoice->id}}`,
+                width: 100,
+                height: 100,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+                });
+    </script>
+    <style>
+        #qrcode {
+            width: 100px;
+            height: 100px;
+            margin-top: 15px;
+        }
+    </style>
+
+
+
     <a href="{{route('invoices.edit',$invoice->id)}}" class="btn btn-primary float-left">Update</a>
     <a href="#" class="btn btn-danger float-right" data-toggle="modal" data-target="#delete-modal">Delete</a>
     <div class="clearfix"></div>

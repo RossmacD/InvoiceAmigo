@@ -139,6 +139,7 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
+        //URL::forceRootUrl('http://192.168.5.207');
         return view('invoices.show', [
             'invoice' => $invoice
         ]);
