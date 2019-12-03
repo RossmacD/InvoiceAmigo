@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 use Stripe\Stripe;
 use Auth;
+use App\User;
 use App\Invoice;
+use App\InvoiceItems;
+use App\Product;
 use Illuminate\Http\Request;
 
 class StripePaymentController extends Controller
@@ -44,6 +47,8 @@ class StripePaymentController extends Controller
     public function paySingleInvoice($id){
         $user = Auth::user();
         $invoice = Invoice::findOrFail($id);
+        $invoiceItems = InvoiceItems::where('invoice_id', $id)->get();
+        $client =  User::where('id', $invoice->client_id)->firstOrFail();
         //Set the api key
         Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
         $intent = \Stripe\PaymentIntent::create([
@@ -51,7 +56,7 @@ class StripePaymentController extends Controller
             'currency' => 'eur',
         ]); 
 
-        return view('stripe.paySingleInvoice', ['intent'=>$intent,'user'=>$user, 'invoice' => $invoice]);
+        return view('stripe.paySingleInvoice', ['intent'=>$intent,'user'=>$user, 'invoice' => $invoice, 'invoiceItems' => $invoiceItems,'client' => $client]);
     }
 
     public function webhooks($_payload){

@@ -139,9 +139,13 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
+        $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
+        $client =  User::where('id', $invoice->client_id)->firstOrFail();
         //URL::forceRootUrl('http://192.168.5.207');
         return view('invoices.show', [
-            'invoice' => $invoice
+            'invoice' => $invoice,
+            'invoiceItems'=>$invoiceItems,
+            'client'=>$client
         ]);
     }
 

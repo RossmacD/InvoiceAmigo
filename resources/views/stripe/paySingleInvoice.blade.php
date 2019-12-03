@@ -36,10 +36,54 @@
 <p>Name: {{$user->name}}</p>
 <p>Email: {{$user->email}}</p>
 <hr>
+<h2>Invoice From:</h2>
+<p>Name: {{$client->name}}</p>
+<p>Email: {{$client->email}}</p>
+<hr>
 <h1>Invoice #{{$invoice->invoice_number}}</h1>
 <h4>Due date:</h4>
 <p>{{$invoice->due_date}}</p>
+<h2>Products</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Num</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Cost</th>
 
+                </tr>
+            </thead>
+            <tbody id="myAddedRows">
+                @foreach ($invoiceItems as $invoiceItem)
+
+                <tr id="invoiceItem{{$loop->index}}">
+                    <th scope="row">{{$loop->index+1}}</th>
+                    <td>
+                        {{$invoiceItem->product_name}}
+
+                    </td>
+                    <td>
+                        {{$invoiceItem->product_description}}
+
+                    </td>
+                    <td>
+                        {{$invoiceItem->product_quantity}}
+
+                    </td>
+                    <td>
+                        {{$invoiceItem->product_cost}}
+
+                    </td>
+                    @endforeach
+
+            </tbody>
+        </table>
+        <hr>
+        
 @if($invoice->note!==null)
 <h5>Notes:</h5>
 <p>{{$invoice->note}}</p>
@@ -54,9 +98,9 @@
     </div>
     <div class="card-body">
 
-        <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount/100, 2, '.', '')?></h5>
+        <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount, 2, '.', '')?></h5>
         <p class="card-text"></p>
-        <div class="w-50 ">
+        <div class="w-100">
             <label for="card-element">
                 Credit or debit card
             </label>

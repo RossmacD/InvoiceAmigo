@@ -12,11 +12,10 @@
         
         <p>{{ Str::limit($invoice->note,10) }}</p>
         <small class="float-right">{{ $invoice->created_at->diffForHumans() }}</small>
-        <h6>Total Cost: {{number_format((float)$invoice->total_cost/100, 2, '.', '')}}</h6>
+        <h6>Total Cost: {{number_format((float)$invoice->total_cost, 2, '.', '')}}</h6>
         <a href="{{route('invoices.show',$invoice->id)}}">View</a>
         @if (!$invoice->outgoing)
         <a class="float-right btn btn-success" href="{{route('stripe.paySingleInvoice',$invoice->id)}}">Pay Now</a>  
-        @else
         
         @endif
         

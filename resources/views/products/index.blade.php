@@ -7,7 +7,7 @@
         @forelse($products as $product)
             <li class="list-group-item my-2">
                 <h5>{{ $product->product_name }}</h5>
-                <h4 class="float-right">€{{ number_format((float)$product->product_cost/100, 2, '.', '') }} EUR</h4>
+                <h4 class="float-right">€{{ number_format((float)$product->product_cost, 2, '.', '') }} EUR</h4>
                 <p>{{ Str::limit($product->product_description,100) }}</p>
                 <small class="float-right">{{ $product->created_at->diffForHumans() }}</small>
                 <a href="{{route('products.show',$product->id)}}">View Details</a>

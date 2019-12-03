@@ -46,7 +46,7 @@
     </div>
     <div class="card-body">
 
-      <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount/100, 2, '.', '')?></h5>
+      <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount, 2, '.', '')?></h5>
       <p class="card-text"></p>
       <div class="w-50 ">
       <label for="card-element">
