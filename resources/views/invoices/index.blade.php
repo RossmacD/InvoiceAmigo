@@ -6,17 +6,17 @@
 <a href="{{route('invoices.create')}}" class="btn btn-primary ">New Invoice</a>
 <ul class="list-group py-3 mb-3">
     @forelse($invoices as $invoice)
-    <li class="list-group-item my-2"><h5 class="float-right badge badge-{{$invoice->outgoing?'success':'info'}}">
+    <li class="list-group-item my-2"><h5 class="float-right badge badge-{{$invoice->outgoing?'info':'success'}}">
         {{$invoice->outgoing?'Outgoing':'Incoming'}}</h5>
         <h5>Invoice Number: {{ $invoice->invoice_number }} </h5>
         
-        <p>{{ Str::limit($invoice->note,10) }}</p>
+        <p>{{ Str::limit($invoice->note,100) }}</p>
         <small class="float-right">{{ $invoice->created_at->diffForHumans() }}</small>
-        <h6>Total Cost: {{number_format((float)$invoice->total_cost, 2, '.', '')}}</h6>
-        <a href="{{route('invoices.show',$invoice->id)}}">View</a>
-        @if (!$invoice->outgoing)
+        <h6>Total Cost: {{number_format((float)$invoice->total_cost/100, 2, '.', '')}}</h6>
+        @if ($invoice->outgoing)
+        <a class="float-right btn btn-info" href="{{route('invoices.show',$invoice->id)}}">View</a>
+        @else
         <a class="float-right btn btn-success" href="{{route('stripe.paySingleInvoice',$invoice->id)}}">Pay Now</a>  
-        
         @endif
         
 

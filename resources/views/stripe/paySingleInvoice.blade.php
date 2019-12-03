@@ -75,7 +75,7 @@
 
                     </td>
                     <td>
-                        {{$invoiceItem->product_cost}}
+                        €{{$invoiceItem->product_cost/100}}
 
                     </td>
                     @endforeach
@@ -98,7 +98,7 @@
     </div>
     <div class="card-body">
 
-        <h5 class="card-title">Cost: €<?= number_format((float)$intent->amount, 2, '.', '')?></h5>
+        <h5 class="card-title">Cost: €{{ number_format((float)$invoice->total_cost/100, 2, '.', '') }}</h5>
         <p class="card-text"></p>
         <div class="w-100">
             <label for="card-element">

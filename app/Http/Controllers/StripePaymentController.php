@@ -48,7 +48,8 @@ class StripePaymentController extends Controller
         $user = Auth::user();
         $invoice = Invoice::findOrFail($id);
         $invoiceItems = InvoiceItems::where('invoice_id', $id)->get();
-        $client =  User::where('id', $invoice->client_id)->firstOrFail();
+        $client =  User::where('id', $invoice->user_id)->firstOrFail();
+        //dd($invoice);
         //Set the api key
         Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
         $intent = \Stripe\PaymentIntent::create([
@@ -59,21 +60,19 @@ class StripePaymentController extends Controller
         return view('stripe.paySingleInvoice', ['intent'=>$intent,'user'=>$user, 'invoice' => $invoice, 'invoiceItems' => $invoiceItems,'client' => $client]);
     }
 
-    public function webhooks($_payload){
+    public function webhooks(Request $request){
         //return view('stripe.webhooks');
-        //$payload = @file_get_contents('php://input');
-        $payload=$_payload;
+        $payload = $request->getContent();
         $event = null;
 
         try {
-            $event = Stripe\Stripe\Event::constructFrom(
+            $event = Stripe\Event::constructFrom(
                 json_decode($payload, true)
             );
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
-            return Response::make("", 400);
+            return new Response('Webhook Fucked', 400);
         }
-
         // Handle the event
         switch ($event->type) {
             case 'payment_intent.succeeded':
@@ -87,10 +86,8 @@ class StripePaymentController extends Controller
                 // ... handle other event types
             default:
                 // Unexpected event type
-                return Response::make("", 400);
+                return new Response('Webhook Fucked', 400);
         }
-
-     return response(null, 200);
-
+        return new Response('Webhook Handled', 200);
     }
 }

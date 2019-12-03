@@ -44,7 +44,7 @@
                         
                     </td>
                     <td>
-                        {{$invoiceItem->product_cost}}
+                        €{{$invoiceItem->product_cost/100}}
                         
                     </td>
                 @endforeach
@@ -53,7 +53,7 @@
         </table>
         <hr><div class="ml-5">
         <h3>Total Cost:</h3>
-    <h4>€{{$invoice->total_cost}}</h4></div>
+    <h4>€{{ number_format((float)$invoice->total_cost/100, 2, '.', '') }}</h4></div>
     <hr>
     @if($invoice->note!==null)
     <h5>Notes:</h5>
@@ -66,7 +66,7 @@
         
         <div class="card-body">
             <div class="row justify-content-center">
-        <h5 class="card-title">Cost: €{{$invoice->total_cost}}</h5>
+        {{-- <h5 class="card-title">Cost: €{{ number_format((float)$invoice->total_cost, 2, '.', '') }}</h5> --}}
             </div>
             <p class="card-text"></p>
             <div class="row justify-content-center">
@@ -83,7 +83,7 @@
     </div>
     <script type="text/javascript">
         new QRCode(document.getElementById("qrcode"), {
-                text: `http://192.168.5.207:8000/pay/{{$invoice->id}}`,
+                text: `http://192.168.104.86:8000/pay/{{$invoice->id}}`,
                 width: 150,
                 height: 150,
                 colorDark : "#000000",

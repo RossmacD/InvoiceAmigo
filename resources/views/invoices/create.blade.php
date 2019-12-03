@@ -247,8 +247,6 @@
                                     </span>
                                     @endif
                                 </td>
-                            
-                            
                                 <td>
                                     <input type="checkbox" name="product[{{$loop->index}}][save]" id="product{{$loop->index}}save" value="save_as_product" />Save
                                     <button type="button" class="btn btn-danger btn-sm" onclick="myTableDelete({{$loop->index}})">Delete</button>
@@ -285,7 +283,6 @@
                             </script>
                         @endforeach
                     @endif
-                    
                 </tbody>
             </table>
             <button class="btn btn-success" onclick="myTableRowAdd();return false;">+</button>
