@@ -61,10 +61,8 @@ class StripePaymentController extends Controller
     }
 
     public function webhooks(Request $request){
-        //return view('stripe.webhooks');
         $payload = $request->getContent();
         $event = null;
-
         try {
             $event = Stripe\Event::constructFrom(
                 json_decode($payload, true)
