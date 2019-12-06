@@ -1,13 +1,16 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
-// Variables
-@import 'variables';
-
+//@import 'variables';
+@import "~bootstrap/scss/functions";
+//@import 'variables';
+@import 'newBootVars';
+@import "~bootstrap/scss/variables";
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
-
+html{
+  font-family: 'Montserrat', sans-serif !important;
+}
 
 .alert {
   z-index: 99;
