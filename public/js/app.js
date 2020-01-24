@@ -2072,15 +2072,42 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      products: null
+    };
+  },
   mounted: function mounted() {
-    console.log('Index mounted.');
+    var _this = this;
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products/', {
+      headers: {
+        Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTg0MTdjZTFkZTVkOWM2N2ZiZTY3ZTEzMzA3NmYzOGQzYzZmMGFlZTcxYzAzNmY5ZmM5MjlhZGFjYTIxYjZmYWQzOTg4NTNjOTY3MDk2NGQiLCJpYXQiOjE1Nzk4OTY1NzAsIm5iZiI6MTU3OTg5NjU3MCwiZXhwIjoxNjExNTE4OTcwLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.H4DlvtRmoKGCKora4NI5DGbhxkgTnyJoEVYs7jDF-TN9QmmKBWDtFtQf_nplKHgO9gLCDP5v_b4lISQSyYv2XGV7IgxPEXeTB7Rbu43WsWp7H_z-7q5M5CF04Htk0AOpcKZ58efqEMvcVMNOShCH0kKCwZIyIrJIrvvDyGyXjAj03JbG_mmU08s3pZdNH1Ld034e7OTaZVBuAf_6xmzZn1VYofdACDCGrUxzkyh0un0p-sRk_tKbYeW9B7tYTh3z-t_Ipfdc8qNc3bEU7xs0esrojkrr7je6IgEhKEdsGaesNDrIZEGJL5TZ1BqCY1vz1gBSlTWg06m24KW1FBlxYckfTHxV5M0rEe6z05IZeHXdiZ5j43Y5kUUfyDFYaIG4inBEVDX3wTtvzQXfrYc4FU0_DZuVsr9TfEp6XbdZalzmDTPs0xlSbfNY9uFXUrbc3CkcC12yKjDtbu-yMbJaC57HoajPH7WmC7nsmV1GlFgXj-EABKKOPBAQaxCS73QK4ICVs9TEYSO_f__5qcwQ5D41QwMAeoxtgHtZax-efePw2O4apDQ1y0yqiQCfWtv7ikXHY0Xi_XgGiN5NUYjQAd92xnf_OJCAJ37tdm--f8YhIo5E41KS91Ndt6t7LLcjpMift2S4NJLYuRuj4EB1Asw-sY1_D1oDDCNrCKpNfJA"
+      }
+    }).then(function (response) {
+      return _this.products = response.data.products.data;
+    })["catch"]();
   }
 });
 
@@ -56688,18 +56715,34 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("h2", { staticClass: "text-center" }, [_vm._v("All Products")]),
+    _vm._v(" "),
+    _vm.products
+      ? _c(
+          "ul",
+          { staticClass: "list-group py-3 mb-3" },
+          _vm._l(_vm.products, function(product) {
+            return _c(
+              "li",
+              { key: product.id, staticClass: "list-group-item my-2" },
+              [
+                _c("h5", [_vm._v(_vm._s(product.product_name))]),
+                _vm._v(" "),
+                _c("h4", { staticClass: "float-right" }, [
+                  _vm._v("€" + _vm._s(product.product_cost) + " EUR")
+                ]),
+                _vm._v(" "),
+                _c("p", [_vm._v(_vm._s(product.product_description))])
+              ]
+            )
+          }),
+          0
+        )
+      : _vm._e()
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("h2", { staticClass: "text-center" }, [_vm._v("All Products")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

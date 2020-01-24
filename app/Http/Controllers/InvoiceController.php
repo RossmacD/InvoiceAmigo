@@ -29,10 +29,13 @@ class InvoiceController extends Controller
         foreach ($invoices as $invoice) {
             $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
         }
-        return view('invoices.index', [
+        return response()->json(
+            [
             'invoices' => $invoices,
             'user' => $user,
-        ]);
+            ]
+            ,200
+        );
     }
 
     /**
@@ -40,11 +43,11 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $user = Auth::user();
-        return view('invoices.create', ['user' => $user]);
-    }
+    // public function create()
+    // {
+    //     $user = Auth::user();
+    //     return view('invoices.create', ['user' => $user]);
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -62,10 +65,10 @@ class InvoiceController extends Controller
             'due_date' => 'required|date|after:invoice_date',
             'currency' => 'in:eur,gbp,usd',
             'note'  => 'nullable|string|max:1000',
-            'product.*.name' => 'required|string',
-            'product.*.description' => 'required|string',
-            'product.*.quantity' => 'required|numeric',
-            'product.*.cost' => 'required|numeric',
+            // 'product.*.name' => 'required|string',
+            // 'product.*.description' => 'required|string',
+            // 'product.*.quantity' => 'required|numeric',
+            // 'product.*.cost' => 'required|numeric',
         ];
        
         //custom validation error messages
@@ -91,9 +94,9 @@ class InvoiceController extends Controller
         $invoice->note = $request->note;
         $invoice->user_id = Auth::id();
         $total_cost=0;
-        foreach ($itemAmount as $invoiceItemPost) {
-            $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
-        }
+        // foreach ($itemAmount as $invoiceItemPost) {
+        //     $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
+        // }
         $invoice->total_cost=$total_cost*100;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
@@ -103,31 +106,29 @@ class InvoiceController extends Controller
         $invoice->save(); 
 
         //Creates a Invoice Item for everything within the array
-        foreach ($itemAmount as $invoiceItemPost) {
-            $invoiceItem = new InvoiceItems;
-            $invoiceItem->product_name = $invoiceItemPost['name'];
-            $invoiceItem->product_description = $invoiceItemPost['description'];
-            $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
-            $invoiceItem->product_cost = $invoiceItemPost['cost']*100;
-            $invoiceItem->invoice_id = $invoice->id;
+        // foreach ($itemAmount as $invoiceItemPost) {
+        //     $invoiceItem = new InvoiceItems;
+        //     $invoiceItem->product_name = $invoiceItemPost['name'];
+        //     $invoiceItem->product_description = $invoiceItemPost['description'];
+        //     $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
+        //     $invoiceItem->product_cost = $invoiceItemPost['cost']*100;
+        //     $invoiceItem->invoice_id = $invoice->id;
             
-            //Save as a Invoice line as product
-            if(isset($invoiceItemPost['save'])){
-                if ($invoiceItemPost['save'] == 'save_as_product') {
-                    $product = new Product;
-                    $product->user_id = Auth::id();
-                    $product->product_name = $invoiceItemPost['name'];
-                    $product->product_description = $invoiceItemPost['description'];
-                    $product->product_cost = $invoiceItemPost['cost']*100;
-                    $product->save();
-                }
-            }
-            $invoiceItem->save();
-        }
+        //     //Save as a Invoice line as product
+        //     if(isset($invoiceItemPost['save'])){
+        //         if ($invoiceItemPost['save'] == 'save_as_product') {
+        //             $product = new Product;
+        //             $product->user_id = Auth::id();
+        //             $product->product_name = $invoiceItemPost['name'];
+        //             $product->product_description = $invoiceItemPost['description'];
+        //             $product->product_cost = $invoiceItemPost['cost']*100;
+        //             $product->save();
+        //         }
+        //     }
+        //     $invoiceItem->save();
+        // }
         //Redirect to a specified route with flash message.
-        return redirect()
-            ->route('invoices.index')
-            ->with('status', 'Created a new Invoice!');
+        return response()->json(200);
     }
 
     /**
@@ -142,11 +143,14 @@ class InvoiceController extends Controller
         $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
         $client =  User::where('id', $invoice->client_id)->firstOrFail();
         //URL::forceRootUrl('http://192.168.5.207');
-        return view('invoices.show', [
+        return response()->json(
+            [
             'invoice' => $invoice,
             'invoiceItems'=>$invoiceItems,
             'client'=>$client
-        ]);
+            ]
+            ,200
+        );
     }
 
     /**
@@ -158,9 +162,12 @@ class InvoiceController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::findOrFail($id);
-        return view('invoices.edit', [
+        return response()->json(
+            [
             'invoice' => $invoice
-        ]);
+            ]
+            ,200
+        );
     }
 
     /**
@@ -194,9 +201,11 @@ class InvoiceController extends Controller
         $invoice->note = $request->note;
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
-        return redirect()
-            ->route('invoices.show', $id)
-            ->with('status', 'Updated the Invoice!');
+        return response()->json(
+            [
+                'id'=>$id
+            ],200
+        );
     }
 
     /**
@@ -209,8 +218,6 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $invoice->delete();
-        return redirect()
-            ->route('invoices.index')
-            ->with('status', 'Deleted the selected Invoice');
+        return response()->json(200);
     }
 }

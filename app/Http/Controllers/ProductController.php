@@ -84,9 +84,10 @@ class ProductController extends Controller
         ]
         ,200
         );
-        return response()->json([
+        return response()->json(
+            [
             'product'=>$product
-        ]
+            ]
         ,200
         );
     }
@@ -100,10 +101,11 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        return response()->json([
+        return response()->json(
+            [
             'product'=>$product
-        ]
-        ,200
+            ]
+            ,200
         );
     }
 

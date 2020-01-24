@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Product;
+use App\Invoice;
+
 
 class User extends Authenticatable
 {
@@ -24,12 +26,12 @@ class User extends Authenticatable
 
     public function incomingInvoices()
     {
-        return $this->hasMany('App\invoice', 'client_id');
+        return $this->hasMany('App\Invoice', 'client_id');
     }
 
     public function outgoingInvoices()
     {
-        return $this->hasMany('App\invoice', 'user_id');
+        return $this->hasMany('App\Invoice', 'user_id');
     }
 
     public function products()
