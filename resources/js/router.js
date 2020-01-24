@@ -1,22 +1,16 @@
 import VueRouter from 'vue-router'
-import ExampleComponent from "./components/ExampleComponent";
-import ExampleComponent2 from "./components/ExampleComponent2";
+import Home from "./pages/Homepage";
+import ProductIndex from "./pages/products/ProductIndex.vue";
 
 
 const routes = [
     {path: '/', 
-    name: 'example',
-    component: ExampleComponent},
-
+    name: 'home',
+    component: Home},
     {
-        path: '/example',
-        name: 'example2',
-        component: ExampleComponent2
-    },
-    {
-        path: '/customers',
-        name: 'custine',
-        component: ExampleComponent2
+        path: '/products',
+        name: 'product',
+        component: ProductIndex
     }
 ]
 

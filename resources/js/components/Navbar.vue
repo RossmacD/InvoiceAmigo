@@ -1,7 +1,7 @@
 <template>
     <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <router-link class="navbar-brand" to="/example">Laravel/Vue</router-link> -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <b-nav class="navbar navbar-expand-md navbar-dark  bg-dark">
         <router-link class="navbar-brand" to="/">
             InvoiceAmigo
         </router-link>
@@ -9,9 +9,8 @@
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </b-button>
-        <b-nav>
-            <b-nav-item active to="/example">Active</b-nav-item>
-        </b-nav>
+        <b-nav-item active to="/products">Products</b-nav-item>
+        
         <!-- <div class="collapse navbar-collapse" id="navbarCollapse">
 
             <ul class="navbar-nav ml-auto">
@@ -59,7 +58,7 @@
                 @endauth
             </ul>
         </div> -->
-    </nav>
+    </b-nav>
 </template>
 
 <script>

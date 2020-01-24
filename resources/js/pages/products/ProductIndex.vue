@@ -1,9 +1,7 @@
 <template>
     <div>
         <h2 class="text-center">All Products</h2>
-
     </div>
-    
 </template>
 
 <script>
