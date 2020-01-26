@@ -51,7 +51,7 @@ class PassportController extends Controller
                     'token' => $token
                 ],200);
         }else{
-            return response()->json(['error'=>'Unauthorised'],401);
+            return response()->json(['error'=>'Unauthorised - Incorrect credentials'],401);
         }
     }
 
