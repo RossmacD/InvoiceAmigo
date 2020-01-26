@@ -2,12 +2,12 @@ require('./bootstrap');
 // import Vue from 'vue';
 // require('vue')
 // import './newBootVars'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import PortalVue from 'portal-vue';
 import Vue from 'vue';
-import App from './app/App'
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
+import App from './app/App';
 import router from './router.js';
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import PortalVue from 'portal-vue'
 
 window.Vue = Vue;
 Vue.config.devtools = true;

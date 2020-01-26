@@ -2033,6 +2033,20 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2092,6 +2106,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+Vue.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["FormPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   data: function data() {
@@ -2104,14 +2120,14 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     login: function login() {
       var app = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/login/', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/login/", {
         email: "ross@rossmail.com",
         password: "testtest"
       }).then(function (response) {
         console.log(response);
         app.name = response.data.name;
         app.email = response.data.email;
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem("token", response.data.token);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2160,10 +2176,10 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.token = localStorage.getItem('token');
+    this.token = localStorage.getItem("token");
 
     if (this.token !== null) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/products/', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products/", {
         headers: {
           Authorization: "Bearer " + this.token
         }
@@ -56735,37 +56751,143 @@ var render = function() {
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-header" }, [_vm._v("Login")]),
     _vm._v(" "),
-    _c("div", { staticClass: "card-body" }, [
-      _c("div", { staticClass: "form-group row mb-0" }, [
-        _c("div", { staticClass: "col-md-8 offset-md-4" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              attrs: { type: "submit" },
-              on: {
-                click: function($event) {
-                  return _vm.login()
-                }
-              }
-            },
-            [
-              _vm._v(
-                "\n                               Login\n                            "
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _vm.message
-            ? _c(
-                "span",
-                { staticClass: "invalid-feedback", attrs: { role: "alert" } },
-                [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-              )
-            : _vm._e()
-        ])
-      ])
-    ])
+    _c(
+      "div",
+      {
+        staticClass: "card-body",
+        on: {
+          submit: function($event) {
+            return _vm.login()
+          }
+        }
+      },
+      [
+        _c(
+          "b-form",
+          [
+            _c("b-form-group", [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "email" }
+                },
+                [_vm._v("Email Address")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  staticClass:
+                    "form-control @error('email') is-invalid @enderror",
+                  attrs: {
+                    id: "email",
+                    type: "email",
+                    name: "email",
+                    value: "",
+                    required: "",
+                    autocomplete: "email",
+                    autofocus: ""
+                  }
+                }),
+                _vm._v(" "),
+                _vm.message
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                    )
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-md-4 col-form-label text-md-right",
+                  attrs: { for: "password" }
+                },
+                [_vm._v("Password")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: {
+                    id: "password",
+                    type: "password",
+                    name: "password",
+                    required: "",
+                    autocomplete: "current-password"
+                  }
+                }),
+                _vm._v(" "),
+                _vm.message
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                    )
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group row" }, [
+              _c("div", { staticClass: "col-md-6 offset-md-4" }, [
+                _c("div", { staticClass: "form-check" }, [
+                  _c("input", {
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "checkbox",
+                      name: "remember",
+                      id: "remember"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "remember" }
+                    },
+                    [_vm._v("Remember Me")]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group row mb-0" }, [
+              _c("div", { staticClass: "col-md-8 offset-md-4" }, [
+                _c(
+                  "button",
+                  { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+                  [_vm._v("Login")]
+                ),
+                _vm._v(" "),
+                _vm.message
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                    )
+                  : _vm._e()
+              ])
+            ])
+          ],
+          1
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -71917,14 +72039,14 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _app_App__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app/App */ "./resources/js/app/App.vue");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./router.js */ "./resources/js/router.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
-/* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! portal-vue */ "./node_modules/portal-vue/dist/portal-vue.common.js");
-/* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(portal_vue__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+/* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! portal-vue */ "./node_modules/portal-vue/dist/portal-vue.common.js");
+/* harmony import */ var portal_vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(portal_vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _app_App__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app/App */ "./resources/js/app/App.vue");
+/* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./router.js */ "./resources/js/router.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import Vue from 'vue';
 // require('vue')
 // import './newBootVars'
@@ -71936,18 +72058,18 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import
 
 
 
-window.Vue = vue__WEBPACK_IMPORTED_MODULE_0___default.a;
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.devtools = true;
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_5___default.a); // Install BootstrapVue
+window.Vue = vue__WEBPACK_IMPORTED_MODULE_2___default.a;
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.config.devtools = true;
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_1___default.a); // Install BootstrapVue
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["BootstrapVue"]); // Optionally install the BootstrapVue icon components plugin
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BootstrapVue"]); // Optionally install the BootstrapVue icon components plugin
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["IconsPlugin"]);
-new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-  router: _router_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["IconsPlugin"]);
+new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
+  router: _router_js__WEBPACK_IMPORTED_MODULE_5__["default"],
   render: function render(h) {
-    return h(_app_App__WEBPACK_IMPORTED_MODULE_1__["default"]);
+    return h(_app_App__WEBPACK_IMPORTED_MODULE_4__["default"]);
   }
 }).$mount('#app');
 
