@@ -1,57 +1,41 @@
 <template>
-  <div class="card">
-    <div class="card-header">Login</div>
-    <div class="card-body" @submit="login()">
+  <div class='card'>
+    <div class='card-header'>Login</div>
+    <div class='card-body'>
       <b-form>
-        <b-form-group>
-          <label for="email" class="col-md-4 col-form-label text-md-right">Email Address</label>
-          <div class="col-md-6">
-            <input
-              id="email"
-              type="email"
-              class="form-control @error('email') is-invalid @enderror"
-              name="email"
-              value
-              required
-              autocomplete="email"
-              autofocus
-            />
-            <span class="invalid-feedback" role="alert" v-if="message">
+        <b-form-group class='form-group row'>
+          <label for='email' class='col-md-4 col-form-label text-md-right'>Email Address</label>
+          <div class='col-md-6'>
+            <b-form-input id='email' type='email' class='form-control' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
+            <span class='invalid-feedback' role='alert' v-if='message'>
               <strong>{{ message }}</strong>
             </span>
           </div>
         </b-form-group>
 
-        <div class="form-group row">
-          <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-          <div class="col-md-6">
-            <input
-              id="password"
-              type="password"
-              class="form-control"
-              name="password"
-              required
-              autocomplete="current-password"
-            />
-            <span class="invalid-feedback" role="alert" v-if="message">
+        <b-form-group class='form-group row'>
+          <label for='password' class='col-md-4 col-form-label text-md-right'>Password</label>
+          <div class='col-md-6'>
+            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' />
+            <span class='invalid-feedback' role='alert' v-if='message'>
               <strong>{{ message }}</strong>
             </span>
           </div>
-        </div>
+        </b-form-group>
 
-        <div class="form-group row">
-          <div class="col-md-6 offset-md-4">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="remember" id="remember" />
-              <label class="form-check-label" for="remember">Remember Me</label>
+        <div class='form-group row'>
+          <div class='col-md-6 offset-md-4'>
+            <div class='form-check'>
+              <input class='form-check-input' type='checkbox' name='remember' id='remember' />
+              <label class='form-check-label' for='remember'>Remember Me</label>
             </div>
           </div>
         </div>
 
-        <div class="form-group row mb-0">
-          <div class="col-md-8 offset-md-4">
-            <button type="submit" class="btn btn-primary">Login</button>
-            <span class="invalid-feedback" role="alert" v-if="message">
+        <div class='form-group row mb-0'>
+          <div class='col-md-8 offset-md-4'>
+            <b-button v-on:click='login()' class='btn btn-primary'>Login</b-button>
+            <span class='invalid-feedback' role='alert' v-if='message'>
               <strong>{{ message }}</strong>
             </span>
             <!--                                
@@ -71,7 +55,9 @@
 
 <script>
 import axios from "axios";
-import { FormPlugin } from "bootstrap-vue";
+import { FormPlugin, ButtonPlugin } from "bootstrap-vue";
+import Vue from "vue";
+Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 export default {
   name: "Login",
@@ -79,16 +65,18 @@ export default {
     return {
       name: "",
       email: "",
+      password: "",
       message: null
     };
   },
   methods: {
     login() {
+      console.log("test");
       let app = this;
       axios
-        .post("/api/login/", {
-          email: "ross@rossmail.com",
-          password: "testtest"
+        .post("/api/login", {
+          email: app.email,
+          password: app.password
         })
         .then(function(response) {
           console.log(response);
@@ -97,7 +85,7 @@ export default {
           localStorage.setItem("token", response.data.token);
         })
         .catch(function(error) {
-          console.log(error);
+          app.message = error;
         });
     }
   },

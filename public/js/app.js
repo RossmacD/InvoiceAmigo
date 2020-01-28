@@ -2034,22 +2034,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -2107,29 +2093,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
-Vue.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["FormPlugin"]);
+
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["ButtonPlugin"]);
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["FormPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   data: function data() {
     return {
       name: "",
       email: "",
+      password: "",
       message: null
     };
   },
   methods: {
     login: function login() {
+      console.log("test");
       var app = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/login/", {
-        email: "ross@rossmail.com",
-        password: "testtest"
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/login", {
+        email: app.email,
+        password: app.password
       }).then(function (response) {
         console.log(response);
         app.name = response.data.name;
         app.email = response.data.email;
         localStorage.setItem("token", response.data.token);
       })["catch"](function (error) {
-        console.log(error);
+        app.message = error;
       });
     }
   },
@@ -56753,19 +56743,12 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      {
-        staticClass: "card-body",
-        on: {
-          submit: function($event) {
-            return _vm.login()
-          }
-        }
-      },
+      { staticClass: "card-body" },
       [
         _c(
           "b-form",
           [
-            _c("b-form-group", [
+            _c("b-form-group", { staticClass: "form-group row" }, [
               _c(
                 "label",
                 {
@@ -56775,35 +56758,45 @@ var render = function() {
                 [_vm._v("Email Address")]
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  staticClass:
-                    "form-control @error('email') is-invalid @enderror",
-                  attrs: {
-                    id: "email",
-                    type: "email",
-                    name: "email",
-                    value: "",
-                    required: "",
-                    autocomplete: "email",
-                    autofocus: ""
-                  }
-                }),
-                _vm._v(" "),
-                _vm.message
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
+              _c(
+                "div",
+                { staticClass: "col-md-6" },
+                [
+                  _c("b-form-input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "email",
+                      type: "email",
+                      name: "email",
+                      required: "",
+                      autocomplete: "email",
+                      autofocus: ""
+                    },
+                    model: {
+                      value: _vm.email,
+                      callback: function($$v) {
+                        _vm.email = $$v
                       },
-                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-                    )
-                  : _vm._e()
-              ])
+                      expression: "email"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.message
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                      )
+                    : _vm._e()
+                ],
+                1
+              )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group row" }, [
+            _c("b-form-group", { staticClass: "form-group row" }, [
               _c(
                 "label",
                 {
@@ -56813,29 +56806,41 @@ var render = function() {
                 [_vm._v("Password")]
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    id: "password",
-                    type: "password",
-                    name: "password",
-                    required: "",
-                    autocomplete: "current-password"
-                  }
-                }),
-                _vm._v(" "),
-                _vm.message
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
+              _c(
+                "div",
+                { staticClass: "col-md-6" },
+                [
+                  _c("b-form-input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "password",
+                      type: "password",
+                      name: "password",
+                      required: "",
+                      autocomplete: "current-password"
+                    },
+                    model: {
+                      value: _vm.password,
+                      callback: function($$v) {
+                        _vm.password = $$v
                       },
-                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-                    )
-                  : _vm._e()
-              ])
+                      expression: "password"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.message
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                      )
+                    : _vm._e()
+                ],
+                1
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group row" }, [
@@ -56863,24 +56868,36 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group row mb-0" }, [
-              _c("div", { staticClass: "col-md-8 offset-md-4" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-                  [_vm._v("Login")]
-                ),
-                _vm._v(" "),
-                _vm.message
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "invalid-feedback",
-                        attrs: { role: "alert" }
-                      },
-                      [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-                    )
-                  : _vm._e()
-              ])
+              _c(
+                "div",
+                { staticClass: "col-md-8 offset-md-4" },
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "btn btn-primary",
+                      on: {
+                        click: function($event) {
+                          return _vm.login()
+                        }
+                      }
+                    },
+                    [_vm._v("Login")]
+                  ),
+                  _vm._v(" "),
+                  _vm.message
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "invalid-feedback",
+                          attrs: { role: "alert" }
+                        },
+                        [_c("strong", [_vm._v(_vm._s(_vm.message))])]
+                      )
+                    : _vm._e()
+                ],
+                1
+              )
             ])
           ],
           1
@@ -72071,7 +72088,7 @@ new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
   render: function render(h) {
     return h(_app_App__WEBPACK_IMPORTED_MODULE_4__["default"]);
   }
-}).$mount('#app');
+}).$mount("#app");
 
 /***/ }),
 
@@ -72170,7 +72187,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
  */
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -72410,17 +72427,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [{
-  path: '/',
-  name: 'login',
+  path: "/",
+  name: "login",
   component: _pages_auth_Login__WEBPACK_IMPORTED_MODULE_1__["default"]
 }, {
-  path: '/products',
-  name: 'product',
+  path: "/products",
+  name: "product",
   component: _pages_products_ProductIndex__WEBPACK_IMPORTED_MODULE_2__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   history: true,
-  mode: 'history',
+  mode: "history",
   routes: routes
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
