@@ -21,9 +21,12 @@ class ProductController extends Controller
         $user=Auth::user();
         $products=$user->products()->orderBy('created_at','desc')->paginate(10);
 
-        return view('products.index', [
-            'products'=>$products,
-            ]);
+        return response()->json(
+            [
+                'products'=>$products,
+            ]
+            ,200
+        );
     }
 
     /**
@@ -31,10 +34,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('products.create');
-    }
+    // public function create()
+    // {
+    //     return response()->json(200);
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -48,7 +51,6 @@ class ProductController extends Controller
     $rules = [
         'product_name' => 'required|string',
         'product_description' => 'required|string',
-        'product_quantity'=> 'nullable|numeric',
         'product_cost' => 'required|numeric',
     ];
     //custom validation error messages
@@ -65,9 +67,7 @@ class ProductController extends Controller
     $product->user_id=Auth::id();
     $product->save(); // save it to the database.
     //Redirect to a specified route with flash message.
-    return redirect()
-        ->route('products.index')
-        ->with('status','Created a new product!');
+    return response()->json(200);
     }
 
     /**
@@ -79,9 +79,17 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        return view('products.show',[
+        return response()->json([
             'product'=>$product
-            ]);
+        ]
+        ,200
+        );
+        return response()->json(
+            [
+            'product'=>$product
+            ]
+        ,200
+        );
     }
 
     /**
@@ -93,9 +101,12 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        return view('products.edit',[
+        return response()->json(
+            [
             'product'=>$product
-            ]);
+            ]
+            ,200
+        );
     }
 
     /**
@@ -124,10 +135,13 @@ class ProductController extends Controller
         $product->product_description = $request->product_description;
         $product->product_cost = $request->product_cost;
         $product->save(); // save it to the database.
-        //Redirect to a specified route with flash message.
-        return redirect()
-            ->route('products.show',$id)
-            ->with('status','Updated the product!');
+
+        //Return success response with product id 
+        return response()->json(
+            [
+                'id'=>$id
+            ],200
+        );
     }
 
     /**
@@ -140,8 +154,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect()
-            ->route('products.index')
-            ->with('status','Deleted the selected product');
+        return response()->json(200);
+
     }
 }

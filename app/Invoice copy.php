@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Invoice extends Model
 {
     //Set default values
     protected $attributes = [
-        // 'user_id' => 0,
-    ];
+        'client_id' => 0,
+        'status' =>'unseen',
+        'currency' => 'eur',
+     ];
 }
