@@ -1,6 +1,6 @@
 <template>
   <div class='card'>
-    <div class='card-header'>Login</div>
+    <div class='card-header'>Login update</div>
     <div class='card-body'>
       <b-form>
         <b-form-group class='form-group row'>
