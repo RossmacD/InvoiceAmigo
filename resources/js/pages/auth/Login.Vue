@@ -7,9 +7,9 @@
           <label for='email' class='col-md-4 col-form-label text-md-right'>Email Address</label>
           <div class='col-md-6'>
             <b-form-input id='email' type='email' class='form-control' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
-            <span class='invalid-feedback' role='alert' v-if='message'>
+            <!-- <span class='invalid-feedback' role='alert' v-if='message'>
               <strong>{{ message }}</strong>
-            </span>
+            </span>-->
           </div>
         </b-form-group>
 
@@ -17,9 +17,7 @@
           <label for='password' class='col-md-4 col-form-label text-md-right'>Password</label>
           <div class='col-md-6'>
             <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' />
-            <span class='invalid-feedback' role='alert' v-if='message'>
-              <strong>{{ message }}</strong>
-            </span>
+            <b-form-invalid-feedback force-show>{{message}}</b-form-invalid-feedback>
           </div>
         </b-form-group>
 
@@ -66,7 +64,7 @@ export default {
       name: "",
       email: "",
       password: "",
-      message: null
+      message: ""
     };
   },
   methods: {
@@ -85,7 +83,8 @@ export default {
           localStorage.setItem("token", response.data.token);
         })
         .catch(function(error) {
-          app.message = error;
+          console.log(error.response.data.error);
+          app.message = error.response.data.error;
         });
     }
   },

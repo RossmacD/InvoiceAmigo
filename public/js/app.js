@@ -2089,8 +2089,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 
@@ -2103,7 +2101,7 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       name: "",
       email: "",
       password: "",
-      message: null
+      message: ""
     };
   },
   methods: {
@@ -2119,7 +2117,8 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
         app.email = response.data.email;
         localStorage.setItem("token", response.data.token);
       })["catch"](function (error) {
-        app.message = error;
+        console.log(error.response.data.error);
+        app.message = error.response.data.error;
       });
     }
   },
@@ -56779,18 +56778,7 @@ var render = function() {
                       },
                       expression: "email"
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.message
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "invalid-feedback",
-                          attrs: { role: "alert" }
-                        },
-                        [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-                      )
-                    : _vm._e()
+                  })
                 ],
                 1
               )
@@ -56828,16 +56816,11 @@ var render = function() {
                     }
                   }),
                   _vm._v(" "),
-                  _vm.message
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "invalid-feedback",
-                          attrs: { role: "alert" }
-                        },
-                        [_c("strong", [_vm._v(_vm._s(_vm.message))])]
-                      )
-                    : _vm._e()
+                  _c(
+                    "b-form-invalid-feedback",
+                    { attrs: { "force-show": "" } },
+                    [_vm._v(_vm._s(_vm.message))]
+                  )
                 ],
                 1
               )
