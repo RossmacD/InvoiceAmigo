@@ -1988,6 +1988,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -56722,7 +56725,16 @@ var render = function() {
     "b-navbar",
     { attrs: { toggleable: "md", type: "dark", variant: "dark" } },
     [
-      _c("b-navbar-brand", { attrs: { to: "/" } }, [_vm._v("InvoiceAmigo")]),
+      _c("b-navbar-brand", { attrs: { to: "/" } }, [
+        _c("img", {
+          staticClass: "d-inline-block align-top",
+          attrs: {
+            src: "/img/brand/navLogoInverted.png",
+            height: "45",
+            alt: "InvoiceAmigo"
+          }
+        })
+      ]),
       _vm._v(" "),
       _c("b-navbar-toggle", { attrs: { target: "navbarCollapse" } }),
       _vm._v(" "),

@@ -2,7 +2,10 @@
   <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <router-link class="navbar-brand" to="/example">Laravel/Vue</router-link>-->
   <b-navbar toggleable='md' type='dark' variant='dark'>
-    <b-navbar-brand to='/'>InvoiceAmigo</b-navbar-brand>
+    <b-navbar-brand to='/'>
+      <img src='/img/brand/navLogoInverted.png' height='45' class='d-inline-block align-top' alt='InvoiceAmigo' />
+      <!-- InvoiceAmigo -->
+    </b-navbar-brand>
     <b-navbar-toggle target='navbarCollapse'></b-navbar-toggle>
     <b-navbar-nav class='ml-auto'>
       <b-collapse id='navbarCollapse' is-nav>
