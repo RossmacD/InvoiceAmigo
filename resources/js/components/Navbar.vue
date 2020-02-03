@@ -6,9 +6,10 @@
     <b-navbar-toggle target='navbarCollapse'></b-navbar-toggle>
     <b-navbar-nav class='ml-auto'>
       <b-collapse id='navbarCollapse' is-nav>
-        <b-nav-item active to='/products' v-if='token'>Products</b-nav-item>
-        <b-nav-item active @click='logout()' v-if='token'>Log Out</b-nav-item>
-
+        <!-- Show when logged in -->
+        <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
+        <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
+        <!-- Show when not logged in -->
         <b-nav-item active to='/login' v-else>Login</b-nav-item>
       </b-collapse>
     </b-navbar-nav>
@@ -18,41 +19,28 @@
 <script>
 import Vue from "vue";
 import { ButtonPlugin, NavPlugin, NavbarPlugin } from "bootstrap-vue";
+import { mapGetters, mapState } from "vuex";
+import { AUTH_LOGOUT } from "../store/actions/auth";
+
 // Install BootstrapVue
 Vue.use(ButtonPlugin);
 Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
+
 export default {
-  data() {
-    return {
-      token: localStorage.getItem("token")
-    };
-  },
   methods: {
     logout() {
-      this.token = localStorage.getItem("token");
-      let app = this;
-      axios
-        .get("/api/logout", {
-          headers: {
-            Authorization: "Bearer " + this.token
-          }
-        })
-        .then(response => {
-          console.log(response);
-          localStorage.removeItem("token");
-          this.token = null;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      this.$store.dispatch(AUTH_LOGOUT).then(() => {
+        this.$router.push("/login");
+      });
     }
   },
-  updated() {
-    this.token = localStorage.getItem("token");
-  },
-  mounted() {
-    this.token = localStorage.getItem("token");
+  computed: {
+    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
+    ...mapState({
+      authLoading: state => state.auth.status === "loading",
+      name: state => `${state.user.profile.title} ${state.user.profile.name}`
+    })
   }
 };
 </script>

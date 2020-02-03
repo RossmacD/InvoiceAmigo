@@ -17,7 +17,7 @@
         <b-form-group class='form-group row'>
           <label for='password' class='col-md-4 col-form-label'>Password</label>
           <div class='col-md-6'>
-            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' />
+            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native="login()"/>
             <b-form-invalid-feedback force-show v-if='message.password'>{{message.password[0]}}</b-form-invalid-feedback>
           </div>
         </b-form-group>
@@ -55,6 +55,8 @@ import { FormPlugin, ButtonPlugin } from "bootstrap-vue";
 import Vue from "vue";
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
+import { AUTH_REQUEST } from "../../store/actions/auth";
+
 export default {
   name: "Login",
   data() {
@@ -71,28 +73,12 @@ export default {
   },
   methods: {
     login() {
-      console.log("test");
-      let app = this;
-      axios
-        .post("/api/login", {
-          email: app.email,
-          password: app.password
-        })
-        .then(response => {
-          console.log(response);
-          app.name = response.data.name;
-          app.email = response.data.email;
-          localStorage.setItem("token", response.data.token);
-        })
-        .catch(error => {
-          if (error.response.data.messages !== null) {
-            app.message = error.response.data.messages;
-          } else {
-            app.message = error.response.data.error;
-          }
+      this.$store
+        .dispatch(AUTH_REQUEST, { email: this.email, password: this.password })
+        .then(() => {
+          this.$router.push("/");
         });
     }
-  },
-  mounted() {}
+  }
 };
 </script>
