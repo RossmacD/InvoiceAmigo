@@ -1931,20 +1931,19 @@ __webpack_require__.r(__webpack_exports__);
     Navbar: _components_Navbar_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   created: function created() {
-    if (!!localStorage.getItem('token')) {
+    if (!!localStorage.getItem("token")) {
       this.$store.dispatch(_store_actions_user__WEBPACK_IMPORTED_MODULE_2__["USER_REQUEST"]);
-    }
+    } // axios.interceptors.response.use(undefined, function(err) {
+    //   return new Promise(function(resolve, reject) {
+    //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+    //       // if you ever get an unauthorized, logout the user
+    //       this.$store.dispatch(AUTH_LOGOUT);
+    //       // you can also redirect to /login if needed !
+    //     }
+    //     throw err;
+    //   });
+    // });
 
-    axios.interceptors.response.use(undefined, function (err) {
-      return new Promise(function (resolve, reject) {
-        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          // if you ever get an unauthorized, logout the user
-          this.$store.dispatch(AUTH_LOGOUT); // you can also redirect to /login if needed !
-        }
-
-        throw err;
-      });
-    });
   }
 });
 
@@ -73837,6 +73836,7 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
       var token = resp.data.token;
       localStorage.setItem('token', token); // store the token in localstorage
 
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common['Authorization'] = "Bearer " + token;
       commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_SUCCESS"], token); // you have your token, now log in your user :)
 
       dispatch(_actions_user__WEBPACK_IMPORTED_MODULE_2__["USER_REQUEST"]);
@@ -73858,9 +73858,10 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
     }).then(function (resp) {
       commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"]);
       localStorage.removeItem('token'); // clear your user's token from localstorage
+
+      resolve();
     })["catch"](function (err) {
-      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], err);
-      localStorage.removeItem('token'); // if the request fails, remove any possible user token if possible
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], err); // localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
 
       reject(err);
     });

@@ -20,6 +20,7 @@ const actions = {
                 .then(resp => {
                     const token = resp.data.token
                     localStorage.setItem('token', token) // store the token in localstorage
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + token;
                     commit(AUTH_SUCCESS, token)
                     // you have your token, now log in your user :)
                     dispatch(USER_REQUEST)
@@ -35,15 +36,16 @@ const actions = {
         return new Promise((resolve, reject) => {
             axios({ url: 'api/logout', method: 'GET' })
                 .then(resp => {
-                     commit(AUTH_LOGOUT)
+                    commit(AUTH_LOGOUT)
                     localStorage.removeItem('token') // clear your user's token from localstorage
+                    resolve()
                 })
                 .catch(err => {
                     commit(AUTH_ERROR, err)
-                    localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
+                    // localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
                     reject(err)
                 })
-           
+
             resolve()
         })
     }
