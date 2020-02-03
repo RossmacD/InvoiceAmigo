@@ -3,18 +3,15 @@
     <div class='card-header'>Login</div>
     <div class='card-body'>
       <b-form>
-        <b-form-group class='form-group row'>
-          <label for='email' class='col-md-4 col-form-label'>Email Address</label>
-          <div class='col-md-6'>
-            <b-form-input id='email' type='email' class='form-control' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
-            <b-form-invalid-feedback v-if='message.email' force-show>{{message.email[0]}}</b-form-invalid-feedback>
-            <!-- <span class='invalid-feedback' role='alert' v-if='message'>
+        <b-form-group label='Email Address' label-for='email' :state='state'>
+          <b-form-input id='email' type='email' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
+          <b-form-invalid-feedback v-if='message.email' force-show>{{message.email[0]}}</b-form-invalid-feedback>
+          <!-- <span class='invalid-feedback' role='alert' v-if='message'>
               <strong>{{ message }}</strong>
-            </span>-->
-          </div>
+          </span>-->
         </b-form-group>
 
-        <b-form-group class='form-group row'>
+        <b-form-group>
           <label for='password' class='col-md-4 col-form-label'>Password</label>
           <div class='col-md-6'>
             <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
@@ -22,16 +19,16 @@
           </div>
         </b-form-group>
 
-        <div class='form-group row'>
+        <b-form-group>
           <div class='col-md-4'>
             <div class='form-check'>
               <input class='form-check-input' type='checkbox' name='remember' id='remember' />
               <label class='form-check-label' for='remember'>Remember Me</label>
             </div>
           </div>
-        </div>
+        </b-form-group>
 
-        <div class='form-group row mb-0'>
+        <b-form-group class='mb-0'>
           <div class='col-md-4'>
             <b-button v-on:click='login()' class='btn btn-primary' v-if='!authLoading'>Login</b-button>
             <b-button v-else class='btn btn-info'>
@@ -42,7 +39,7 @@
                                     Forgot your password
             </a>-->
           </div>
-        </div>
+        </b-form-group>
 
         <!-- <div class="col-md-8 col-md-offset-4">
                             <a href="{{url('/redirect')}}" class="btn btn-primary">Login with Google</a>
@@ -92,6 +89,9 @@ export default {
     ...mapState({
       authLoading: state => state.auth.status === "loading"
     })
+  },
+  state() {
+    return !!this.message.email;
   }
 };
 </script>
