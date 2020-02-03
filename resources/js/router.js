@@ -3,6 +3,7 @@ import Login from "./pages/auth/Login";
 import Home from "./pages/HomePage";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import ProductIndex from "./pages/products/ProductIndex";
+import ProductCreate from "./pages/products/ProductsCreate.vue";
 import store from "./store";
 
 //Middleware
@@ -39,6 +40,12 @@ const routes = [
         path: "/products",
         name: "product",
         component: ProductIndex,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/products/create",
+        name: "productcreate",
+        component: ProductCreate,
         beforeEnter: onlyLoggedIn
     },
     {

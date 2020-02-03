@@ -3,7 +3,7 @@
     <div class='card-header'>Login</div>
     <div class='card-body'>
       <b-form>
-        <b-form-group label='Email Address' label-for='email' :state='state'>
+        <b-form-group label='Email Address' label-for='email'>
           <b-form-input id='email' type='email' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
           <b-form-invalid-feedback v-if='message.email' force-show>{{message.email[0]}}</b-form-invalid-feedback>
           <!-- <span class='invalid-feedback' role='alert' v-if='message'>
@@ -89,9 +89,6 @@ export default {
     ...mapState({
       authLoading: state => state.auth.status === "loading"
     })
-  },
-  state() {
-    return !!this.message.email;
   }
 };
 </script>
