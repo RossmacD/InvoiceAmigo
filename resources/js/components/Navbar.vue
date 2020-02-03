@@ -10,7 +10,7 @@
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
         <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
         <!-- Show when not logged in -->
-        <b-nav-item active to='/login' v-else>Login</b-nav-item>
+        <b-nav-item class='btn btn-success text-dark' active to='/login' v-else>Login</b-nav-item>
       </b-collapse>
     </b-navbar-nav>
   </b-navbar>

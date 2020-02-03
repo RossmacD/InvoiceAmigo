@@ -56753,9 +56753,14 @@ var render = function() {
                     },
                     [_vm._v("Log Out")]
                   )
-                : _c("b-nav-item", { attrs: { active: "", to: "/login" } }, [
-                    _vm._v("Login")
-                  ])
+                : _c(
+                    "b-nav-item",
+                    {
+                      staticClass: "btn btn-success text-dark",
+                      attrs: { active: "", to: "/login" }
+                    },
+                    [_vm._v("Login")]
+                  )
             ],
             1
           )
