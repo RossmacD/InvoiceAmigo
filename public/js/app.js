@@ -2171,6 +2171,13 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+//
+//
+//
+//
 //
 //
 //
@@ -2189,6 +2196,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["SpinnerPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -57045,7 +57055,18 @@ var render = function() {
           }),
           0
         )
-      : _vm._e()
+      : _c(
+          "div",
+          { staticClass: "mt-5 text-center" },
+          [
+            _c("b-spinner", {
+              attrs: { variant: "secondary", label: "Loading..." }
+            }),
+            _vm._v(" "),
+            _c("h4", [_vm._v("Loading...")])
+          ],
+          1
+        )
   ])
 }
 var staticRenderFns = []

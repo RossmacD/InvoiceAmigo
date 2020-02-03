@@ -11,12 +11,19 @@
         <a href="{{route('products.show',$product->id)}}">View Details</a>-->
       </li>
     </ul>
+    <div v-else class='mt-5 text-center'>
+      <b-spinner variant='secondary' label='Loading...'></b-spinner>
+      <h4>Loading...</h4>
+    </div>
   </div>
 </template>
 
 
 <script>
 import axios from "axios";
+import Vue from "vue";
+import { SpinnerPlugin } from "bootstrap-vue";
+Vue.use(SpinnerPlugin);
 export default {
   data() {
     return {
