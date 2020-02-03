@@ -1,27 +1,19 @@
 <template>
-  <div class='card'>
-    <div class='card-header'>Customers:</div>
-    <div class='card-body' v-for='customer in customers' v-bind:key='customer'>
-      <h4>Name</h4>
-      {{ customer.first_name }} {{ customer.last_name }}
-      <h4>Email</h4>
-      {{ customer.email }}
-    </div>
+  <div>
+    <h1>Home page</h1>
+    <h2 v-if='isProfileLoaded'>Welcome back, {{name}}!</h2>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapState } from "vuex";
 export default {
-  data() {
-    return {
-      customers: null
-    };
-  },
-  mounted() {
-    axios
-      .get("http://localhost:8000/api/customer/")
-      .then(response => (this.customers = response.data.data));
+  computed: {
+    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
+    ...mapState({
+      authLoading: state => state.auth.status === "loading",
+      name: state => `${state.user.profile.name}`
+    })
   }
 };
 </script>
