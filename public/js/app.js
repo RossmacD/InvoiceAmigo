@@ -2276,8 +2276,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
     if (this.token !== null) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoices/").then(function (response) {
-        _this.invoices = response.data.invoices.data;
-        if (!!_this.invoices) _this.invoices.empty = true;
+        _this.invoices = response.data.invoices.data; // if (!!this.invoices) this.invoices.empty = true;
       })["catch"](function (err) {
         console.log(err);
       });
@@ -2351,7 +2350,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
     if (this.token !== null) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products/").then(function (response) {
-        _this.products = response.data.products.data; //if (!!this.products) this.products.empty = true;
+        _this.products = response.data.products.data;
       })["catch"](function (err) {});
     }
   }
@@ -57327,7 +57326,7 @@ var render = function() {
             ],
             1
           )
-        : _vm.invoices.empty
+        : _vm.invoices.length === 0
         ? _c("EmptyIndex", { attrs: { indexType: "invoice" } })
         : _c(
             "ul",
@@ -57397,7 +57396,7 @@ var render = function() {
             ],
             1
           )
-        : _vm.products.empty
+        : _vm.products.length === 0
         ? _c("EmptyIndex", { attrs: { indexType: "product" } })
         : _c(
             "ul",

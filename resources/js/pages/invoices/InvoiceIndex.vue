@@ -10,7 +10,7 @@
       <h3 class='text-center mt-5'>You have no invoices 😢</h3>
       <b-button class='mt-1' variant='success'>+ Add New Invoice</b-button>
     </div>-->
-    <EmptyIndex indexType='invoice' v-else-if='invoices.empty'></EmptyIndex>
+    <EmptyIndex indexType='invoice' v-else-if='invoices.length===0'></EmptyIndex>
     <ul class='list-group py-3 mb-3' v-else>
       <li class='list-group-item my-2' v-for='invoice in invoices' v-bind:key='invoice.id'>
         <h5>{{ invoice.invoice_name }}</h5>
@@ -50,7 +50,7 @@ export default {
         .get("/api/invoices/")
         .then(response => {
           this.invoices = response.data.invoices.data;
-          if (!!this.invoices) this.invoices.empty = true;
+          // if (!!this.invoices) this.invoices.empty = true;
         })
         .catch(err => {
           console.log(err);

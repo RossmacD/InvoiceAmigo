@@ -9,7 +9,7 @@
       <b-spinner variant='secondary' label='Loading...'></b-spinner>
       <h4>Loading...</h4>
     </div>
-    <EmptyIndex indexType='product' v-else-if='products.empty'></EmptyIndex>
+    <EmptyIndex indexType='product' v-else-if='products.length===0'></EmptyIndex>
     <ul class='list-group py-3 mb-3' v-else>
       <li class='list-group-item my-2' v-for='product in products' v-bind:key='product.id'>
         <h5>{{ product.product_name }}</h5>
@@ -47,7 +47,6 @@ export default {
         .get("/api/products/")
         .then(response => {
           this.products = response.data.products.data;
-          //if (!!this.products) this.products.empty = true;
         })
         .catch(err => {});
     }
