@@ -17,7 +17,7 @@
         <b-form-group class='form-group row'>
           <label for='password' class='col-md-4 col-form-label'>Password</label>
           <div class='col-md-6'>
-            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native="login()"/>
+            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
             <b-form-invalid-feedback force-show v-if='message.password'>{{message.password[0]}}</b-form-invalid-feedback>
           </div>
         </b-form-group>
@@ -33,8 +33,10 @@
 
         <div class='form-group row mb-0'>
           <div class='col-md-4'>
-            <b-button v-on:click='login()' class='btn btn-primary'>Login</b-button>
-
+            <b-button v-on:click='login()' class='btn btn-primary' v-if='!authLoading'>Login</b-button>
+            <b-button v-else class='btn btn-info'>
+              <b-spinner small label='Loading...'></b-spinner>
+            </b-button>
             <!--                                
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot your password
@@ -51,11 +53,13 @@
 </template>
 <script>
 import axios from "axios";
-import { FormPlugin, ButtonPlugin } from "bootstrap-vue";
+import { FormPlugin, ButtonPlugin, SpinnerPlugin } from "bootstrap-vue";
 import Vue from "vue";
+import { mapGetters, mapState } from "vuex";
+import { AUTH_REQUEST } from "../../store/actions/auth";
+Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
-import { AUTH_REQUEST } from "../../store/actions/auth";
 
 export default {
   name: "Login",
@@ -77,8 +81,17 @@ export default {
         .dispatch(AUTH_REQUEST, { email: this.email, password: this.password })
         .then(() => {
           this.$router.push("/");
+        })
+        .catch(e => {
+          this.message = e.data.messages;
         });
     }
+  },
+  computed: {
+    ...mapGetters(["isProfileLoaded"]),
+    ...mapState({
+      authLoading: state => state.auth.status === "loading"
+    })
   }
 };
 </script>

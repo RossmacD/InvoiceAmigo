@@ -10,6 +10,7 @@
     <b-navbar-nav class='ml-auto'>
       <b-collapse id='navbarCollapse' is-nav>
         <!-- Show when logged in -->
+        <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
         <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
         <!-- Show when not logged in -->
@@ -33,9 +34,12 @@ Vue.use(NavbarPlugin);
 export default {
   methods: {
     logout() {
-      this.$store.dispatch(AUTH_LOGOUT).then(() => {
-        this.$router.push("/login");
-      });
+      this.$store
+        .dispatch(AUTH_LOGOUT)
+        .then(() => {
+          this.$router.push("/login");
+        })
+        .catch(e => {});
     }
   },
   computed: {

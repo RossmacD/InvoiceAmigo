@@ -1,8 +1,8 @@
 <template>
-<div>
-  <h1>Home page</h1>
-  <h2 v-if="isProfileLoaded"> Welcome back {{name}}</h2>
-</div>
+  <div>
+    <h1>Home page</h1>
+    <h2 v-if='isProfileLoaded'>Welcome back, {{name}}!</h2>
+  </div>
 </template>
 
 <script>

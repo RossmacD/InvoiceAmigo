@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class='text-center'>All Products</h2>
+    <h2 class='text-center'>Your Products</h2>
     <!-- <a href="{{route('products.create')}}" class="btn btn-primary ">New Product</a> -->
     <ul class='list-group py-3 mb-3' v-if='products'>
       <li class='list-group-item my-2' v-for='product in products' v-bind:key='product.id'>
@@ -36,7 +36,7 @@ export default {
       axios
         .get("/api/products/")
         .then(response => (this.products = response.data.products.data))
-        .catch();
+        .catch(err => {});
     }
   }
 };

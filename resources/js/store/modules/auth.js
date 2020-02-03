@@ -29,7 +29,7 @@ const actions = {
                 .catch(err => {
                     commit(AUTH_ERROR, err)
                     localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
-                    reject(err)
+                    reject(err.response)// Send back error response
                 })
         })
     }, [AUTH_LOGOUT]: ({ commit, dispatch }) => {
