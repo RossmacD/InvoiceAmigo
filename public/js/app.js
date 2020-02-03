@@ -1911,6 +1911,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Navbar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Navbar.vue */ "./resources/js/components/Navbar.vue");
+/* harmony import */ var _store_actions_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/actions/user */ "./resources/js/store/actions/user.js");
 //
 //
 //
@@ -1921,6 +1922,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1928,16 +1930,21 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Navbar: _components_Navbar_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  created: function created() {// axios.interceptors.response.use(undefined, function(err) {
-    //   return new Promise(function(resolve, reject) {
-    //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-    //       // if you ever get an unauthorized, logout the user
-    //       this.$store.dispatch(AUTH_LOGOUT);
-    //       // you can also redirect to /login if needed !
-    //     }
-    //     throw err;
-    //   });
-    // });
+  created: function created() {
+    if (!!localStorage.getItem('token')) {
+      this.$store.dispatch(_store_actions_user__WEBPACK_IMPORTED_MODULE_2__["USER_REQUEST"]);
+    }
+
+    axios.interceptors.response.use(undefined, function (err) {
+      return new Promise(function (resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          // if you ever get an unauthorized, logout the user
+          this.$store.dispatch(AUTH_LOGOUT); // you can also redirect to /login if needed !
+        }
+
+        throw err;
+      });
+    });
   }
 });
 
@@ -73233,7 +73240,7 @@ var token = {
   token: localStorage.getItem('token')
 };
 
-if (token) {
+if (!!token.token) {
   axios.defaults.headers.common['Authorization'] = "Bearer " + token.token;
 } // store.dispatch('auth/attempt', token).then(() => {
 
@@ -73802,7 +73809,6 @@ var getters = {
 var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_REQUEST"], function (_ref, user) {
   var commit = _ref.commit,
       dispatch = _ref.dispatch;
-  console.log("Hit request");
   return new Promise(function (resolve, reject) {
     // The Promise used for router redirect in login
     commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_REQUEST"]);
@@ -73829,9 +73835,18 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
   var commit = _ref2.commit,
       dispatch = _ref2.dispatch;
   return new Promise(function (resolve, reject) {
-    commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"]);
-    localStorage.removeItem('token'); // clear your user's token from localstorage
+    axios__WEBPACK_IMPORTED_MODULE_0___default()({
+      url: 'api/logout',
+      method: 'GET'
+    }).then(function (resp) {
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"]);
+      localStorage.removeItem('token'); // clear your user's token from localstorage
+    })["catch"](function (err) {
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], err);
+      localStorage.removeItem('token'); // if the request fails, remove any possible user token if possible
 
+      reject(err);
+    });
     resolve();
   });
 }), _actions);
@@ -73910,8 +73925,6 @@ var actions = _defineProperty({}, _actions_user__WEBPACK_IMPORTED_MODULE_3__["US
 var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_user__WEBPACK_IMPORTED_MODULE_3__["USER_REQUEST"], function (state) {
   state.status = "loading";
 }), _defineProperty(_mutations, _actions_user__WEBPACK_IMPORTED_MODULE_3__["USER_SUCCESS"], function (state, resp) {
-  console.log("User SUCC");
-  console.log(resp);
   state.status = "success";
   vue__WEBPACK_IMPORTED_MODULE_1___default.a.set(state, "profile", resp.data.user);
 }), _defineProperty(_mutations, _actions_user__WEBPACK_IMPORTED_MODULE_3__["USER_ERROR"], function (state) {

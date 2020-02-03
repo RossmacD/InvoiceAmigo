@@ -14,7 +14,6 @@ const getters = {
 };
 const actions = {
     [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
-        console.log("Hit request")
         return new Promise((resolve, reject) => { // The Promise used for router redirect in login
             commit(AUTH_REQUEST)
             axios({ url: 'api/login', data: user, method: 'POST' })
@@ -34,8 +33,17 @@ const actions = {
         })
     }, [AUTH_LOGOUT]: ({ commit, dispatch }) => {
         return new Promise((resolve, reject) => {
-            commit(AUTH_LOGOUT)
-            localStorage.removeItem('token') // clear your user's token from localstorage
+            axios({ url: 'api/logout', method: 'GET' })
+                .then(resp => {
+                     commit(AUTH_LOGOUT)
+                    localStorage.removeItem('token') // clear your user's token from localstorage
+                })
+                .catch(err => {
+                    commit(AUTH_ERROR, err)
+                    localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
+                    reject(err)
+                })
+           
             resolve()
         })
     }

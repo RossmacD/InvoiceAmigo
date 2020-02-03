@@ -22,8 +22,8 @@ Vue.use(IconsPlugin);
 const token = {
     token: localStorage.getItem('token')
 }
-if (token) {
-    axios.defaults.headers.common['Authorization'] = "Bearer " + token.token
+if (!!token.token) {
+    axios.defaults.headers.common['Authorization'] = "Bearer " + token.token;
 }
 
 // store.dispatch('auth/attempt', token).then(() => {
