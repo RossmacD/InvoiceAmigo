@@ -27,11 +27,7 @@ export default {
     this.token = localStorage.getItem("token");
     if (this.token !== null) {
       axios
-        .get("/api/products/", {
-          headers: {
-            Authorization: "Bearer " + this.token
-          }
-        })
+        .get("/api/products/")
         .then(response => (this.products = response.data.products.data))
         .catch();
     }

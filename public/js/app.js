@@ -2201,11 +2201,7 @@ __webpack_require__.r(__webpack_exports__);
     this.token = localStorage.getItem("token");
 
     if (this.token !== null) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products/", {
-        headers: {
-          Authorization: "Bearer " + this.token
-        }
-      }).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products/").then(function (response) {
         return _this.products = response.data.products.data;
       })["catch"]();
     }
