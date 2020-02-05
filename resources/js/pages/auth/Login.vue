@@ -3,10 +3,7 @@
     <div class='card-header'>Login</div>
     <div class='card-body'>
       <b-form>
-        <b-form-group label='Email Address' label-for='email'>
-          <b-form-input id='email' type='email' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
-          <b-form-invalid-feedback v-if='messages.email' force-show>{{messages.email[0]}}</b-form-invalid-feedback>
-        </b-form-group>
+        <EmailField v-on:email-update="getEmail" prefix="" :messages="messages.email" ></EmailField>
 
         <b-form-group label='Password' label-for='password'>
           <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
@@ -41,24 +38,32 @@ import { FormPlugin, ButtonPlugin, SpinnerPlugin } from "bootstrap-vue";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
+import EmailField from "../../components/EmailField";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 
 export default {
   name: "Login",
+  components: {
+    EmailField
+  },
   data() {
     return {
       name: "",
       email: "",
       password: "",
       messages: {
-        email: "",
-        password: ""
-      }
+        email: [],
+        password: []
+      },
+      active: ""
     };
   },
   methods: {
+    getEmail(email){
+      this.email=email
+    },
     login() {
       this.$store
         .dispatch(AUTH_REQUEST, { email: this.email, password: this.password })
@@ -74,8 +79,7 @@ export default {
     ...mapGetters(["isProfileLoaded"]),
     ...mapState({
       authLoading: state => state.auth.status === "loading"
-    }),
-    validationState() {}
+    })
   }
 };
 </script>
