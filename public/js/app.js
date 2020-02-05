@@ -2146,19 +2146,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2174,10 +2161,10 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       name: "",
       email: "",
       password: "",
-      message: _defineProperty({
+      messages: {
         email: "",
         password: ""
-      }, "email", "")
+      }
     };
   },
   methods: {
@@ -2190,7 +2177,7 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       }).then(function () {
         _this.$router.push("/");
       })["catch"](function (e) {
-        _this.message = e.data.messages;
+        _this.messages = e.data.messages;
       });
     }
   },
@@ -2198,7 +2185,9 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     authLoading: function authLoading(state) {
       return state.auth.status === "loading";
     }
-  }))
+  }), {
+    validationState: function validationState() {}
+  })
 });
 
 /***/ }),
@@ -57150,134 +57139,114 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm.message.email
+                _vm.messages.email
                   ? _c(
                       "b-form-invalid-feedback",
                       { attrs: { "force-show": "" } },
-                      [_vm._v(_vm._s(_vm.message.email[0]))]
+                      [_vm._v(_vm._s(_vm.messages.email[0]))]
                     )
                   : _vm._e()
               ],
               1
             ),
             _vm._v(" "),
-            _c("b-form-group", [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 col-form-label",
-                  attrs: { for: "password" }
-                },
-                [_vm._v("Password")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-md-6" },
-                [
-                  _c("b-form-input", {
-                    staticClass: "form-control",
-                    attrs: {
-                      id: "password",
-                      type: "password",
-                      name: "password",
-                      required: "",
-                      autocomplete: "current-password"
-                    },
-                    nativeOn: {
-                      keydown: function($event) {
-                        if (
-                          !$event.type.indexOf("key") &&
-                          _vm._k(
-                            $event.keyCode,
-                            "enter",
-                            13,
-                            $event.key,
-                            "Enter"
-                          )
-                        ) {
-                          return null
-                        }
-                        return _vm.login()
+            _c(
+              "b-form-group",
+              { attrs: { label: "Password", "label-for": "password" } },
+              [
+                _c("b-form-input", {
+                  staticClass: "form-control",
+                  attrs: {
+                    id: "password",
+                    type: "password",
+                    name: "password",
+                    required: "",
+                    autocomplete: "current-password"
+                  },
+                  nativeOn: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
                       }
-                    },
-                    model: {
-                      value: _vm.password,
-                      callback: function($$v) {
-                        _vm.password = $$v
-                      },
-                      expression: "password"
+                      return _vm.login()
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.message.password
-                    ? _c(
-                        "b-form-invalid-feedback",
-                        { attrs: { "force-show": "" } },
-                        [_vm._v(_vm._s(_vm.message.password[0]))]
-                      )
-                    : _vm._e()
-                ],
-                1
-              )
-            ]),
+                  },
+                  model: {
+                    value: _vm.password,
+                    callback: function($$v) {
+                      _vm.password = $$v
+                    },
+                    expression: "password"
+                  }
+                }),
+                _vm._v(" "),
+                _vm.messages.password
+                  ? _c(
+                      "b-form-invalid-feedback",
+                      { attrs: { "force-show": "" } },
+                      [_vm._v(_vm._s(_vm.messages.password[0]))]
+                    )
+                  : _vm._e()
+              ],
+              1
+            ),
             _vm._v(" "),
-            _c("b-form-group", [
-              _c("div", { staticClass: "col-md-4" }, [
-                _c("div", { staticClass: "form-check" }, [
-                  _c("input", {
-                    staticClass: "form-check-input",
+            _c(
+              "b-form-group",
+              { attrs: { label: "", "label-for": "remember" } },
+              [
+                _c(
+                  "b-form-checkbox",
+                  {
                     attrs: {
-                      type: "checkbox",
+                      id: "remember",
                       name: "remember",
-                      id: "remember"
+                      value: "remember"
                     }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-check-label",
-                      attrs: { for: "remember" }
-                    },
-                    [_vm._v("Remember Me")]
-                  )
-                ])
-              ])
-            ]),
+                  },
+                  [_vm._v("Remember Me")]
+                )
+              ],
+              1
+            ),
             _vm._v(" "),
-            _c("b-form-group", { staticClass: "mb-0" }, [
-              _c(
-                "div",
-                { staticClass: "col-md-4" },
-                [
-                  !_vm.authLoading
-                    ? _c(
-                        "b-button",
-                        {
-                          staticClass: "btn btn-primary",
-                          on: {
-                            click: function($event) {
-                              return _vm.login()
-                            }
+            _c(
+              "b-form-group",
+              {
+                staticClass: "mb-0",
+                attrs: { label: "", "label-for": "login" }
+              },
+              [
+                !_vm.authLoading
+                  ? _c(
+                      "b-button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { id: "login" },
+                        on: {
+                          click: function($event) {
+                            return _vm.login()
                           }
-                        },
-                        [_vm._v("Login")]
-                      )
-                    : _c(
-                        "b-button",
-                        { staticClass: "btn btn-info" },
-                        [
-                          _c("b-spinner", {
-                            attrs: { small: "", label: "Loading..." }
-                          })
-                        ],
-                        1
-                      )
-                ],
-                1
-              )
-            ])
+                        }
+                      },
+                      [_vm._v("Login")]
+                    )
+                  : _c(
+                      "b-button",
+                      { staticClass: "btn btn-info" },
+                      [
+                        _c("b-spinner", {
+                          attrs: { small: "", label: "Loading..." }
+                        })
+                      ],
+                      1
+                    )
+              ],
+              1
+            )
           ],
           1
         )
@@ -74553,11 +74522,13 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/auth */ "./resources/js/store/actions/auth.js");
-/* harmony import */ var _actions_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/user */ "./resources/js/store/actions/user.js");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../router */ "./resources/js/router.js");
+/* harmony import */ var _actions_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/auth */ "./resources/js/store/actions/auth.js");
+/* harmony import */ var _actions_user__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/user */ "./resources/js/store/actions/user.js");
 var _actions, _mutations;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -74575,12 +74546,12 @@ var getters = {
     return state.status;
   }
 };
-var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_REQUEST"], function (_ref, user) {
+var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_REQUEST"], function (_ref, user) {
   var commit = _ref.commit,
       dispatch = _ref.dispatch;
   return new Promise(function (resolve, reject) {
     // The Promise used for router redirect in login
-    commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_REQUEST"]);
+    commit(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_REQUEST"]);
     axios__WEBPACK_IMPORTED_MODULE_0___default()({
       url: 'api/login',
       data: user,
@@ -74590,18 +74561,18 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
       localStorage.setItem('token', token); // store the token in localstorage
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common['Authorization'] = "Bearer " + token;
-      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_SUCCESS"], token); // you have your token, now log in your user :)
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_SUCCESS"], token); // you have your token, now log in your user :)
 
-      dispatch(_actions_user__WEBPACK_IMPORTED_MODULE_2__["USER_REQUEST"]);
+      dispatch(_actions_user__WEBPACK_IMPORTED_MODULE_3__["USER_REQUEST"]);
       resolve(resp);
     })["catch"](function (err) {
-      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], err);
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_ERROR"], err);
       localStorage.removeItem('token'); // if the request fails, remove any possible user token if possible
 
       reject(err.response); // Send back error response
     });
   });
-}), _defineProperty(_actions, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"], function (_ref2) {
+}), _defineProperty(_actions, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"], function (_ref2) {
   var commit = _ref2.commit,
       dispatch = _ref2.dispatch;
   return new Promise(function (resolve, reject) {
@@ -74609,28 +74580,30 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
       url: 'api/logout',
       method: 'GET'
     }).then(function (resp) {
-      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"]);
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"]);
       localStorage.removeItem('token'); // clear your user's token from localstorage
 
-      resolve();
+      _router__WEBPACK_IMPORTED_MODULE_1__["default"].push("/");
+      resolve(resp);
     })["catch"](function (err) {
-      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], err); // localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
+      commit(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_ERROR"], err);
+      localStorage.removeItem('token'); // if the request fails, remove any possible user token if possible
 
       reject(err);
     });
-    resolve();
+    resolve(resp);
   });
 }), _actions);
-var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_REQUEST"], function (state) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_REQUEST"], function (state) {
   state.status = "loading";
-}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_SUCCESS"], function (state, resp) {
+}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_SUCCESS"], function (state, resp) {
   state.status = "success";
   state.token = resp;
   state.hasLoadedOnce = true;
-}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_ERROR"], function (state) {
+}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_ERROR"], function (state) {
   state.status = "error";
   state.hasLoadedOnce = true;
-}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_1__["AUTH_LOGOUT"], function (state) {
+}), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"], function (state) {
   state.token = "";
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({

@@ -1,7 +1,10 @@
 
 import axios from 'axios';
+import router from '../../router';
 import { AUTH_ERROR, AUTH_LOGOUT, AUTH_REQUEST, AUTH_SUCCESS } from "../actions/auth";
 import { USER_REQUEST } from "../actions/user";
+
+
 
 const state = {
     token: localStorage.getItem('token') || '',
@@ -38,15 +41,16 @@ const actions = {
                 .then(resp => {
                     commit(AUTH_LOGOUT)
                     localStorage.removeItem('token') // clear your user's token from localstorage
-                    resolve()
+                    router.push("/");
+                    resolve(resp)
                 })
                 .catch(err => {
                     commit(AUTH_ERROR, err)
-                    // localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
+                    localStorage.removeItem('token') // if the request fails, remove any possible user token if possible
                     reject(err)
                 })
 
-            resolve()
+            resolve(resp)
         })
     }
 }
