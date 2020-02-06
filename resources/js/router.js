@@ -1,5 +1,6 @@
 import VueRouter from "vue-router";
 import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import Home from "./pages/HomePage";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import ProductIndex from "./pages/products/ProductIndex";
@@ -34,6 +35,12 @@ const routes = [
         path: "/login",
         name: "login",
         component: Login,
+        beforeEnter: onlyLoggedOut
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: Register,
         beforeEnter: onlyLoggedOut
     },
     {

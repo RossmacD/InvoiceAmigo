@@ -6,17 +6,18 @@
       <img src='/img/brand/navLogoInverted.png' height='45' class='d-inline-block align-top' alt='InvoiceAmigo' />
       <!-- InvoiceAmigo -->
     </b-navbar-brand>
-    <b-navbar-toggle target='navbarCollapse'></b-navbar-toggle>
-    <b-navbar-nav class='ml-auto'>
-      <b-collapse id='navbarCollapse' is-nav>
+    <b-navbar-toggle target='navbarCollapse' class='float-right'></b-navbar-toggle>
+    <b-collapse id='navbarCollapse' is-nav>
+      <b-navbar-nav class='ml-auto'>
         <!-- Show when logged in -->
         <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
         <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
         <!-- Show when not logged in -->
-        <b-nav-item class='btn btn-success text-dark' active to='/login' v-else>Login</b-nav-item>
-      </b-collapse>
-    </b-navbar-nav>
+        <b-nav-item class='btn btn-success text-dark' active to='/login' v-if='!isAuthenticated'>Login</b-nav-item>
+        <b-nav-item class='btn btn-success text-dark' active to='/register' v-if='!isAuthenticated'>Register</b-nav-item>
+      </b-navbar-nav>
+    </b-collapse>
   </b-navbar>
 </template>
 
@@ -25,7 +26,6 @@ import Vue from "vue";
 import { ButtonPlugin, NavPlugin, NavbarPlugin } from "bootstrap-vue";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_LOGOUT } from "../store/actions/auth";
-
 // Install BootstrapVue
 Vue.use(ButtonPlugin);
 Vue.use(NavPlugin);
@@ -39,7 +39,7 @@ export default {
         .then(() => {
           this.$router.push("/login");
         })
-        .catch(e => {});
+        .catch(e => {console.log(e)});
     }
   },
   computed: {

@@ -3,7 +3,7 @@
     <div class='card-header'>Login</div>
     <div class='card-body'>
       <b-form>
-        <EmailField v-on:email-update="getEmail" prefix="" :messages="messages.email" ></EmailField>
+        <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
 
         <b-form-group label='Password' label-for='password'>
           <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
@@ -56,8 +56,7 @@ export default {
       messages: {
         email: [],
         password: []
-      },
-      active: ""
+      }
     };
   },
   methods: {

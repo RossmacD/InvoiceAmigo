@@ -20,25 +20,28 @@ export default {
     return {
       message: !!this.messages ? this.messages : [],
       active: null,
-      email:""
+      email: ""
     };
   },
   computed: {
     validationState() {
+      if (this.messages.length !== 0) {
+        this.message = this.messages;
+        return false;
+      }
       if (this.email.length == 0 && this.message.length == 0) {
         return null;
       } else if (
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)
       ) {
         this.message = [];
-        this.$emit('email-update',this.email);
+        this.$emit("email-update", this.email);
         return true;
       } else {
-          if(this.email.length===0){
-            this.message = ["Please enter an email address"]
-        }
-        else{
-            this.message = ["Please enter a valid email address"]
+        if (this.email.length === 0) {
+          this.message = ["Please enter an email address"];
+        } else {
+          this.message = ["Please enter a valid email address"];
         }
         return false;
       }
