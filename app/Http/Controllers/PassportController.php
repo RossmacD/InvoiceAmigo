@@ -19,14 +19,12 @@ class PassportController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user = User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
-
-        $token = $user->createToken('InvoiceAmigo')->accessToken;
-        return response()->json(['token' => $token], 200);
+        return response(200);
     }
 
     public function login(Request $request)

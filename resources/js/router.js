@@ -1,8 +1,11 @@
 import VueRouter from "vue-router";
 import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import Home from "./pages/HomePage";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import ProductIndex from "./pages/products/ProductIndex";
+import ProductCreate from "./pages/products/ProductsCreate.vue";
+import ProductUpdate from "./pages/products/ProductUpdate.vue";
 import store from "./store";
 
 //Middleware
@@ -36,9 +39,27 @@ const routes = [
         beforeEnter: onlyLoggedOut
     },
     {
+        path: "/register",
+        name: "register",
+        component: Register,
+        beforeEnter: onlyLoggedOut
+    },
+    {
         path: "/products",
         name: "product",
         component: ProductIndex,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/products/create",
+        name: "productcreate",
+        component: ProductCreate,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/products/:id",
+        name: "productupdate",
+        component: ProductUpdate,
         beforeEnter: onlyLoggedIn
     },
     {

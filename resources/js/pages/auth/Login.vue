@@ -3,42 +3,26 @@
     <div class='card-header'>Login</div>
     <div class='card-body'>
       <b-form>
-        <b-form-group label='Email Address' label-for='email' :state='state'>
-          <b-form-input id='email' type='email' name='email' required autocomplete='email' autofocus v-model='email'></b-form-input>
-          <b-form-invalid-feedback v-if='message.email' force-show>{{message.email[0]}}</b-form-invalid-feedback>
-          <!-- <span class='invalid-feedback' role='alert' v-if='message'>
-              <strong>{{ message }}</strong>
-          </span>-->
+        <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
+
+        <b-form-group label='Password' label-for='password'>
+          <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
+          <b-form-invalid-feedback force-show v-if='messages.password'>{{messages.password[0]}}</b-form-invalid-feedback>
         </b-form-group>
 
-        <b-form-group>
-          <label for='password' class='col-md-4 col-form-label'>Password</label>
-          <div class='col-md-6'>
-            <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
-            <b-form-invalid-feedback force-show v-if='message.password'>{{message.password[0]}}</b-form-invalid-feedback>
-          </div>
+        <b-form-group label label-for='remember'>
+          <b-form-checkbox id='remember' name='remember' value='remember'>Remember Me</b-form-checkbox>
         </b-form-group>
 
-        <b-form-group>
-          <div class='col-md-4'>
-            <div class='form-check'>
-              <input class='form-check-input' type='checkbox' name='remember' id='remember' />
-              <label class='form-check-label' for='remember'>Remember Me</label>
-            </div>
-          </div>
-        </b-form-group>
-
-        <b-form-group class='mb-0'>
-          <div class='col-md-4'>
-            <b-button v-on:click='login()' class='btn btn-primary' v-if='!authLoading'>Login</b-button>
-            <b-button v-else class='btn btn-info'>
-              <b-spinner small label='Loading...'></b-spinner>
-            </b-button>
-            <!--                                
+        <b-form-group label label-for='login' class='mb-0'>
+          <b-button id='login' v-on:click='login()' class='btn btn-primary' v-if='!authLoading'>Login</b-button>
+          <b-button v-else class='btn btn-info'>
+            <b-spinner small label='Loading...'></b-spinner>
+          </b-button>
+          <!--                                
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot your password
-            </a>-->
-          </div>
+          </a>-->
         </b-form-group>
 
         <!-- <div class="col-md-8 col-md-offset-4">
@@ -54,25 +38,31 @@ import { FormPlugin, ButtonPlugin, SpinnerPlugin } from "bootstrap-vue";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
+import EmailField from "../../components/EmailField";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 
 export default {
   name: "Login",
+  components: {
+    EmailField
+  },
   data() {
     return {
       name: "",
       email: "",
       password: "",
-      message: {
-        email: "",
-        password: "",
-        email: ""
+      messages: {
+        email: [],
+        password: []
       }
     };
   },
   methods: {
+    getEmail(email){
+      this.email=email
+    },
     login() {
       this.$store
         .dispatch(AUTH_REQUEST, { email: this.email, password: this.password })
@@ -80,7 +70,7 @@ export default {
           this.$router.push("/");
         })
         .catch(e => {
-          this.message = e.data.messages;
+          this.messages = e.data.messages;
         });
     }
   },
@@ -89,9 +79,6 @@ export default {
     ...mapState({
       authLoading: state => state.auth.status === "loading"
     })
-  },
-  state() {
-    return !!this.message.email;
   }
 };
 </script>
