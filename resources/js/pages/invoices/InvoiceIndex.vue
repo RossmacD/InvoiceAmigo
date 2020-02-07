@@ -57,6 +57,9 @@ export default {
         });
     }
   },
+  methods:{
+    
+  },
   computed: {
     ...mapGetters(["isAuthenticated"]),
     ...mapState({})
