@@ -108,17 +108,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'product_name' => 'required|string',
-            'product_description' => 'required|string',
-            'product_cost' => 'required|numeric',
-        ];
-        //custom validation error messages
-        $messages = [
-            //'invoice_number.unique' => 'Invoice title should be unique', //syntax: field_name.rule
-        ];
-        //First Validate the form data
-        $request->validate($rules, $messages);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'cost' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
+        }
         //Create a Todo
         $product =  Product::findOrFail($id);
         $product->product_name = $request->name;
@@ -127,12 +124,7 @@ class ProductController extends Controller
         $product->save(); // save it to the database.
 
         //Return success response with product id 
-        return response()->json(
-            [
-                'id' => $id
-            ],
-            200
-        );
+        return response(200);
     }
 
     /**
