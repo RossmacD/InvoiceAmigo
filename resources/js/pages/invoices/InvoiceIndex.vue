@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class='text-center'>Your Invoices</h2>
+    <h2 >Your Invoices</h2>
     <!-- <a href="{{route('products.create')}}" class="btn btn-primary ">New Product</a> -->
     <div v-if='!invoices' class='mt-5 text-center'>
       <b-spinner variant='secondary' label='Loading...'></b-spinner>

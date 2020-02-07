@@ -2649,6 +2649,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2657,6 +2660,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["SpinnerPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["ButtonPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["LayoutPlugin"]);
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["CardPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ProductIndex",
   components: {
@@ -58784,7 +58788,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("h2", { staticClass: "text-center" }, [_vm._v("Your Invoices")]),
+      _c("h2", [_vm._v("Your Invoices")]),
       _vm._v(" "),
       !_vm.invoices
         ? _c(
@@ -58844,7 +58848,7 @@ var render = function() {
     [
       _c(
         "h2",
-        { staticClass: "text-center" },
+        { staticClass: " mb-4" },
         [
           _vm._v("\n    Your Products\n    "),
           _c(
@@ -58871,79 +58875,81 @@ var render = function() {
           )
         : _vm.products.length === 0
         ? _c("EmptyIndex", { attrs: { indexType: "product" } })
-        : _c(
-            "ul",
-            { staticClass: "list-group py-3 mb-3" },
-            _vm._l(_vm.products, function(product, index) {
-              return _c(
-                "li",
-                { key: product.id, staticClass: "list-group-item my-2" },
-                [
-                  _c(
-                    "b-row",
-                    [
-                      _c("b-col", [
-                        _c("h5", [_vm._v(_vm._s(product.product_name))]),
+        : _vm._l(_vm.products, function(product, index) {
+            return _c(
+              "b-card",
+              {
+                key: product.id,
+                staticClass: "my-2",
+                attrs: {
+                  "footer-bg-variant": "light",
+                  footer: product.created_at
+                }
+              },
+              [
+                _c(
+                  "b-row",
+                  [
+                    _c("b-col", [
+                      _c("h5", [_vm._v(_vm._s(product.product_name))]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v(_vm._s(product.product_description))])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "b-col",
+                      [
+                        _c(
+                          "b-button",
+                          {
+                            staticClass: "float-right m-1",
+                            attrs: {
+                              variant: "secondary",
+                              pressed: false,
+                              to: "/products/" + product.id,
+                              size: "sm"
+                            }
+                          },
+                          [
+                            _c("b-icon", {
+                              staticStyle: { width: "20px", height: "20px" },
+                              attrs: { variant: "light", icon: "pen" }
+                            })
+                          ],
+                          1
+                        ),
                         _vm._v(" "),
-                        _c("p", [_vm._v(_vm._s(product.product_description))])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        [
-                          _c(
-                            "b-button",
-                            {
-                              staticClass: "float-right",
-                              attrs: {
-                                variant: "secondary",
-                                pressed: false,
-                                to: "/products/" + product.id,
-                                size: "sm"
-                              }
-                            },
-                            [
-                              _c("b-icon", {
-                                staticStyle: { width: "20px", height: "20px" },
-                                attrs: { variant: "light", icon: "pen" }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("DeleteButton", {
-                            staticClass: "float-right",
-                            attrs: { id: product.id, index: index },
-                            on: { "on-confirm": _vm.deleteProduct }
-                          })
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "b-row",
-                    [
-                      _c("b-col"),
-                      _vm._v(" "),
-                      _c("b-col", [
-                        _c("h4", { staticClass: "float-right" }, [
-                          _vm._v("€" + _vm._s(product.product_cost) + " EUR")
-                        ])
+                        _c("DeleteButton", {
+                          staticClass: "float-right m-1",
+                          attrs: { id: product.id, index: index },
+                          on: { "on-confirm": _vm.deleteProduct }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-row",
+                  [
+                    _c("b-col"),
+                    _vm._v(" "),
+                    _c("b-col", [
+                      _c("h4", { staticClass: "float-right" }, [
+                        _vm._v("€" + _vm._s(product.product_cost) + " EUR")
                       ])
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            }),
-            0
-          )
+                    ])
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          })
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []
