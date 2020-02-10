@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class='mb-4'>
-      Your <span class="capitalise">{{itemName}}</span>
+      Your <span style="text-transform: capitalize;">{{itemName}}</span>
       <b-button :to='pageRoute+"create"' class='float-right'>+ New</b-button>
     </h2>
     <ErrorPage v-if="hitError"></ErrorPage>
@@ -101,8 +101,3 @@ export default {
 };
 </script>
 
-<style>
-.capitalize {
-  text-transform: capitalize;
-}
-</style>

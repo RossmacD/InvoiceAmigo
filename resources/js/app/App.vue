@@ -55,9 +55,9 @@ export default {
         const toDepth = to.path.split("/").length;
         const fromDepth = from.path.split("/").length;
         if ((this.transitionName = toDepth < fromDepth)) {
-          this.transitionName = "slide-left";
-        } else {
           this.transitionName = "slide-right";
+        } else {
+          this.transitionName = "slide-left";
         }
       }
     }

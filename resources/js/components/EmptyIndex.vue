@@ -1,7 +1,7 @@
 <template>
   <div class='text-center'>
     <h3 class='text-center mt-5'>You have no {{indexType}}s 😢</h3>
-    <b-button class='mt-1' variant='success'>+ Add New Invoice</b-button>
+    <b-button class='mt-1' variant='success' style="text-transform: capitalize;">+ Add New {{indexType}}</b-button>
   </div>
 </template>
 

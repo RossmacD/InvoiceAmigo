@@ -8,7 +8,6 @@
       <b-form-group label='Product Name' label-for='product_name'>
         <b-form-input :state='nameState' aria-describedby='input-live-feedback' id='product_name' type='text' name='product_name' required autocomplete='product_name' autofocus v-model='product.name'></b-form-input>
         <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
-        <!-- <b-form-invalid-feedback v-if='messages.product.name' force-show>{{messages.product.name[0]}}</b-form-invalid-feedback> -->
       </b-form-group>
       <b-form-group label='Product Description' label-for='product_description'>
         <b-form-input id='product_description' type='text' name='product_description' required autocomplete='product_description' autofocus v-model='product.description'></b-form-input>
