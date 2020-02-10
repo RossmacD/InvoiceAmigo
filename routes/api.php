@@ -19,6 +19,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('logout', 'PassportController@logout');
     //Products
     Route::apiResource('/products', 'ProductController');
+    //Services
+    Route::apiResource('/services', 'ServiceController');
     //Invoices
     Route::apiResource('/invoices', 'InvoiceController');
 });

@@ -4,13 +4,12 @@
       Your Products
       <b-button to='/products/create' class='float-right'>+ New</b-button>
     </h2>
-    <div v-if='!products' class='mt-5 text-center'>
+    <!-- <div v-if='!products' class='mt-5 text-center'>
       <b-spinner variant='secondary' label='Loading...'></b-spinner>
       <h4>Loading...</h4>
-    </div>
+    </div> -->
+    <LoadingPage  v-if='!products'></LoadingPage>
     <EmptyIndex indexType='product' v-else-if='products.length===0'></EmptyIndex>
-    <!-- <ul class='list-group py-3 mb-3' v-else>
-      <li class='list-group-item my-2' v-for='(product,index) in products' v-bind:key='product.id'> -->
         <b-card v-else v-for='(product,index) in products' v-bind:key='product.id' class="my-2" footer-bg-variant="light" :footer="product.created_at">
         <b-row>
           <b-col>
@@ -30,10 +29,7 @@
             <h4 class='float-right'>€{{ product.product_cost }} EUR</h4>
           </b-col>
         </b-row>
-        
         </b-card>
-      <!-- </li>
-    </ul> -->
   </div>
 </template>
 
@@ -43,6 +39,7 @@ import axios from "axios";
 import Vue from "vue";
 import EmptyIndex from "../../components/EmptyIndex";
 import DeleteButton from "../../components/DeleteButton";
+import LoadingPage from "../../components/LoadingPage";
 import { SpinnerPlugin, ButtonPlugin, LayoutPlugin, CardPlugin } from "bootstrap-vue";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
@@ -52,7 +49,8 @@ export default {
   name: "ProductIndex",
   components: {
     EmptyIndex,
-    DeleteButton
+    DeleteButton,
+    LoadingPage
   },
   data() {
     return {
@@ -89,3 +87,4 @@ export default {
   }
 };
 </script>
+

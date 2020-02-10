@@ -10,9 +10,12 @@
     <b-collapse id='navbarCollapse' is-nav>
       <b-navbar-nav class='ml-auto'>
         <!-- Show when logged in -->
+        
         <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
+        <b-nav-item active to='/services' v-if='isAuthenticated'>Services</b-nav-item>
         <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
+        
         <!-- Show when not logged in -->
         <b-nav-item class='btn btn-success text-dark' active to='/login' v-if='!isAuthenticated'>Login</b-nav-item>
         <b-nav-item class='btn btn-success text-dark' active to='/register' v-if='!isAuthenticated'>Register</b-nav-item>

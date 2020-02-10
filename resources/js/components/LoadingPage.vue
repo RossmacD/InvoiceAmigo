@@ -1,8 +1,8 @@
 <template>
-    <div  class='mt-5 text-center'>
-      <b-spinner variant='secondary' label='Loading...'></b-spinner>
-      <h4>Loading...</h4>
-</div>
+  <div class='mt-5 text-center'>
+    <b-spinner variant='secondary' label='Loading...'></b-spinner>
+    <h4>Loading...</h4>
+  </div>
 </template>
 
 <script>

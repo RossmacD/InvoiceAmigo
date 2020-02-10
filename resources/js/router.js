@@ -6,7 +6,9 @@ import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
+import ServiceIndex from "./pages/services/ServiceIndex.vue";
 import store from "./store";
+
 
 //Middleware
 //Reroutes to home if authenticated
@@ -46,7 +48,7 @@ const routes = [
     },
     {
         path: "/products",
-        name: "product",
+        name: "products",
         component: ProductIndex,
         beforeEnter: onlyLoggedIn
     },
@@ -60,6 +62,12 @@ const routes = [
         path: "/products/:id",
         name: "productupdate",
         component: ProductUpdate,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/services",
+        name: "services",
+        component: ServiceIndex,
         beforeEnter: onlyLoggedIn
     },
     {
