@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "InvoiceAmigo",
+    "short_name": "InvoiceAmigo",
     "icons": [
         {
             "src": "/android-chrome-96x96.png",
@@ -8,7 +8,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+    "theme_color": "#f9f8f9",
+    "background_color": "#f9f8f9",
+    "display": "standalone",
+    "dir": "rtl"
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\User;
 use App\Invoice;
+use Validator;
 use App\InvoiceItems;
 use App\Product;
 use Illuminate\Http\Request;
@@ -59,32 +60,43 @@ class InvoiceController extends Controller
     {
         //dd($request);
         //validation rules
-        $rules = [
+        // $rules = [
+        //     'invoice_number' => 'required|numeric|integer',
+        //     'invoice_date' => 'required|date',
+        //     'due_date' => 'required|date|after:invoice_date',
+        //     'currency' => 'in:eur,gbp,usd',
+        //     'note'  => 'nullable|string|max:1000',
+        //     // 'product.*.name' => 'required|string',
+        //     // 'product.*.description' => 'required|string',
+        //     // 'product.*.quantity' => 'required|numeric',
+        //     // 'product.*.cost' => 'required|numeric',
+        // ];
+       
+        //custom validation error messages
+        // $messages = [
+        //     'product.*.name.required' => 'Name Required', //syntax: field_name.rule
+        //     'product.*.description.required' => 'Description Required',
+        //     'product.*.quantity.required' => 'Quantity Required',
+        //     'product.*.cost.required' => 'Cost Required',
+        //     'product.*.name.max:1000' => 'Must be less than 1000 characters',
+
+
+        // ];
+
+        $validator = Validator::make($request->all(), [
             'invoice_number' => 'required|numeric|integer',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after:invoice_date',
             'currency' => 'in:eur,gbp,usd',
             'note'  => 'nullable|string|max:1000',
-            // 'product.*.name' => 'required|string',
-            // 'product.*.description' => 'required|string',
-            // 'product.*.quantity' => 'required|numeric',
-            // 'product.*.cost' => 'required|numeric',
-        ];
-       
-        //custom validation error messages
-        $messages = [
-            'product.*.name.required' => 'Name Required', //syntax: field_name.rule
-            'product.*.description.required' => 'Description Required',
-            'product.*.quantity.required' => 'Quantity Required',
-            'product.*.cost.required' => 'Cost Required',
-            'product.*.name.max:1000' => 'Must be less than 1000 characters',
-
-
-        ];
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
+        }
         //Validate the form data
-        $request->validate($rules, $messages);
+        // $request->validate($rules, $messages);
         //Get the arrays from the form
-        $itemAmount = $request->input('product');
+       //TEMP $itemAmount = $request->input('product');
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -100,8 +112,8 @@ class InvoiceController extends Controller
         $invoice->total_cost=$total_cost*100;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
-        $client = User::where('email', strtolower($request->client_email))->firstOrFail();
-        $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
+     //TEMP  $client = User::where('email', strtolower($request->client_email))->firstOrFail();
+     //TEMP   $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
         
         $invoice->save(); 
 

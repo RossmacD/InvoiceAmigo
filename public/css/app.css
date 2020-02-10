@@ -11404,6 +11404,19 @@ html {
   }
 }
 
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #5d0c75;
+  outline: 1px solid #c1bac5;
+}
+
 .alert {
   z-index: 99;
   min-width: 30%;

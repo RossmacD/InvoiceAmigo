@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProductCreate v-if='product' :product='product' editing></ProductCreate>
+    <InvoiceCreate v-if='invoice' :invoice='invoice' editing></InvoiceCreate>
     <LoadingPage v-else></LoadingPage>
   </div>
 </template>
@@ -9,20 +9,20 @@
 import Vue from "vue";
 import axios from "axios";
 import { ButtonPlugin, SpinnerPlugin } from "bootstrap-vue";
-import ProductCreate from "./ProductsCreate";
 import { mapGetters, mapState } from "vuex";
+import InvoiceCreate from "./InvoiceCreate";
 import LoadingPage from "../../components/LoadingPage";
 Vue.use(ButtonPlugin);
 Vue.use(SpinnerPlugin);
 export default {
-  name: "ProductUpdate",
+  name: "InvoiceUpdate",
   components: {
-    ProductCreate,
+    InvoiceCreate,
     LoadingPage
   },
   data() {
     return {
-      product: ""
+      invoice: ""
     };
   },
   methods: {},
@@ -34,9 +34,9 @@ export default {
     const app = this;
     if (app.isAuthenticated) {
       axios
-        .get("/api/products/" + this.$route.params.id)
+        .get("/api/invoices/" + this.$route.params.id)
         .then(response => {
-          app.product = response.data.product;
+          app.invoice = response.data.invoice;
         })
         .catch(err => {
           console.log(error);

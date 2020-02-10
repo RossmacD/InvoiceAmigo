@@ -2,31 +2,54 @@
   <div>
     <h3 class='text-center'>
       <span v-if='editing'>Update</span>
-      <span v-else>Create</span> Product
+      <span v-else>Create</span> Invoice
     </h3>
     <b-form>
-      <b-form-group label='Product Name' label-for='product_name'>
-        <b-form-input :state='nameState' aria-describedby='input-live-feedback' id='product_name' type='text' name='product_name' required autocomplete='product_name' autofocus v-model='product.name'></b-form-input>
-        <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+    <b-row>
+      <b-col md="3">
+            <b-form-group label="Invoice Number" label-for="invoice_number">
+                <b-form-input id='invoice_number' type='number' name='invoice_number' required autocomplete='invoice_number' autofocus v-model='invoice.invoice_number'></b-form-input>
+                <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+            </b-form-group>
+      </b-col>
+      <b-col md="3">
+            <b-form-group label="Currency" label-for="currency">
+                <b-form-select plain v-model="invoice.currency" :options="currencyOptions"></b-form-select>
+            </b-form-group>
+      </b-col>
+    </b-row>
+    <hr>
+    <b-row>
+      <b-col>
+        <b-form-group label="Invoice Date" label-for="invoice_date">
+                <b-form-input id='invoice_date' type='date' name='invoice_date' required autocomplete='invoice_date' autofocus v-model='invoice.invoice_date'></b-form-input>
+                <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+        </b-form-group>
+      </b-col>
+      <b-col>
+        <b-form-group label="Due Date" label-for="due_date">
+                <b-form-input id='due_date' type='date' name='due_date' required autocomplete='due_date' autofocus v-model='invoice.due_date'></b-form-input>
+                <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+        </b-form-group>
+      </b-col>
+    </b-row>
+      <b-form-group label="Invoice Notes" label-for="notes">
+        <b-form-textarea id='note' name='note' rows='4' placeholder='Enter note' autocomplete='note' autofocus v-model='invoice.note'>
+        </b-form-textarea>
       </b-form-group>
-      <b-form-group label='Product Description' label-for='product_description'>
-        <b-form-input id='product_description' type='text' name='product_description' required autocomplete='product_description' autofocus v-model='product.description'></b-form-input>
-        <b-form-invalid-feedback v-if='messages.product.description' force-show>{{messages.product.description[0]}}</b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group label='Product Cost' label-for='product_cost'>
-        <b-form-input id='product_cost' type='number' name='product_cost' required autocomplete='product_cost' autofocus v-model='product.cost'></b-form-input>
-        <b-form-invalid-feedback v-if='messages.product.cost' force-show>{{messages.product.cost[0]}}</b-form-invalid-feedback>
-      </b-form-group>
+
       <b-form-group class='mb-0'>
         <div class='col-md-4'>
           <b-button v-on:click='submit()' v-if='!submiting' class='btn btn-primary'><span v-if='editing'>Update</span>
-      <span v-else>Create</span></b-button>
+            <span v-else>Create</span></b-button>
           <b-button v-else class='btn btn-info'>
             <b-spinner small label='Loading...'></b-spinner>
           </b-button>
         </div>
       </b-form-group>
+
     </b-form>
+
   </div>
 </template>
 
@@ -41,15 +64,17 @@ Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 
 export default {
-  name: "ProductCreate",
+  name: "InvoiceCreate",
   props: {
-    product: {
+    invoice: {
       type: Object,
       default: function() {
         return {
-          name: "",
-          description: "",
-          cost: ""
+          invoice_number: "",
+          client_id: "",
+          invoice_date: "",
+          due_date: "",
+          currency: "eur"
         };
       }
     },
@@ -60,8 +85,14 @@ export default {
   },
   data() {
     return {
+      selectedCurrency: null,
+      currencyOptions: [
+        { value: 'eur', text: '€ - Euro' },
+        { value: 'gbp', text: '£ - Pound Sterling'},
+        { value: 'usd', text: '$ - US Dollar'}
+      ],
       messages: {
-        product: {
+        invoice: {  
           name: [],
           description: [],
           cost: []
@@ -78,16 +109,16 @@ export default {
       if (app.isAuthenticated) {
         if (app.editing) {
           axios
-            .put("/api/products/"+ app.product.id, app.product)
+            .put("/api/invoice/"+ app.invoice.id, app.invoice)
             .then(response => {
-              this.$router.push("/products");
+              this.$router.push("/invoices");
             })
             .catch(err => {console.log(err.response)});
         } else {
           axios
-            .post("/api/products/", app.product)
+            .post("/api/invoices/", app.invoice)
             .then(response => {
-              this.$router.push("/products");
+              this.$router.push("/invoices");
             })
             .catch(err => {});
         }
@@ -98,9 +129,9 @@ export default {
   },
   computed: {
     nameState() {
-      if (this.product.name.length == 0) {
+      if (this.invoice.name.length == 0) {
         return null;
-      } else if (this.product.name.length > 4) {
+      } else if (this.invoice.name.length > 4) {
         return true;
       } else {
         return false;

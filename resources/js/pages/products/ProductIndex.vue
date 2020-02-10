@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     deleteProduct(id, index) {
-      console.log("delete" + index);
       const app = this;
       axios
         .delete("/api/products/" + id)

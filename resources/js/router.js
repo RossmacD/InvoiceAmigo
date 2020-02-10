@@ -2,7 +2,9 @@ import VueRouter from "vue-router";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/HomePage";
+import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
+import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
@@ -107,6 +109,18 @@ const routes = [
         meta: {
             depthIndex: 2
         }
+    },
+    {
+        path: "/invoices/create",
+        name: "invoicecreate",
+        component: InvoiceCreate,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/invoices/:id",
+        name: "invoiceupdate",
+        component: InvoiceUpdate,
+        beforeEnter: onlyLoggedIn
     }
 ];
 
