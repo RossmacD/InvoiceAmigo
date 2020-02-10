@@ -153,30 +153,12 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
-        $client =  User::where('id', $invoice->client_id)->firstOrFail();
-        //URL::forceRootUrl('http://192.168.5.207');
+        // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
         return response()->json(
             [
             'invoice' => $invoice,
             'invoiceItems'=>$invoiceItems,
-            'client'=>$client
-            ]
-            ,200
-        );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $invoice = Invoice::findOrFail($id);
-        return response()->json(
-            [
-            'invoice' => $invoice
+            //TEMP'client'=>$client
             ]
             ,200
         );
@@ -191,19 +173,16 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'invoice_number' => 'required|numeric|integer',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after:invoice_date',
             'currency' => 'in:eur,gbp,usd',
             'note'  => 'nullable|string|max:1000',
-        ];
-        //custom validation error messages
-        $messages = [
-            //'invoice_number.unique' => 'Invoice title should be unique', //syntax: field_name.rule
-        ];
-        //First Validate the form data
-        $request->validate($rules, $messages);
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
+        }
         //Create a Todo
         $invoice =  Invoice::findOrFail($id);
         $invoice->invoice_number = $request->invoice_number;
@@ -213,11 +192,7 @@ class InvoiceController extends Controller
         $invoice->note = $request->note;
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
-        return response()->json(
-            [
-                'id'=>$id
-            ],200
-        );
+        return response(200);
     }
 
     /**

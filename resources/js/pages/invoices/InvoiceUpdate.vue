@@ -39,7 +39,7 @@ export default {
           app.invoice = response.data.invoice;
         })
         .catch(err => {
-          console.log(error);
+          console.log(err.response);
         });
     }
   }

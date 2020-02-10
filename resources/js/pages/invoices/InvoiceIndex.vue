@@ -19,10 +19,7 @@
             <DeleteButton class='float-right mx-1' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index'></DeleteButton>
           </b-col>
         </b-row>
-
     </template>
-     
-          
         <b-row>
           <b-col></b-col>
           <b-col>
@@ -78,10 +75,10 @@ export default {
       axios
         .delete("/api/invoices/" + id)
         .then(function(response) {
-          app.$delete(app.products, index);
+          app.$delete(app.invoices, index);
         })
         .catch(function(error) {
-          console.log(error.response);
+          console.log(error);
         });
     }
   },

@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+
+    public function business(){
+        return $this->belongsTo('App\Business');
+    }
+
     //Set default values
     protected $attributes = [
         'client_id' => 0,

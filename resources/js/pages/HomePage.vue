@@ -10,8 +10,8 @@
         </b-card>
       </b-col>
       <b-col cols='4'>
-        <b-card bg-variant='default' header-bg-variant='dark' header-text-variant='white'  title='Coming back?' header='Login'>
-          <b-card-text >Login Here</b-card-text>
+        <b-card bg-variant='default' header-bg-variant='dark' header-text-variant='white' title='Coming back?' header='Login'>
+          <b-card-text>Login Here</b-card-text>
           <b-button to='/login' variant='primary'>Login</b-button>
         </b-card>
       </b-col>
@@ -23,11 +23,15 @@
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
 import { CardPlugin, ButtonPlugin, LayoutPlugin } from "bootstrap-vue";
+import ErrorPage from "../components/ErrorPage";
 Vue.use(CardPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(LayoutPlugin);
 
 export default {
+  components: {
+    ErrorPage
+  },
   computed: {
     ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
     ...mapState({

@@ -39,7 +39,7 @@ export default {
           app.product = response.data.product;
         })
         .catch(err => {
-          console.log(error);
+          console.log(err);
         });
     }
   }

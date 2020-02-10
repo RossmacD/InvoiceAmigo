@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Product;
+use App\Service;
 use App\Invoice;
 
 
@@ -43,7 +44,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Service', 'user_id');
     }
 
-
+    public function business() {
+        return $this->hasOne('App\Business');
+    }
 
 
 

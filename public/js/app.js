@@ -2029,6 +2029,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     clickHandler: function clickHandler() {
       if (this.text) {
         console.log(this.index);
+        this.$emit("on-confirm", this.id, this.index);
         this.$parent.$emit("on-confirm", this.id, this.index);
       } else {
         this.text = "Are you sure?";
@@ -2417,6 +2418,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+/* harmony import */ var _components_ErrorPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/ErrorPage */ "./resources/js/components/ErrorPage.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2447,10 +2449,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["CardPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["ButtonPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["LayoutPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    ErrorPage: _components_ErrorPage__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(["getProfile", "isAuthenticated", "isProfileLoaded"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])({
     authLoading: function authLoading(state) {
       return state.auth.status === "loading";
@@ -2813,6 +2819,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2821,6 +2858,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["SpinnerPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["ButtonPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["FormPlugin"]);
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["TablePlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceCreate",
   props: {
@@ -2832,7 +2870,13 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
           client_id: "",
           invoice_date: "",
           due_date: "",
-          currency: "eur"
+          currency: "eur",
+          items: [{
+            name: "",
+            description: "",
+            cost: "",
+            quantity: ""
+          }]
         };
       }
     },
@@ -2843,16 +2887,16 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
   },
   data: function data() {
     return {
-      selectedCurrency: null,
+      fields: ["no.", "name", "description", "cost", "quantity", "options"],
       currencyOptions: [{
-        value: 'eur',
-        text: '€ - Euro'
+        value: "eur",
+        text: "€ - Euro"
       }, {
-        value: 'gbp',
-        text: '£ - Pound Sterling'
+        value: "gbp",
+        text: "£ - Pound Sterling"
       }, {
-        value: 'usd',
-        text: '$ - US Dollar'
+        value: "usd",
+        text: "$ - US Dollar"
       }],
       messages: {
         invoice: {
@@ -2865,6 +2909,17 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     };
   },
   methods: {
+    getDate: function getDate() {
+      var toTwoDigits = function toTwoDigits(num) {
+        return num < 10 ? "0" + num : num;
+      };
+
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = toTwoDigits(today.getMonth() + 1);
+      var day = toTwoDigits(today.getDate());
+      return "".concat(year, "-").concat(month, "-").concat(day);
+    },
     submit: function submit() {
       var _this = this;
 
@@ -2873,7 +2928,7 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
       if (app.isAuthenticated) {
         if (app.editing) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoice/" + app.invoice.id, app.invoice).then(function (response) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoices/" + app.invoice.id, app.invoice).then(function (response) {
             _this.$router.push("/invoices");
           })["catch"](function (err) {
             console.log(err.response);
@@ -2888,17 +2943,11 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       }
     }
   },
-  computed: _objectSpread({
-    nameState: function nameState() {
-      if (this.invoice.name.length == 0) {
-        return null;
-      } else if (this.invoice.name.length > 4) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])(["isAuthenticated"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapState"])({}))
+  mounted: function mounted() {
+    this.editing ? "" : this.invoice.due_date = this.getDate();
+    this.editing ? "" : this.invoice.invoice_date = this.getDate();
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])(["isAuthenticated"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapState"])({}))
 });
 
 /***/ }),
@@ -2928,9 +2977,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
 //
 //
 //
@@ -3003,9 +3049,9 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     deleteInvoice: function deleteInvoice(id, index) {
       var app = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]("/api/invoices/" + id).then(function (response) {
-        app.$delete(app.products, index);
+        app.$delete(app.invoices, index);
       })["catch"](function (error) {
-        console.log(error.response);
+        console.log(error);
       });
     }
   },
@@ -3072,7 +3118,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/invoices/" + this.$route.params.id).then(function (response) {
         app.invoice = response.data.invoice;
       })["catch"](function (err) {
-        console.log(error);
+        console.log(err.response);
       });
     }
   }
@@ -3210,7 +3256,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/products/" + this.$route.params.id).then(function (response) {
         app.product = response.data.product;
       })["catch"](function (err) {
-        console.log(error);
+        console.log(err);
       });
     }
   }
@@ -3480,7 +3526,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/services/" + this.$route.params.id).then(function (response) {
         app.service = response.data.service;
       })["catch"](function (err) {
-        console.log(error);
+        console.log(err);
       });
     }
   }
@@ -37265,7 +37311,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Enter and leave animations can use different */\r\n/* durations and timing functions.              */\n.slide-fade-enter-active {\r\n  -webkit-transition: all 0.3s ease;\r\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\r\n  -webkit-transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\r\n  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter,\r\n.slide-fade-leave-to {\r\n  -webkit-transform: translateX(10px);\r\n          transform: translateX(10px);\r\n  opacity: 0;\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Enter and leave animations can use different */\r\n/* durations and timing functions.              */\n.slide-fade-enter-active {\r\n  -webkit-transition: all 0.3s ease;\r\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\r\n  -webkit-transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\r\n  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter,\r\n.slide-fade-leave-to {\r\n  -webkit-transform: translateX(10px);\r\n          transform: translateX(10px);\r\n  opacity: 0;\n}\r\n", ""]);
 
 // exports
 
@@ -59893,8 +59939,7 @@ var render = function() {
                           type: "date",
                           name: "invoice_date",
                           required: "",
-                          autocomplete: "invoice_date",
-                          autofocus: ""
+                          autocomplete: "invoice_date"
                         },
                         model: {
                           value: _vm.invoice.invoice_date,
@@ -59930,8 +59975,7 @@ var render = function() {
                           type: "date",
                           name: "due_date",
                           required: "",
-                          autocomplete: "due_date",
-                          autofocus: ""
+                          autocomplete: "due_date"
                         },
                         model: {
                           value: _vm.invoice.due_date,
@@ -59957,6 +60001,171 @@ var render = function() {
             1
           ),
           _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("b-table", {
+            attrs: {
+              striped: "",
+              hover: "",
+              fields: _vm.fields,
+              items: _vm.invoice.items
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "cell(no.)",
+                fn: function(data) {
+                  return [_vm._v(_vm._s(data.index + 1))]
+                }
+              },
+              {
+                key: "cell(name)",
+                fn: function(name_data) {
+                  return [
+                    _c(
+                      "b-form-group",
+                      [
+                        _c("b-form-input", {
+                          attrs: {
+                            id: "line_name0",
+                            type: "text",
+                            name: "line_name0",
+                            required: "",
+                            autocomplete: "line_name",
+                            value: name_data
+                          },
+                          model: {
+                            value: _vm.invoice.items[0].name,
+                            callback: function($$v) {
+                              _vm.$set(_vm.invoice.items[0], "name", $$v)
+                            },
+                            expression: "invoice.items[0].name"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "b-form-invalid-feedback",
+                          { attrs: { id: "input-live-feedback" } },
+                          [_vm._v("Required")]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                }
+              },
+              {
+                key: "cell(description)",
+                fn: function(description_data) {
+                  return [
+                    _c(
+                      "b-form-group",
+                      [
+                        _c("b-form-input", {
+                          attrs: {
+                            id: "line_description0",
+                            type: "text",
+                            name: "line_description0",
+                            required: "",
+                            autocomplete: "line_description",
+                            value: description_data
+                          },
+                          model: {
+                            value: _vm.invoice.items[0].description,
+                            callback: function($$v) {
+                              _vm.$set(_vm.invoice.items[0], "description", $$v)
+                            },
+                            expression: "invoice.items[0].description"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "b-form-invalid-feedback",
+                          { attrs: { id: "input-live-feedback" } },
+                          [_vm._v("Required")]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                }
+              },
+              {
+                key: "cell(cost)",
+                fn: function(cost_data) {
+                  return [
+                    _c(
+                      "b-form-group",
+                      [
+                        _c("b-form-input", {
+                          attrs: {
+                            id: "line_cost0",
+                            type: "number",
+                            name: "line_cost0",
+                            required: "",
+                            autocomplete: "line_cost",
+                            value: cost_data
+                          },
+                          model: {
+                            value: _vm.invoice.items[0].cost,
+                            callback: function($$v) {
+                              _vm.$set(_vm.invoice.items[0], "cost", $$v)
+                            },
+                            expression: "invoice.items[0].cost"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "b-form-invalid-feedback",
+                          { attrs: { id: "input-live-feedback" } },
+                          [_vm._v("Required")]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                }
+              },
+              {
+                key: "cell(quantity)",
+                fn: function(quantity_data) {
+                  return [
+                    _c(
+                      "b-form-group",
+                      [
+                        _c("b-form-input", {
+                          attrs: {
+                            id: "line_quantity",
+                            type: "number",
+                            name: "line_quantity0",
+                            required: "",
+                            autocomplete: "line_quantity",
+                            value: quantity_data
+                          },
+                          model: {
+                            value: _vm.invoice.items[0].quantity,
+                            callback: function($$v) {
+                              _vm.$set(_vm.invoice.items[0], "quantity", $$v)
+                            },
+                            expression: "invoice.items[0].quantity"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "b-form-invalid-feedback",
+                          { attrs: { id: "input-live-feedback" } },
+                          [_vm._v("Required")]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                }
+              }
+            ])
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
           _c(
             "b-form-group",
             { attrs: { label: "Invoice Notes", "label-for": "notes" } },
@@ -59967,8 +60176,7 @@ var render = function() {
                   name: "note",
                   rows: "4",
                   placeholder: "Enter note",
-                  autocomplete: "note",
-                  autofocus: ""
+                  autocomplete: "note"
                 },
                 model: {
                   value: _vm.invoice.note,
