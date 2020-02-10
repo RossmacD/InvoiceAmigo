@@ -1932,10 +1932,16 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Navbar: _components_Navbar_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
+  data: function data() {
+    return {
+      transitionName: "slide-right"
+    };
+  },
   created: function created() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(_store_actions_user__WEBPACK_IMPORTED_MODULE_2__["USER_REQUEST"]);
-    } // axios.interceptors.response.use(undefined, function(err) {
+    } //Logout on Unauthourised
+    // axios.interceptors.response.use(undefined, function(err) {
     //   return new Promise(function(resolve, reject) {
     //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
     //       // if you ever get an unauthorized, logout the user
@@ -1946,6 +1952,27 @@ __webpack_require__.r(__webpack_exports__);
     //   });
     // });
 
+  },
+  watch: {
+    $route: function $route(to, from) {
+      //Choose transition based on page location or amount of partitions in url
+      if (!!to.meta.depthIndex && !!from.meta.depthIndex) {
+        if (to.meta.depthIndex < from.meta.depthIndex) {
+          this.transitionName = "slide-right";
+        } else {
+          this.transitionName = "slide-left";
+        }
+      } else {
+        var toDepth = to.path.split("/").length;
+        var fromDepth = from.path.split("/").length;
+
+        if (this.transitionName = toDepth < fromDepth) {
+          this.transitionName = "slide-left";
+        } else {
+          this.transitionName = "slide-right";
+        }
+      }
+    }
   }
 });
 
@@ -58316,7 +58343,7 @@ var render = function() {
         [
           _c(
             "transition",
-            { attrs: { name: "slide-right", mode: "out-in" } },
+            { attrs: { name: _vm.transitionName, mode: "out-in" } },
             [_c("router-view")],
             1
           )
@@ -77079,22 +77106,34 @@ var onlyLoggedIn = function onlyLoggedIn(to, from, next) {
 var routes = [{
   path: "/",
   name: "home",
-  component: _pages_HomePage__WEBPACK_IMPORTED_MODULE_3__["default"]
+  component: _pages_HomePage__WEBPACK_IMPORTED_MODULE_3__["default"],
+  meta: {
+    depthIndex: 1
+  }
 }, {
   path: "/login",
   name: "login",
   component: _pages_auth_Login__WEBPACK_IMPORTED_MODULE_1__["default"],
-  beforeEnter: onlyLoggedOut
+  beforeEnter: onlyLoggedOut,
+  meta: {
+    depthIndex: 5
+  }
 }, {
   path: "/register",
   name: "register",
   component: _pages_auth_Register__WEBPACK_IMPORTED_MODULE_2__["default"],
-  beforeEnter: onlyLoggedOut
+  beforeEnter: onlyLoggedOut,
+  meta: {
+    depthIndex: 6
+  }
 }, {
   path: "/products",
   name: "products",
   component: _pages_products_ProductIndex__WEBPACK_IMPORTED_MODULE_5__["default"],
-  beforeEnter: onlyLoggedIn
+  beforeEnter: onlyLoggedIn,
+  meta: {
+    depthIndex: 3
+  }
 }, {
   path: "/products/create",
   name: "productcreate",
@@ -77109,12 +77148,18 @@ var routes = [{
   path: "/services",
   name: "services",
   component: _pages_services_ServiceIndex_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-  beforeEnter: onlyLoggedIn
+  beforeEnter: onlyLoggedIn,
+  meta: {
+    depthIndex: 4
+  }
 }, {
   path: "/invoices",
   name: "invoice",
   component: _pages_invoices_InvoiceIndex__WEBPACK_IMPORTED_MODULE_4__["default"],
-  beforeEnter: onlyLoggedIn
+  beforeEnter: onlyLoggedIn,
+  meta: {
+    depthIndex: 2
+  }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   history: true,

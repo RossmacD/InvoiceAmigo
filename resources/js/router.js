@@ -32,25 +32,37 @@ const routes = [
     {
         path: "/",
         name: "home",
-        component: Home
+        component: Home,
+        meta:{
+            depthIndex:1
+        }
     },
     {
         path: "/login",
         name: "login",
         component: Login,
-        beforeEnter: onlyLoggedOut
+        beforeEnter: onlyLoggedOut,
+        meta: {
+            depthIndex: 5
+        }
     },
     {
         path: "/register",
         name: "register",
         component: Register,
-        beforeEnter: onlyLoggedOut
+        beforeEnter: onlyLoggedOut,
+        meta: {
+            depthIndex: 6
+        }
     },
     {
         path: "/products",
         name: "products",
         component: ProductIndex,
-        beforeEnter: onlyLoggedIn
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 3
+        }
     },
     {
         path: "/products/create",
@@ -68,13 +80,19 @@ const routes = [
         path: "/services",
         name: "services",
         component: ServiceIndex,
-        beforeEnter: onlyLoggedIn
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 4
+        }
     },
     {
         path: "/invoices",
         name: "invoice",
         component: InvoiceIndex,
-        beforeEnter: onlyLoggedIn
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 2
+        }
     }
 ];
 

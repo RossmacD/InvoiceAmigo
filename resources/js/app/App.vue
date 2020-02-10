@@ -3,7 +3,7 @@
     <Navbar></Navbar>
     <main role='main' class='container mt-4'>
       <!-- Content -->
-      <transition name='slide-right'  mode="out-in">
+      <transition :name='transitionName' mode='out-in'>
         <router-view></router-view>
       </transition>
     </main>
@@ -20,11 +20,17 @@ export default {
   components: {
     Navbar
   },
+  data() {
+    return {
+      transitionName: "slide-right"
+    };
+  },
   created: function() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(USER_REQUEST);
     }
 
+    //Logout on Unauthourised
     // axios.interceptors.response.use(undefined, function(err) {
     //   return new Promise(function(resolve, reject) {
     //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
@@ -35,6 +41,26 @@ export default {
     //     throw err;
     //   });
     // });
+  },
+  watch: {
+    $route(to, from) {
+      //Choose transition based on page location or amount of partitions in url
+      if (!!to.meta.depthIndex&&!!from.meta.depthIndex) {
+        if(to.meta.depthIndex<from.meta.depthIndex){
+          this.transitionName = "slide-right";
+        }else{
+          this.transitionName = "slide-left";
+        }
+      } else {
+        const toDepth = to.path.split("/").length;
+        const fromDepth = from.path.split("/").length;
+        if ((this.transitionName = toDepth < fromDepth)) {
+          this.transitionName = "slide-left";
+        } else {
+          this.transitionName = "slide-right";
+        }
+      }
+    }
   }
 };
 </script>
