@@ -11397,6 +11397,13 @@ html {
   font-family: "Montserrat", sans-serif !important;
 }
 
+@media screen and (min-width: 960px) {
+  html {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
 .alert {
   z-index: 99;
   min-width: 30%;

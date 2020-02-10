@@ -3,7 +3,7 @@
   <router-link class="navbar-brand" to="/example">Laravel/Vue</router-link>-->
   <b-navbar toggleable='md' type='dark' variant='dark'>
     <b-navbar-brand to='/'>
-      <img src='/img/brand/navLogoInverted.png' height='45' class='d-inline-block align-top' alt='InvoiceAmigo' />
+      <img src='/img/brand/navLogoInverted.png'  height='44' class='d-inline-block align-top ' alt='InvoiceAmigo' />
       <!-- InvoiceAmigo -->
     </b-navbar-brand>
     <b-navbar-toggle target='navbarCollapse' class='float-right'></b-navbar-toggle>
@@ -54,3 +54,4 @@ export default {
   }
 };
 </script>
+

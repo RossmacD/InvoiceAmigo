@@ -1,14 +1,16 @@
 <template>
   <span>
-    <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class='mb-2'>
-      <b-icon variant='light' icon='trash-fill' style='width: 20px; height: 20px'></b-icon>
-    </b-button>
-    <b-button v-else variant='warning' @mouseleave='reset' @click='clickHandler' size='sm' class='mb-2'>
-      <b-icon variant='light' icon='alert-circle-fill' style='width: 20px; height: 20px'></b-icon>
-      <transition name='slide-fade'>
+    <transition name='slide-fade' mode='out-in'>
+      <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class='mb-2'>
+        <b-icon variant='light' icon='trash-fill' style='width: 20px; height: 20px'></b-icon>
+      </b-button>
+      <b-button v-else variant='warning' @mouseleave='reset' @click='clickHandler' size='sm' class='mb-2'>
+        <b-icon variant='light' icon='alert-circle-fill' style='width: 20px; height: 20px'></b-icon>
+        <!-- <transition name='slide-fade'> -->
         <span style='color:#FFF'>{{text}}</span>
-      </transition>
-    </b-button>
+        <!-- </transition> -->
+      </b-button>
+    </transition>
   </span>
 </template>
 
@@ -41,7 +43,6 @@ export default {
     },
     reset() {
       setTimeout(() => (this.text = ""), 1200);
-
     }
   }
 };
@@ -54,7 +55,7 @@ export default {
   transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter,
 .slide-fade-leave-to {

@@ -2004,6 +2004,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["ButtonPlugin"]);
@@ -2131,7 +2133,12 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["ButtonPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EmptyIndex",
-  props: ["indexType"]
+  props: ["indexType"],
+  date: function date() {
+    return {
+      link: this.indexType + "/create"
+    };
+  }
 });
 
 /***/ }),
@@ -2651,9 +2658,6 @@ vue__WEBPACK_IMPORTED_MODULE_4___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     };
   },
   methods: {
-    passMatch: function passMatch() {
-      this.password == this.confirmPassword ? this.messages.confirmPassword[0] = "" : this.messages.confirmPassword[0] = "Passwords must match";
-    },
     getEmail: function getEmail(email) {
       this.email = email;
     },
@@ -2689,7 +2693,41 @@ vue__WEBPACK_IMPORTED_MODULE_4___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       }
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])(["isProfileLoaded"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapState"])({
+  computed: _objectSpread({
+    passValid: function passValid() {
+      if (this.password.length == 0) return null;
+
+      if (this.password.length < 6) {
+        this.messages.password = ["Password must be at least 6 characters"];
+        return false;
+      } else {
+        return true;
+      }
+    },
+    passMatch: function passMatch() {
+      if (this.confirmPassword == "") {
+        return null;
+      } else if (this.password == this.confirmPassword) {
+        return true;
+      } else {
+        this.messages.confirmPassword[0] = "Passwords must match";
+        return false;
+      }
+    },
+    nameValid: function nameValid() {
+      if (this.name == "") {
+        return null;
+      } else if (!/\s/.test(this.name)) {
+        this.messages.name[0] = "Please enter first and last name";
+        return false;
+      } else if (this.name.length < 3) {
+        this.messages.name[0] = "Name must be at least 3 characters";
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])(["isProfileLoaded"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapState"])({
     authLoading: function authLoading(authState) {
       return authState.auth.status === "loading";
     }
@@ -2936,7 +2974,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
 //
 //
 //
@@ -36962,7 +36999,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Enter and leave animations can use different */\r\n/* durations and timing functions.              */\n.slide-fade-enter-active {\r\n  -webkit-transition: all 0.3s ease;\r\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\r\n  -webkit-transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);\r\n  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter,\r\n.slide-fade-leave-to {\r\n  -webkit-transform: translateX(10px);\r\n          transform: translateX(10px);\r\n  opacity: 0;\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Enter and leave animations can use different */\r\n/* durations and timing functions.              */\n.slide-fade-enter-active {\r\n  -webkit-transition: all 0.3s ease;\r\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\r\n  -webkit-transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\r\n  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter,\r\n.slide-fade-leave-to {\r\n  -webkit-transform: translateX(10px);\r\n          transform: translateX(10px);\r\n  opacity: 0;\n}\r\n", ""]);
 
 // exports
 
@@ -58545,43 +58582,48 @@ var render = function() {
   return _c(
     "span",
     [
-      !_vm.text
-        ? _c(
-            "b-button",
-            {
-              staticClass: "mb-2",
-              attrs: { variant: "danger", pressed: false, size: "sm" },
-              on: { click: _vm.clickHandler }
-            },
-            [
-              _c("b-icon", {
-                staticStyle: { width: "20px", height: "20px" },
-                attrs: { variant: "light", icon: "trash-fill" }
-              })
-            ],
-            1
-          )
-        : _c(
-            "b-button",
-            {
-              staticClass: "mb-2",
-              attrs: { variant: "warning", size: "sm" },
-              on: { mouseleave: _vm.reset, click: _vm.clickHandler }
-            },
-            [
-              _c("b-icon", {
-                staticStyle: { width: "20px", height: "20px" },
-                attrs: { variant: "light", icon: "alert-circle-fill" }
-              }),
-              _vm._v(" "),
-              _c("transition", { attrs: { name: "slide-fade" } }, [
-                _c("span", { staticStyle: { color: "#FFF" } }, [
-                  _vm._v(_vm._s(_vm.text))
-                ])
-              ])
-            ],
-            1
-          )
+      _c(
+        "transition",
+        { attrs: { name: "slide-fade", mode: "out-in" } },
+        [
+          !_vm.text
+            ? _c(
+                "b-button",
+                {
+                  staticClass: "mb-2",
+                  attrs: { variant: "danger", pressed: false, size: "sm" },
+                  on: { click: _vm.clickHandler }
+                },
+                [
+                  _c("b-icon", {
+                    staticStyle: { width: "20px", height: "20px" },
+                    attrs: { variant: "light", icon: "trash-fill" }
+                  })
+                ],
+                1
+              )
+            : _c(
+                "b-button",
+                {
+                  staticClass: "mb-2",
+                  attrs: { variant: "warning", size: "sm" },
+                  on: { mouseleave: _vm.reset, click: _vm.clickHandler }
+                },
+                [
+                  _c("b-icon", {
+                    staticStyle: { width: "20px", height: "20px" },
+                    attrs: { variant: "light", icon: "alert-circle-fill" }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticStyle: { color: "#FFF" } }, [
+                    _vm._v(_vm._s(_vm.text))
+                  ])
+                ],
+                1
+              )
+        ],
+        1
+      )
     ],
     1
   )
@@ -58683,7 +58725,7 @@ var render = function() {
         {
           staticClass: "mt-1",
           staticStyle: { "text-transform": "capitalize" },
-          attrs: { variant: "success" }
+          attrs: { to: _vm.indexType + "s/create", variant: "success" }
         },
         [_vm._v("+ Add New " + _vm._s(_vm.indexType))]
       )
@@ -58942,10 +58984,10 @@ var render = function() {
     [
       _c("b-navbar-brand", { attrs: { to: "/" } }, [
         _c("img", {
-          staticClass: "d-inline-block align-top",
+          staticClass: "d-inline-block align-top ",
           attrs: {
             src: "/img/brand/navLogoInverted.png",
-            height: "45",
+            height: "44",
             alt: "InvoiceAmigo"
           }
         })
@@ -59317,7 +59359,8 @@ var render = function() {
                     type: "text",
                     name: "name",
                     required: "",
-                    autocomplete: "name"
+                    autocomplete: "name",
+                    state: _vm.nameValid
                   },
                   model: {
                     value: _vm.name,
@@ -59329,11 +59372,9 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.messages.name
-                  ? _c(
-                      "b-form-invalid-feedback",
-                      { attrs: { "force-show": "" } },
-                      [_vm._v(_vm._s(_vm.messages.name[0]))]
-                    )
+                  ? _c("b-form-invalid-feedback", [
+                      _vm._v(_vm._s(_vm.messages.name[0]))
+                    ])
                   : _vm._e()
               ],
               1
@@ -59350,9 +59391,9 @@ var render = function() {
                     type: "password",
                     name: "password",
                     required: "",
-                    autocomplete: "current-password"
+                    autocomplete: "current-password",
+                    state: _vm.passValid
                   },
-                  on: { input: _vm.passMatch },
                   model: {
                     value: _vm.password,
                     callback: function($$v) {
@@ -59363,11 +59404,9 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.messages.password[0]
-                  ? _c(
-                      "b-form-invalid-feedback",
-                      { attrs: { "force-show": "" } },
-                      [_vm._v(_vm._s(_vm.messages.password[0]))]
-                    )
+                  ? _c("b-form-invalid-feedback", [
+                      _vm._v(_vm._s(_vm.messages.password[0]))
+                    ])
                   : _vm._e()
               ],
               1
@@ -59388,9 +59427,9 @@ var render = function() {
                     id: "confirm_password",
                     type: "password",
                     name: "confirmPassword",
-                    required: ""
+                    required: "",
+                    state: _vm.passMatch
                   },
-                  on: { input: _vm.passMatch },
                   model: {
                     value: _vm.confirmPassword,
                     callback: function($$v) {
@@ -59401,11 +59440,9 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.messages.confirmPassword
-                  ? _c(
-                      "b-form-invalid-feedback",
-                      { attrs: { "force-show": "" } },
-                      [_vm._v(_vm._s(_vm.messages.confirmPassword[0]))]
-                    )
+                  ? _c("b-form-invalid-feedback", [
+                      _vm._v(_vm._s(_vm.messages.confirmPassword[0]))
+                    ])
                   : _vm._e()
               ],
               1
