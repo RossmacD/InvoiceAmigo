@@ -8,6 +8,7 @@ import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
 import ServiceIndex from "./pages/services/ServiceIndex.vue";
 import ServiceCreate from "./pages/services/ServicesCreate.vue";
+import ServiceUpdate from "./pages/services/ServiceUpdate.vue";
 import store from "./store";
 
 
@@ -34,8 +35,8 @@ const routes = [
         path: "/",
         name: "home",
         component: Home,
-        meta:{
-            depthIndex:1
+        meta: {
+            depthIndex: 1
         }
     },
     {
@@ -90,6 +91,12 @@ const routes = [
         path: "/services/create",
         name: "servicecreate",
         component: ServiceCreate,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/services/:id",
+        name: "serviceupdate",
+        component: ServiceUpdate,
         beforeEnter: onlyLoggedIn
     },
     {
