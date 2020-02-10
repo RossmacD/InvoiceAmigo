@@ -3,7 +3,7 @@
     <div class='card-header'>Register</div>
     <div class='card-body'>
       <b-form>
-        <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
+        <EmailField v-on:email-update="getEmail" :messages="messages.email" ></EmailField>
         
         <b-form-group label='Name' label-for='name'>
           <b-form-input id='name' type='text' class='form-control' name='name' required autocomplete='name' v-model='name' />

@@ -1,61 +1,26 @@
 <template>
   <div>
-    <h2 class=' mb-4'>
-      Your Products
-      <b-button to='/products/create' class='float-right'>+ New</b-button>
-    </h2>
-    <!-- <div v-if='!products' class='mt-5 text-center'>
-      <b-spinner variant='secondary' label='Loading...'></b-spinner>
-      <h4>Loading...</h4>
-    </div> -->
-    <LoadingPage  v-if='!products'></LoadingPage>
-    <EmptyIndex indexType='product' v-else-if='products.length===0'></EmptyIndex>
-        <b-card v-else v-for='(product,index) in products' v-bind:key='product.id' class="my-2" footer-bg-variant="light" :footer="product.created_at">
-        <b-row>
-          <b-col>
-            <h5>{{ product.product_name }}</h5>
-            <p>{{ product.product_description }}</p>
-          </b-col>
-          <b-col>
-            <b-button class='float-right m-1' variant='secondary' :pressed='false' :to="'/products/'+product.id" size='sm'>
-              <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-            </b-button>
-            <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='product.id' :index='index'></DeleteButton>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col></b-col>
-          <b-col>
-            <h4 class='float-right'>€{{ product.product_cost }} EUR</h4>
-          </b-col>
-        </b-row>
-        </b-card>
+    <IndexBase itemName='products' :items='products' :loaded='loaded' :hitError='hitError' v-on:on-confirm='deleteProduct'></IndexBase>
   </div>
 </template>
 
 
 <script>
 import axios from "axios";
+import { mapGetters, mapState } from "vuex";
 import Vue from "vue";
-import EmptyIndex from "../../components/EmptyIndex";
-import DeleteButton from "../../components/DeleteButton";
-import LoadingPage from "../../components/LoadingPage";
-import { SpinnerPlugin, ButtonPlugin, LayoutPlugin, CardPlugin } from "bootstrap-vue";
-Vue.use(SpinnerPlugin);
-Vue.use(ButtonPlugin);
-Vue.use(LayoutPlugin);
-Vue.use(CardPlugin);
+import IndexBase from "../../components/IndexBase";
+
 export default {
   name: "ProductIndex",
   components: {
-    EmptyIndex,
-    DeleteButton,
-    LoadingPage
+    IndexBase
   },
   data() {
     return {
-      products: null,
-      deleteText: ""
+      products: [],
+      loaded: false,
+      hitError: false
     };
   },
   methods: {
@@ -65,25 +30,31 @@ export default {
       axios
         .delete("/api/products/" + id)
         .then(function(response) {
-          console.log(response);
           app.$delete(app.products, index);
         })
         .catch(function(error) {
           console.log(error.response);
         });
-    },
-    
+    }
   },
   mounted() {
-    this.token = localStorage.getItem("token");
-    if (this.token !== null) {
+    const app = this;
+    if (app.isAuthenticated) {
       axios
         .get("/api/products/")
         .then(response => {
-          this.products = response.data.products.data;
+          app.products = response.data.products.data;
+          app.loaded = true;
         })
-        .catch(err => {console.log(error)});
+        .catch(err => {
+          console.log(error);
+          app.hitError = true;
+        });
     }
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
+    ...mapState({})
   }
 };
 </script>

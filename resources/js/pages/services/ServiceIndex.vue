@@ -1,6 +1,6 @@
 <template>
   <div>
-    <IndexBase itemName='services' :items='services' :loaded="loaded" :hitError="hitError"></IndexBase>
+    <IndexBase itemName='services' :items='services' :loaded="loaded" :hitError="hitError" v-on:on-confirm='deleteService'></IndexBase>
   </div>
 </template>
 
@@ -22,7 +22,19 @@ export default {
       hitError:false
     };
   },
-  methods: {},
+  methods: {
+     deleteService(id, index) {
+      const app = this;
+      axios
+        .delete("/api/services/" + id)
+        .then(function(response) {
+          app.$delete(app.services, index);
+        })
+        .catch(function(error) {
+          console.log(error.response);
+        });
+    },
+  },
   mounted() {
     const app = this;
     if (app.isAuthenticated) {

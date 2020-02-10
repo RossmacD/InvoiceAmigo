@@ -32,12 +32,7 @@ export default {
       axios
         .get("/api/products/" + this.$route.params.id)
         .then(response => {
-          app.product = {
-            id: response.data.product.id,
-            name: response.data.product.product_name,
-            description: response.data.product.product_description,
-            cost: response.data.product.product_cost
-          };
+          app.product = response.data.product;
         })
         .catch(err => {
           console.log(error);

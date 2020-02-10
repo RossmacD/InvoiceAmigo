@@ -50,9 +50,9 @@ class ProductController extends Controller
         }
         //Create a Todo
         $product = new Product;
-        $product->product_name = $request->name;
-        $product->product_description = $request->description;
-        $product->product_cost = $request->cost;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->cost = $request->cost;
         $product->user_id = Auth::id();
         $product->save();
         //Redirect to a specified route with flash message.
@@ -112,9 +112,9 @@ class ProductController extends Controller
         }
         //Create a Todo
         $product =  Product::findOrFail($id);
-        $product->product_name = $request->name;
-        $product->product_description = $request->description;
-        $product->product_cost = $request->cost;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->cost = $request->cost;
         $product->save(); // save it to the database.
 
         //Return success response with product id 
