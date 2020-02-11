@@ -15,10 +15,13 @@ class CreateInvoiceItemsTable extends Migration
     {
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('product_name');
-            $table->string('product_description');
-            $table->bigInteger('product_cost');
-            $table->bigInteger('product_quantity');
+            $table->string('name');
+            $table->string('description');
+            $table->bigInteger('cost')->nullable();
+            $table->bigInteger('rate')->nullable();
+            $table->enum('rate_unit', ['hour', 'day', 'week'])->nullable();
+            $table->bigInteger('quantity');
+            $table->enum('type', ['product','service']);
             $table->bigInteger('invoice_id');
             $table->timestamps();
         });

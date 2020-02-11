@@ -1,6 +1,7 @@
 import VueRouter from "vue-router";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import DashBoard from "./pages/DashPage";
 import Home from "./pages/HomePage";
 import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
@@ -21,7 +22,7 @@ const onlyLoggedOut = (to, from, next) => {
         next()
         return
     }
-    next('/')
+    next('/dash')
 }
 //Reroutes to login if not authenticated
 const onlyLoggedIn = (to, from, next) => {
@@ -39,7 +40,17 @@ const routes = [
         component: Home,
         meta: {
             depthIndex: 1
-        }
+        },
+        beforeEnter:onlyLoggedOut
+    },
+    {
+        path: "/dash",
+        name: "dashboard",
+        component: DashBoard,
+        meta: {
+            depthIndex: 1
+        },
+        beforeEnter: onlyLoggedIn
     },
     {
         path: "/login",
