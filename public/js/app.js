@@ -3018,13 +3018,7 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
             quantity: "",
             save: false
           }],
-          services: [{
-            name: "",
-            description: "",
-            cost: "",
-            quantity: "",
-            save: false
-          }]
+          services: []
         };
       }
     },

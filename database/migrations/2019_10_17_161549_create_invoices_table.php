@@ -16,13 +16,13 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('invoice_number');
-            $table->bigInteger('client_id');
             $table->date('invoice_date');
             $table->date('due_date');
             $table->enum('status', ['unseen','unpaid','paid']);
             $table->enum('currency', ['eur', 'gbp','usd']);
-            $table->text('note')->nullable();
             $table->bigInteger('total_cost');
+            $table->text('note')->nullable();
+            $table->bigInteger('client_id');
             $table->timestamps();
         });
     }

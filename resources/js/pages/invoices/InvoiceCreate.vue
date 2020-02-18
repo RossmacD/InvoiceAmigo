@@ -199,7 +199,7 @@ export default {
             { name: "", description: "", cost: "", quantity: "", save: false }
           ],
           services: [
-            { name: "", description: "", cost: "", quantity: "", save: false }
+            
           ]
         };
       }

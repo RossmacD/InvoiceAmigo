@@ -11,12 +11,17 @@ class Invoice extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function invoiceItems()
+    {
+        return $this->hasMany('App\InvoiceItems');
+    }
+
     public function business(){
         return $this->belongsTo('App\Business');
     }
 
     //Set default values
-    protected $attributes = [
+    protected $attributes = [   
         'client_id' => 0,
         'status' =>'unseen',
         'currency' => 'eur',

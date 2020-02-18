@@ -97,6 +97,8 @@ class InvoiceController extends Controller
         // $request->validate($rules, $messages);
         //Get the arrays from the form
        //TEMP $itemAmount = $request->input('product');
+
+       
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -105,17 +107,37 @@ class InvoiceController extends Controller
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
         $invoice->user_id = Auth::id();
+
+        //Calculate total cost
         $total_cost=0;
-        // foreach ($itemAmount as $invoiceItemPost) {
-        //     $total_cost+=($invoiceItemPost['cost'] * $invoiceItemPost['quantity']);
+        foreach ($request->products as $product) {
+            // return response()->json([$product['cost']],420);
+            $total_cost+=($product['cost'] * $product['quantity']);
+        }
+        // foreach ($request->services as $service) {
+        //     $total_cost += ($service->rate * $service->quantity);
         // }
+        //Adjust to be accurate for stripe
         $invoice->total_cost=$total_cost*100;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
      //TEMP  $client = User::where('email', strtolower($request->client_email))->firstOrFail();
      //TEMP   $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
         
-        $invoice->save(); 
+        $invoice->save();
+
+        //Attach each product as invoice item
+        foreach ($request->products as $product) {
+            $invoiceItem=new InvoiceItems([
+                'name'=>$product['name'],
+                'description' => $product['description'],
+                'cost' => $product['cost'],
+                'quantity' => $product['quantity'],
+            ]);
+            $invoice->invoiceItems()->save($invoiceItem);
+        }
+        
+
 
         //Creates a Invoice Item for everything within the array
         // foreach ($itemAmount as $invoiceItemPost) {
