@@ -44,11 +44,17 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function create()
-    // {
-    //     $user = Auth::user();
-    //     return view('invoices.create', ['user' => $user]);
-    // }
+    public function create()
+    {
+        $invoice= Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
+        if(isset($invoice_num)){
+            return response()->json(['invoice_number'=> $invoice->invoice_number+1], 200);
+        }else{
+            return response()->json(['invoice_number' => 0], 200);
+        }
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -131,10 +137,19 @@ class InvoiceController extends Controller
             $invoiceItem=new InvoiceItems([
                 'name'=>$product['name'],
                 'description' => $product['description'],
-                'cost' => $product['cost'],
+                'cost' => $product['cost']*100,
                 'quantity' => $product['quantity'],
             ]);
             $invoice->invoiceItems()->save($invoiceItem);
+            if($product['save']){
+                $savedProd=new Product([
+                    'name' => $product['name'],
+                    'description' => $product['description'],
+                    'cost' => $product['cost'] * 100,
+                    'user_id' => Auth::id()
+                    ]);
+                $savedProd->save();
+            }
         }
         
 
@@ -160,10 +175,13 @@ class InvoiceController extends Controller
         //         }
         //     }
         //     $invoiceItem->save();
+
         // }
         //Redirect to a specified route with flash message.
         return response()->json(200);
     }
+
+
 
     /**
      * Display the specified resource.

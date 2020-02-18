@@ -18,17 +18,17 @@ class User extends Authenticatable
 
     public function invoices()
     {
-        $incoming = $this->incomingInvoices();
-        $outgoing = $this->outgoingInvoices();
-        return $outgoing->union($incoming);
-        //return $this->hasMany('App\invoice','user_id') ;
+        // $incoming = $this->incomingInvoices();
+        // $outgoing = $this->outgoingInvoices();
+        // return $outgoing->union($incoming);
+        return $this->hasMany('App\invoice','user_id') ;
         //return $this->hasMany('App\invoice', 'user_id')->where();
     }
 
-    public function incomingInvoices()
-    {
-        return $this->hasMany('App\Invoice', 'client_id');
-    }
+    // public function incomingInvoices()
+    // {
+    //     return $this->hasMany('App\Invoice', 'client_id');
+    // }
 
     public function outgoingInvoices()
     {

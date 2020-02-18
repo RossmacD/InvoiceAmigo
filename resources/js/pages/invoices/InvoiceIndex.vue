@@ -21,7 +21,7 @@
         </b-row>
     </template>
         <b-row>
-          <b-col></b-col>
+          <b-col>{{invoice.note}}</b-col>
           <b-col>
             
           </b-col>

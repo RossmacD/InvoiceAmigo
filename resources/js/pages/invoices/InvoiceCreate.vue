@@ -1,5 +1,7 @@
 <template>
-  <div>
+<div>
+  <LoadingPage v-if="!loaded"></LoadingPage>
+  <div v-else>
     <h3 class='text-center'>
       <span v-if='editing'>Update</span>
       <span v-else>Create</span> Invoice
@@ -37,8 +39,8 @@
       <hr />
       <h3>Invoice Items</h3>
       <h4>Products</h4>
-      <!-- <Dragable v-model="invoice.products" handle=".handle" :options="{draggable:'tbody > tr'}" @start="drag = true" @end="drag = false"> -->
-      <b-table responsive='md' striped hover :fields='fields' :items='invoice.products' foot-clone>
+      <Dragable v-model="invoice.products"  :options="{draggable:'.table-responsive-md > table > tbody > tr'}" @start="drag = true" @end="drag = false">
+      <b-table responsive='md' striped :fields='fields' :items='invoice.products' foot-clone>
         <template v-slot:cell(no.)='data'>
           <span class='handle'>{{ data.index + 1 }}</span>
         </template>
@@ -121,7 +123,7 @@
                 v-model='invoice.products[options_data.index].save'
               ></b-form-checkbox>
             </b-form-group>
-            <DeleteButton></DeleteButton>
+            <DeleteButton v-on:on-confirm="deleteRow" :id="options_data.index" :index="options_data.index"></DeleteButton>
           </b-row>
         </template>
         <template v-slot:foot(quantity)>Total Cost: €{{total}}</template>
@@ -129,7 +131,8 @@
           <br />
         </template>
         <template v-slot:foot(no.)>
-          <br />
+      <b-button variant='success' @click='addRow'>+</b-button>
+          
         </template>
         <template v-slot:foot(name)>
           <br />
@@ -141,8 +144,7 @@
           <br />
         </template>
       </b-table>
-      <!-- </Dragable> -->
-      <b-button variant='success' @click='addRow'>+</b-button>
+      </Dragable>
       <hr />
       <b-form-group label='Invoice Notes' label-for='notes'>
         <b-form-textarea id='note' name='note' rows='4' placeholder='Enter note' autocomplete='note' v-model='invoice.note'></b-form-textarea>
@@ -160,6 +162,7 @@
       </b-form-group>
     </b-form>
   </div>
+  </div>
 </template>
 
 <script>
@@ -173,6 +176,7 @@ import {
 } from "bootstrap-vue";
 import Vue from "vue";
 import DeleteButton from "../../components/DeleteButton";
+import LoadingPage from "../../components/LoadingPage"
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
 Vue.use(SpinnerPlugin);
@@ -183,7 +187,8 @@ export default {
   name: "InvoiceCreate",
   components: {
     DeleteButton,
-    Dragable
+    Dragable,
+    LoadingPage
   },
   props: {
     invoice: {
@@ -211,6 +216,8 @@ export default {
   },
   data() {
     return {
+      searchResults:"",
+      loaded:false,
       drag: true,
       fields: [
         "no.",
@@ -244,12 +251,12 @@ export default {
         0
       );
     },
-    getDate() {
+    getDate(addon) {
       const toTwoDigits = num => (num < 10 ? "0" + num : num);
       let today = new Date();
       let year = today.getFullYear();
       let month = toTwoDigits(today.getMonth() + 1);
-      let day = toTwoDigits(today.getDate());
+      let day = toTwoDigits(today.getDate()+addon);
       return `${year}-${month}-${day}`;
     },
     addRow() {
@@ -260,6 +267,9 @@ export default {
         quantity: "",
         save: false
       });
+    },
+    deleteRow(id,index){
+      this.invoice.products.splice(index, 1);
     },
     submit() {
       const app = this;
@@ -288,8 +298,22 @@ export default {
     }
   },
   mounted() {
-    this.editing ? "" : (this.invoice.due_date = this.getDate());
-    this.editing ? "" : (this.invoice.invoice_date = this.getDate());
+    if(!this.editing){
+      this.invoice.due_date = this.getDate(1);
+      this.invoice.invoice_date = this.getDate(0);
+      const app=this;
+      console.log('test')
+      axios.get("/api/invoice/create").then(res=>{
+          console.log(res);
+          app.invoice.invoice_number=res.data.invoice_number;
+        }
+      ).catch(err=>{
+          console.log(err);
+        }
+      );
+    }
+    this.loaded=true;
+    
   },
   computed: {
     ...mapGetters(["isAuthenticated"]),

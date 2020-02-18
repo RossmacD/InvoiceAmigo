@@ -37,7 +37,7 @@ export default {
       if (this.text) {
         console.log(this.index);
          this.$emit("on-confirm", this.id, this.index);
-        this.$parent.$emit("on-confirm", this.id, this.index);
+        // this.$parent.$emit("on-confirm", this.id, this.index);
       } else {
         this.text = "Are you sure?";
       }

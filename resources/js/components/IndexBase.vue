@@ -81,16 +81,17 @@ export default {
   },
   methods: {
     deleteProduct(id, index) {
-      const app = this;
-      axios
-        .delete(app.apiRoute + id)
-        .then(function(response) {
-          console.log(response);
-          app.$delete(app.products, index);
-        })
-        .catch(function(error) {
-          console.log(error.response);
-        });
+      this.$emit("on-confirm", id, index);
+      // const app = this;
+      // axios
+      //   .delete(app.apiRoute + id)
+      //   .then(function(response) {
+      //     console.log(response);
+      //     app.$delete(app.products, index);
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error.response);
+      //   });
     },
     
   },
