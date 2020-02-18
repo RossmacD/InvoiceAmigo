@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 
 /*
@@ -19,7 +20,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('logout', 'PassportController@logout');
     //Products
     Route::apiResource('/products', 'ProductController');
-    Route::post('/products/search', 'SearchController@searchProducts');
+    Route::get('/search/products', 'SearchController@searchProducts')->name('products.search');
 
     //Services
     Route::apiResource('/services', 'ServiceController');

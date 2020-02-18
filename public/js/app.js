@@ -2990,6 +2990,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3002,12 +3015,14 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["ButtonPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["FormPlugin"]);
 vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["TablePlugin"]);
+vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(vuedraggable__WEBPACK_IMPORTED_MODULE_1___default.a);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceCreate",
   components: {
     DeleteButton: _components_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"],
-    Dragable: vuedraggable__WEBPACK_IMPORTED_MODULE_1___default.a,
-    LoadingPage: _components_LoadingPage__WEBPACK_IMPORTED_MODULE_5__["default"]
+    LoadingPage: _components_LoadingPage__WEBPACK_IMPORTED_MODULE_5__["default"],
+    BIcon: bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__["BIcon"],
+    Dragable: vuedraggable__WEBPACK_IMPORTED_MODULE_1___default.a
   },
   props: {
     invoice: {
@@ -3020,7 +3035,13 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
           due_date: "",
           currency: "eur",
           products: [{
-            name: "",
+            name: "1",
+            description: "",
+            cost: "",
+            quantity: "",
+            save: false
+          }, {
+            name: "12",
             description: "",
             cost: "",
             quantity: "",
@@ -3037,7 +3058,8 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
   },
   data: function data() {
     return {
-      searchResults: "",
+      searchResults: [],
+      keywords: "",
       loaded: false,
       drag: true,
       fields: ["no.", "name", "description", {
@@ -3100,6 +3122,21 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     deleteRow: function deleteRow(id, index) {
       this.invoice.products.splice(index, 1);
     },
+    searchProducts: function searchProducts(index) {
+      // this.invoice.products[name_data.index].name
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/search/products", {
+        params: {
+          keywords: this.invoice.products[index].name
+        }
+      }).then(function (res) {
+        console.log(res);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    highlight: function highlight(text) {
+      return text.replace(new RegExp(this.keywords, "gi"), '<span class="highlighted">$&</span>');
+    },
     submit: function submit() {
       var _this = this;
 
@@ -3128,7 +3165,7 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       this.invoice.due_date = this.getDate(1);
       this.invoice.invoice_date = this.getDate(0);
       var app = this;
-      console.log('test');
+      console.log("test");
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoice/create").then(function (res) {
         console.log(res);
         app.invoice.invoice_number = res.data.invoice_number;
@@ -37510,6 +37547,25 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.highlighted {\r\n  color: blueviolet;\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/lib/css-base.js":
 /*!*************************************************!*\
   !*** ./node_modules/css-loader/lib/css-base.js ***!
@@ -62139,6 +62195,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./InvoiceCreate.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -63783,7 +63869,7 @@ var render = function() {
                 _vm.editing
                   ? _c("span", [_vm._v("Update")])
                   : _c("span", [_vm._v("Create")]),
-                _vm._v(" Invoice\r\n    ")
+                _vm._v(" Invoice\n    ")
               ]),
               _vm._v(" "),
               _c(
@@ -63967,381 +64053,374 @@ var render = function() {
                   _vm._v(" "),
                   _c("h4", [_vm._v("Products")]),
                   _vm._v(" "),
-                  _c(
-                    "Dragable",
-                    {
-                      attrs: {
-                        options: {
-                          draggable: ".table-responsive-md > table > tbody > tr"
-                        }
-                      },
-                      on: {
-                        start: function($event) {
-                          _vm.drag = true
-                        },
-                        end: function($event) {
-                          _vm.drag = false
-                        }
-                      },
-                      model: {
-                        value: _vm.invoice.products,
-                        callback: function($$v) {
-                          _vm.$set(_vm.invoice, "products", $$v)
-                        },
-                        expression: "invoice.products"
-                      }
+                  _c("b-table", {
+                    attrs: {
+                      responsive: "md",
+                      striped: "",
+                      hover: "",
+                      fields: _vm.fields,
+                      items: _vm.invoice.products,
+                      "foot-clone": ""
                     },
-                    [
-                      _c("b-table", {
-                        attrs: {
-                          responsive: "md",
-                          striped: "",
-                          fields: _vm.fields,
-                          items: _vm.invoice.products,
-                          "foot-clone": ""
-                        },
-                        scopedSlots: _vm._u([
-                          {
-                            key: "cell(no.)",
-                            fn: function(data) {
-                              return [
-                                _c("span", { staticClass: "handle" }, [
-                                  _vm._v(_vm._s(data.index + 1))
-                                ])
-                              ]
-                            }
-                          },
-                          {
-                            key: "cell(name)",
-                            fn: function(name_data) {
-                              return [
-                                _c(
-                                  "b-form-group",
-                                  [
-                                    _c("b-form-input", {
-                                      attrs: {
-                                        id: "line_name" + name_data.index,
-                                        type: "text",
-                                        name: "line_name" + name_data.index,
-                                        required: "",
-                                        autocomplete: "line_name",
-                                        value: name_data
-                                      },
-                                      model: {
-                                        value:
-                                          _vm.invoice.products[name_data.index]
-                                            .name,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.invoice.products[
-                                              name_data.index
-                                            ],
-                                            "name",
-                                            $$v
-                                          )
-                                        },
-                                        expression:
-                                          "invoice.products[name_data.index].name"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-form-invalid-feedback",
-                                      { attrs: { id: "input-live-feedback" } },
-                                      [_vm._v("Required")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ]
-                            }
-                          },
-                          {
-                            key: "cell(description)",
-                            fn: function(description_data) {
-                              return [
-                                _c(
-                                  "b-form-group",
-                                  [
-                                    _c("b-form-input", {
-                                      attrs: {
-                                        id:
-                                          "line_description" +
-                                          description_data.index,
-                                        type: "text",
-                                        name:
-                                          "line_description" +
-                                          description_data.index,
-                                        required: "",
-                                        autocomplete: "line_description",
-                                        value: description_data
-                                      },
-                                      model: {
-                                        value:
-                                          _vm.invoice.products[
-                                            description_data.index
-                                          ].description,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.invoice.products[
-                                              description_data.index
-                                            ],
-                                            "description",
-                                            $$v
-                                          )
-                                        },
-                                        expression:
-                                          "invoice.products[description_data.index].description"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-form-invalid-feedback",
-                                      { attrs: { id: "input-live-feedback" } },
-                                      [_vm._v("Required")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ]
-                            }
-                          },
-                          {
-                            key: "cell(cost)",
-                            fn: function(cost_data) {
-                              return [
-                                _c(
-                                  "b-form-group",
-                                  [
-                                    _c("b-form-input", {
-                                      attrs: {
-                                        id: "line_cost" + cost_data.index,
-                                        type: "number",
-                                        name: "line_cost" + cost_data.index,
-                                        required: "",
-                                        autocomplete: "line_cost",
-                                        value: cost_data
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          return _vm.totalCost()
-                                        }
-                                      },
-                                      model: {
-                                        value:
-                                          _vm.invoice.products[cost_data.index]
-                                            .cost,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.invoice.products[
-                                              cost_data.index
-                                            ],
-                                            "cost",
-                                            $$v
-                                          )
-                                        },
-                                        expression:
-                                          "invoice.products[cost_data.index].cost"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-form-invalid-feedback",
-                                      { attrs: { id: "input-live-feedback" } },
-                                      [_vm._v("Required")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ]
-                            }
-                          },
-                          {
-                            key: "cell(quantity)",
-                            fn: function(quantity_data) {
-                              return [
-                                _c(
-                                  "b-form-group",
-                                  [
-                                    _c("b-form-input", {
-                                      attrs: {
-                                        id:
-                                          "line_quantity" + quantity_data.index,
-                                        type: "number",
-                                        name:
-                                          "line_quantity" + quantity_data.index,
-                                        required: "",
-                                        autocomplete: "line_quantity",
-                                        value: quantity_data
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          return _vm.totalCost()
-                                        }
-                                      },
-                                      model: {
-                                        value:
-                                          _vm.invoice.products[
-                                            quantity_data.index
-                                          ].quantity,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.invoice.products[
-                                              quantity_data.index
-                                            ],
-                                            "quantity",
-                                            $$v
-                                          )
-                                        },
-                                        expression:
-                                          "invoice.products[quantity_data.index].quantity"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "b-form-invalid-feedback",
-                                      { attrs: { id: "input-live-feedback" } },
-                                      [_vm._v("Required")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ]
-                            }
-                          },
-                          {
-                            key: "cell()",
-                            fn: function() {
-                              return [
-                                _c(
-                                  "span",
-                                  { staticClass: "align-text-bottom" },
-                                  [_c("h5", [_vm._v("x")])]
-                                )
-                              ]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "cell(options)",
-                            fn: function(options_data) {
-                              return [
-                                _c(
-                                  "b-row",
-                                  [
-                                    _c(
-                                      "b-form-group",
+                    scopedSlots: _vm._u([
+                      {
+                        key: "cell(no.)",
+                        fn: function(data) {
+                          return [
+                            _c(
+                              "span",
+                              [
+                                _vm._v(
+                                  "\n              " +
+                                    _vm._s(data.index + 1) +
+                                    "\n              "
+                                ),
+                                _c("b-icon", {
+                                  staticClass: "handle",
+                                  staticStyle: {
+                                    width: "20px",
+                                    height: "20px"
+                                  },
+                                  attrs: { icon: "arrows-expand" }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell(name)",
+                        fn: function(name_data) {
+                          return [
+                            _c(
+                              "b-form-group",
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id: "line_name" + name_data.index,
+                                    type: "text",
+                                    name: "line_name" + name_data.index,
+                                    required: "",
+                                    autocomplete: "line_name",
+                                    value: name_data
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      return _vm.searchProducts(name_data.index)
+                                    }
+                                  },
+                                  model: {
+                                    value:
+                                      _vm.invoice.products[name_data.index]
+                                        .name,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.invoice.products[name_data.index],
+                                        "name",
+                                        $$v
+                                      )
+                                    },
+                                    expression:
+                                      "invoice.products[name_data.index].name"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _vm.searchResults
+                                  ? _c(
+                                      "datalist",
                                       {
                                         attrs: {
-                                          description: "Save",
-                                          "label-for": "line_options0"
+                                          id: "line_name_list" + name_data.index
                                         }
                                       },
-                                      [
-                                        _c("b-form-checkbox", {
-                                          attrs: {
-                                            id:
-                                              "line_save" + options_data.index,
-                                            type: "number",
-                                            name:
-                                              "line_save" + options_data.index,
-                                            required: "",
-                                            autocomplete: "line_options",
-                                            value: "true"
-                                          },
-                                          model: {
-                                            value:
-                                              _vm.invoice.products[
-                                                options_data.index
-                                              ].save,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.invoice.products[
-                                                  options_data.index
-                                                ],
-                                                "save",
-                                                $$v
-                                              )
-                                            },
-                                            expression:
-                                              "invoice.products[options_data.index].save"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c("DeleteButton", {
+                                      [_c("option", [_vm._v("Test")])]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c(
+                                  "b-form-invalid-feedback",
+                                  { attrs: { id: "input-live-feedback" } },
+                                  [_vm._v("Required")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell(description)",
+                        fn: function(description_data) {
+                          return [
+                            _c(
+                              "b-form-group",
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id:
+                                      "line_description" +
+                                      description_data.index,
+                                    type: "text",
+                                    name:
+                                      "line_description" +
+                                      description_data.index,
+                                    required: "",
+                                    autocomplete: "line_description",
+                                    value: description_data
+                                  },
+                                  model: {
+                                    value:
+                                      _vm.invoice.products[
+                                        description_data.index
+                                      ].description,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.invoice.products[
+                                          description_data.index
+                                        ],
+                                        "description",
+                                        $$v
+                                      )
+                                    },
+                                    expression:
+                                      "invoice.products[description_data.index].description"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "b-form-invalid-feedback",
+                                  { attrs: { id: "input-live-feedback" } },
+                                  [_vm._v("Required")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell(cost)",
+                        fn: function(cost_data) {
+                          return [
+                            _c(
+                              "b-form-group",
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id: "line_cost" + cost_data.index,
+                                    type: "number",
+                                    name: "line_cost" + cost_data.index,
+                                    required: "",
+                                    autocomplete: "line_cost",
+                                    value: cost_data
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      return _vm.totalCost()
+                                    }
+                                  },
+                                  model: {
+                                    value:
+                                      _vm.invoice.products[cost_data.index]
+                                        .cost,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.invoice.products[cost_data.index],
+                                        "cost",
+                                        $$v
+                                      )
+                                    },
+                                    expression:
+                                      "invoice.products[cost_data.index].cost"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "b-form-invalid-feedback",
+                                  { attrs: { id: "input-live-feedback" } },
+                                  [_vm._v("Required")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell(quantity)",
+                        fn: function(quantity_data) {
+                          return [
+                            _c(
+                              "b-form-group",
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id: "line_quantity" + quantity_data.index,
+                                    type: "number",
+                                    name: "line_quantity" + quantity_data.index,
+                                    required: "",
+                                    autocomplete: "line_quantity",
+                                    value: quantity_data
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      return _vm.totalCost()
+                                    }
+                                  },
+                                  model: {
+                                    value:
+                                      _vm.invoice.products[quantity_data.index]
+                                        .quantity,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.invoice.products[
+                                          quantity_data.index
+                                        ],
+                                        "quantity",
+                                        $$v
+                                      )
+                                    },
+                                    expression:
+                                      "invoice.products[quantity_data.index].quantity"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "b-form-invalid-feedback",
+                                  { attrs: { id: "input-live-feedback" } },
+                                  [_vm._v("Required")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell()",
+                        fn: function() {
+                          return [
+                            _c("span", { staticClass: "align-text-bottom" }, [
+                              _c("h5", [_vm._v("x")])
+                            ])
+                          ]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "cell(options)",
+                        fn: function(options_data) {
+                          return [
+                            _c(
+                              "b-row",
+                              [
+                                _c(
+                                  "b-form-group",
+                                  {
+                                    attrs: {
+                                      description: "Save",
+                                      "label-for": "line_options0"
+                                    }
+                                  },
+                                  [
+                                    _c("b-form-checkbox", {
                                       attrs: {
-                                        id: options_data.index,
-                                        index: options_data.index
+                                        id: "line_save" + options_data.index,
+                                        type: "number",
+                                        name: "line_save" + options_data.index,
+                                        required: "",
+                                        autocomplete: "line_options",
+                                        value: "true"
                                       },
-                                      on: { "on-confirm": _vm.deleteRow }
+                                      model: {
+                                        value:
+                                          _vm.invoice.products[
+                                            options_data.index
+                                          ].save,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.invoice.products[
+                                              options_data.index
+                                            ],
+                                            "save",
+                                            $$v
+                                          )
+                                        },
+                                        expression:
+                                          "invoice.products[options_data.index].save"
+                                      }
                                     })
                                   ],
                                   1
-                                )
-                              ]
-                            }
-                          },
-                          {
-                            key: "foot(quantity)",
-                            fn: function() {
-                              return [
-                                _vm._v("Total Cost: €" + _vm._s(_vm.total))
-                              ]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "foot(cost)",
-                            fn: function() {
-                              return [_c("br")]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "foot(no.)",
-                            fn: function() {
-                              return [
-                                _c(
-                                  "b-button",
-                                  {
-                                    attrs: { variant: "success" },
-                                    on: { click: _vm.addRow }
+                                ),
+                                _vm._v(" "),
+                                _c("DeleteButton", {
+                                  attrs: {
+                                    id: options_data.index,
+                                    index: options_data.index
                                   },
-                                  [_vm._v("+")]
-                                )
-                              ]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "foot(name)",
-                            fn: function() {
-                              return [_c("br")]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "foot(description)",
-                            fn: function() {
-                              return [_c("br")]
-                            },
-                            proxy: true
-                          },
-                          {
-                            key: "foot(options)",
-                            fn: function() {
-                              return [_c("br")]
-                            },
-                            proxy: true
-                          }
-                        ])
-                      })
-                    ],
-                    1
-                  ),
+                                  on: { "on-confirm": _vm.deleteRow }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "foot(quantity)",
+                        fn: function() {
+                          return [_vm._v("Total Cost: €" + _vm._s(_vm.total))]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "foot(cost)",
+                        fn: function() {
+                          return [_c("br")]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "foot(no.)",
+                        fn: function() {
+                          return [
+                            _c(
+                              "b-button",
+                              {
+                                attrs: { variant: "success" },
+                                on: { click: _vm.addRow }
+                              },
+                              [_vm._v("+")]
+                            )
+                          ]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "foot(name)",
+                        fn: function() {
+                          return [_c("br")]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "foot(description)",
+                        fn: function() {
+                          return [_c("br")]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "foot(options)",
+                        fn: function() {
+                          return [_c("br")]
+                        },
+                        proxy: true
+                      }
+                    ])
+                  }),
                   _vm._v(" "),
                   _c("hr"),
                   _vm._v(" "),
@@ -85515,7 +85594,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceCreate_vue_vue_type_template_id_7a1008ae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceCreate.vue?vue&type=template&id=7a1008ae& */ "./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=template&id=7a1008ae&");
 /* harmony import */ var _InvoiceCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceCreate.vue?vue&type=script&lang=js& */ "./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./InvoiceCreate.vue?vue&type=style&index=0&lang=css& */ "./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -85523,7 +85604,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _InvoiceCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _InvoiceCreate_vue_vue_type_template_id_7a1008ae___WEBPACK_IMPORTED_MODULE_0__["render"],
   _InvoiceCreate_vue_vue_type_template_id_7a1008ae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -85552,6 +85633,22 @@ component.options.__file = "resources/js/pages/invoices/InvoiceCreate.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./InvoiceCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./InvoiceCreate.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/invoices/InvoiceCreate.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InvoiceCreate_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
