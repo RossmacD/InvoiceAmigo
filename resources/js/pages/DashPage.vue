@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if='isProfileLoaded'>
+    <div v-if='isProfileLoaded=true'>
       <h1>Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
     </div>

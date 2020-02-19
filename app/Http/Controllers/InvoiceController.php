@@ -11,13 +11,13 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-
 class InvoiceController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,21 +40,19 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the get highest invoice number for creating a new Invoice.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
         $invoice= Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
-        if(isset($invoice_num)){
+        if(isset($invoice)){
             return response()->json(['invoice_number'=> $invoice->invoice_number+1], 200);
         }else{
             return response()->json(['invoice_number' => 0], 200);
         }
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -64,7 +62,6 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         //validation rules
         // $rules = [
         //     'invoice_number' => 'required|numeric|integer',
@@ -85,8 +82,6 @@ class InvoiceController extends Controller
         //     'product.*.quantity.required' => 'Quantity Required',
         //     'product.*.cost.required' => 'Cost Required',
         //     'product.*.name.max:1000' => 'Must be less than 1000 characters',
-
-
         // ];
 
         $validator = Validator::make($request->all(), [
@@ -104,7 +99,6 @@ class InvoiceController extends Controller
         //Get the arrays from the form
        //TEMP $itemAmount = $request->input('product');
 
-       
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -117,12 +111,9 @@ class InvoiceController extends Controller
         //Calculate total cost
         $total_cost=0;
         foreach ($request->products as $product) {
-            // return response()->json([$product['cost']],420);
             $total_cost+=($product['cost'] * $product['quantity']);
         }
-        // foreach ($request->services as $service) {
-        //     $total_cost += ($service->rate * $service->quantity);
-        // }
+        
         //Adjust to be accurate for stripe
         $invoice->total_cost=$total_cost*100;
 
@@ -151,32 +142,6 @@ class InvoiceController extends Controller
                 $savedProd->save();
             }
         }
-        
-
-
-        //Creates a Invoice Item for everything within the array
-        // foreach ($itemAmount as $invoiceItemPost) {
-        //     $invoiceItem = new InvoiceItems;
-        //     $invoiceItem->product_name = $invoiceItemPost['name'];
-        //     $invoiceItem->product_description = $invoiceItemPost['description'];
-        //     $invoiceItem->product_quantity = $invoiceItemPost['quantity'];
-        //     $invoiceItem->product_cost = $invoiceItemPost['cost']*100;
-        //     $invoiceItem->invoice_id = $invoice->id;
-            
-        //     //Save as a Invoice line as product
-        //     if(isset($invoiceItemPost['save'])){
-        //         if ($invoiceItemPost['save'] == 'save_as_product') {
-        //             $product = new Product;
-        //             $product->user_id = Auth::id();
-        //             $product->product_name = $invoiceItemPost['name'];
-        //             $product->product_description = $invoiceItemPost['description'];
-        //             $product->product_cost = $invoiceItemPost['cost']*100;
-        //             $product->save();
-        //         }
-        //     }
-        //     $invoiceItem->save();
-
-        // }
         //Redirect to a specified route with flash message.
         return response()->json(200);
     }
@@ -192,16 +157,29 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
+        $invoiceItems = InvoiceItems::where('invoice_id', $id)->get();
+        $invoice->products= $invoiceItems->where('type','product');
+        $invoice->services = $invoiceItems->where('type', 'service');
         // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
         return response()->json(
             [
-            'invoice' => $invoice,
-            'invoiceItems'=>$invoiceItems,
-            //TEMP'client'=>$client
-            ]
-            ,200
+                'invoice' => $invoice,
+                //TEMP 'client'=>$client
+            ],
+            200
         );
+
+        // $invoice = Invoice::findOrFail($id);
+        // $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
+        // // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
+        // return response()->json(
+        //     [
+        //         'invoice' => $invoice,
+        //         'invoiceItems'=>$invoiceItems,
+        //     //TEMP 'client'=>$client
+        //     ]
+        //     ,200
+        // );
     }
 
     /**

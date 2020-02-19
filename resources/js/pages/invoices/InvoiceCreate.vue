@@ -25,14 +25,14 @@
         <b-row>
           <b-col>
             <b-form-group label='Invoice Date' label-for='invoice_date'>
-              <b-form-input id='invoice_date' type='date' name='invoice_date' required autocomplete='invoice_date' v-model='invoice.invoice_date'></b-form-input>
-              <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+              <b-form-datepicker id="example-datepicker" v-model="invoice.invoice_date" ></b-form-datepicker>
             </b-form-group>
+            
+
           </b-col>
           <b-col>
             <b-form-group label='Due Date' label-for='due_date'>
-              <b-form-input id='due_date' type='date' name='due_date' required autocomplete='due_date' v-model='invoice.due_date'></b-form-input>
-              <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
+              <b-form-datepicker id="due_date" v-model="invoice.due_date" ></b-form-datepicker>
             </b-form-group>
           </b-col>
         </b-row>
@@ -43,134 +43,115 @@
         <!-- ORDER:
         <Dragable v-model='invoice.products'>
           <div v-for='product in invoice.products' v-bind:key='product'>Name: {{product.name}}</div>
-        </Dragable> -->
+        </Dragable>-->
 
         <!-- <Dragable v-model='invoice.products' tag='span' draggable='.table-light'> -->
-          <b-table responsive='md' striped hover :fields='fields' :items='invoice.products' foot-clone>
-            <template v-slot:cell(no.)='data'>
-              <span>
-                {{ data.index + 1 }}
-                <b-icon class='handle' icon='arrows-expand' style='width: 20px; height: 20px'></b-icon>
-              </span>
-            </template>
-            <template v-slot:cell(name)='name_data'>
-              <!-- <b-form-group> -->
-                <!-- <b-form-input
-                  :id='`line_name${name_data.index}`'
-                  type='text'
-                  :name='`line_name${name_data.index}`'
-                  required
-                  autocomplete='line_name'
-                  :value='name_data'
-                  v-model='invoice.products[name_data.index].name'
-                  @input='searchProducts(name_data.index)'
-                ></b-form-input> -->
-                <!-- datalist v-if="searchResults" :id='`line_name_list${name_data.index}`'>
-                  <option>Test</option>
-                  <option  v-for="searchResult in searchResults" v-bind='searchResult'>{{ searchResult }}</option>
-                </datalist> -->
-                
-<!-- 
-                <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
-              </b-form-group> -->
-              <vue-bootstrap-typeahead 
-                  :data="searchResults"
-                  :id='`line_name${name_data.index}`'
-                  :name='`line_name${name_data.index}`'
-                  autocomplete='line_name'
-                  :serializer='s=>s.name'
-                  :value='name_data'
-                  @hit='fillWithResult(name_data.index)'
-                  :minMatchingChars='1'
-                  v-model='invoice.products[name_data.index].name'
-                  @input='searchProducts(name_data.index)'
-                />
-            </template>
+        <b-table responsive='md' striped hover :fields='fields' :items='invoice.products' foot-clone>
+          <template v-slot:cell(no.)='data'>
+            <span>
+              {{ data.index + 1 }}
+              <b-icon class='handle' icon='arrows-expand' style='width: 20px; height: 20px'></b-icon>
+            </span>
+          </template>
+          <template v-slot:cell(name)='name_data'>
+            <vue-bootstrap-typeahead
+              :data='searchResults'
+              :id='`line_name${name_data.index}`'
+              :name='`line_name${name_data.index}`'
+              autocomplete='line_name'
+              :serializer='s=>s.name'
+              :value='name_data'
+              @hit='fillWithResult(name_data.index)'
+              :minMatchingChars='1'
+              v-model='invoice.products[name_data.index].name'
+              @input='searchProducts(name_data.index)'
+            />
+          </template>
 
-            <template v-slot:cell(description)='description_data'>
-              <b-form-group>
-                <b-form-input
-                  :id='`line_description${description_data.index}`'
-                  type='text'
-                  :name='`line_description${description_data.index}`'
-                  required
-                  autocomplete='line_description'
-                  :value='description_data'
-                  v-model='invoice.products[description_data.index].description'
-                ></b-form-input>
-                <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
-              </b-form-group>
-            </template>
+          <template v-slot:cell(description)='description_data'>
+            <b-form-group>
+              <b-form-input
+                :id='`line_description${description_data.index}`'
+                type='text'
+                :name='`line_description${description_data.index}`'
+                required
+                autocomplete='line_description'
+                :value='description_data'
+                v-model='invoice.products[description_data.index].description'
+              ></b-form-input>
+              <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
+            </b-form-group>
+          </template>
 
-            <template v-slot:cell(cost)='cost_data'>
-              <b-form-group>
-                <b-form-input
-                  @input='totalCost()'
-                  :id='`line_cost${cost_data.index}`'
+          <template v-slot:cell(cost)='cost_data'>
+            <b-form-group>
+              <b-form-input
+                @input='totalCost()'
+                :id='`line_cost${cost_data.index}`'
+                type='number'
+                :name='`line_cost${cost_data.index}`'
+                required
+                autocomplete='line_cost'
+                :value='cost_data'
+                v-model='invoice.products[cost_data.index].cost'
+              ></b-form-input>
+              <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
+            </b-form-group>
+          </template>
+
+          <template v-slot:cell(quantity)='quantity_data'>
+            <b-form-group>
+              <b-form-input
+                @input='totalCost()'
+                :id='`line_quantity${quantity_data.index}`'
+                type='number'
+                :name='`line_quantity${quantity_data.index}`'
+                required
+                autocomplete='line_quantity'
+                :value='quantity_data'
+                v-model='invoice.products[quantity_data.index].quantity'
+              ></b-form-input>
+              <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
+            </b-form-group>
+          </template>
+          <template v-slot:cell()>
+            <span class='align-text-bottom'>
+              <h5>x</h5>
+            </span>
+          </template>
+          <template v-slot:cell(options)='options_data'>
+            <b-row>
+              <b-form-group description='Save' label-for='line_options0'>
+                <b-form-checkbox
+                  :id='`line_save${options_data.index}`'
                   type='number'
-                  :name='`line_cost${cost_data.index}`'
+                  :name='`line_save${options_data.index}`'
                   required
-                  autocomplete='line_cost'
-                  :value='cost_data'
-                  v-model='invoice.products[cost_data.index].cost'
-                ></b-form-input>
-                <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
+                  autocomplete='line_options'
+                  value='true'
+                  v-model='invoice.products[options_data.index].save'
+                ></b-form-checkbox>
               </b-form-group>
-            </template>
-
-            <template v-slot:cell(quantity)='quantity_data'>
-              <b-form-group>
-                <b-form-input
-                  @input='totalCost()'
-                  :id='`line_quantity${quantity_data.index}`'
-                  type='number'
-                  :name='`line_quantity${quantity_data.index}`'
-                  required
-                  autocomplete='line_quantity'
-                  :value='quantity_data'
-                  v-model='invoice.products[quantity_data.index].quantity'
-                ></b-form-input>
-                <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
-              </b-form-group>
-            </template>
-            <template v-slot:cell()>
-              <span class='align-text-bottom'>
-                <h5>x</h5>
-              </span>
-            </template>
-            <template v-slot:cell(options)='options_data'>
-              <b-row>
-                <b-form-group description='Save' label-for='line_options0'>
-                  <b-form-checkbox
-                    :id='`line_save${options_data.index}`'
-                    type='number'
-                    :name='`line_save${options_data.index}`'
-                    required
-                    autocomplete='line_options'
-                    value='true'
-                    v-model='invoice.products[options_data.index].save'
-                  ></b-form-checkbox>
-                </b-form-group>
-                <DeleteButton v-on:on-confirm='deleteRow' :id='options_data.index' :index='options_data.index'></DeleteButton>
-              </b-row>
-            </template>
-            <template v-slot:foot(quantity)>Total Cost: €{{total}}</template>
-            <template v-slot:foot(cost)>
-              <br />
-            </template>
-            <template v-slot:foot(no.)>
-              <b-button variant='success' @click='addRow'>+</b-button>
-            </template>
-            <template v-slot:foot(name)>
-              <br />
-            </template>
-            <template v-slot:foot(description)>
-              <br />
-            </template>
-            <template v-slot:foot(options)>
-              <br />
-            </template>
-          </b-table>
+              <DeleteButton v-on:on-confirm='deleteRow' :id='options_data.index' :index='options_data.index'></DeleteButton>
+            </b-row>
+          </template>
+          <template v-slot:foot(quantity)>Total Cost: €{{total}}</template>
+          <template v-slot:foot(cost)>
+            <br />
+          </template>
+          <template v-slot:foot(no.)>
+            <b-button variant='success' @click='addRow'>+</b-button>
+          </template>
+          <template v-slot:foot(name)>
+            <br />
+          </template>
+          <template v-slot:foot(description)>
+            <br />
+          </template>
+          <template v-slot:foot(options)>
+            <br />
+          </template>
+        </b-table>
         <!-- </Dragable> -->
         <hr />
         <b-form-group label='Invoice Notes' label-for='notes'>
@@ -200,19 +181,21 @@ import {
   ButtonPlugin,
   SpinnerPlugin,
   TablePlugin,
-  BIcon
+  BIcon,
+  FormDatepickerPlugin 
 } from "bootstrap-vue";
 import Vue from "vue";
 import DeleteButton from "../../components/DeleteButton";
 import LoadingPage from "../../components/LoadingPage";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 Vue.use(TablePlugin);
-Vue.use(Dragable);
+// Vue.use(Dragable);
+Vue.use(FormDatepickerPlugin);
 
 export default {
   name: "InvoiceCreate",
@@ -240,8 +223,7 @@ export default {
               cost: "",
               quantity: "",
               save: false
-            },
-        
+            }
           ],
           services: []
         };
@@ -316,19 +298,21 @@ export default {
         .get("/api/search/products", {
           params: { keywords: this.invoice.products[index].name }
         })
-        .then(res=>{
-          console.log(res)
-          this.searchResults=res.data.products;
+        .then(res => {
+          console.log(res);
+          this.searchResults = res.data.products;
         })
-        .catch(err=>{
-          console.log('CANT FETCH',err)});
+        .catch(err => {
+          console.log("CANT FETCH", err);
+        });
     },
-    fillWithResult(index){
-      const newProduct =this.searchResults.filter(result => result.name == this.invoice.products[index].name);
-      console.log(newProduct);
-      this.invoice.products[index].description=newProduct[0].description;
-      this.invoice.products[index].cost=newProduct[0].cost;
-      this.invoice.products[index].quantity=1;
+    fillWithResult(index) {
+      const newProduct = this.searchResults.filter(
+        result => result.name == this.invoice.products[index].name
+      );
+      this.invoice.products[index].description = newProduct[0].description;
+      this.invoice.products[index].cost = newProduct[0].cost;
+      this.invoice.products[index].quantity = 1;
       this.totalCost();
     },
     submit() {
@@ -361,17 +345,19 @@ export default {
       this.invoice.due_date = this.getDate(1);
       this.invoice.invoice_date = this.getDate(0);
       const app = this;
-      console.log("test");
       axios
         .get("/api/invoice/create")
         .then(res => {
+          console.log(res.data.invoice_number);
           app.invoice.invoice_number = res.data.invoice_number;
+          this.loaded = true;
         })
         .catch(err => {
           console.log(err);
         });
+    } else {
+      this.loaded = true;
     }
-    this.loaded = true;
   },
   computed: {
     ...mapGetters(["isAuthenticated"]),
@@ -380,7 +366,11 @@ export default {
 };
 </script>
 <style>
-.highlighted {
-  color: blueviolet;
+  div.b-calendar-grid-body > div > div > span{
+  padding: 0.5em 0.5em!important;
+  border-radius: 45% !important;
 }
+
+
+
 </style>

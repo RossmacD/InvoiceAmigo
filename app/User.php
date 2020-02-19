@@ -21,7 +21,7 @@ class User extends Authenticatable
         // $incoming = $this->incomingInvoices();
         // $outgoing = $this->outgoingInvoices();
         // return $outgoing->union($incoming);
-        return $this->hasMany('App\invoice','user_id') ;
+        return $this->hasMany('App\Invoice','user_id') ;
         //return $this->hasMany('App\invoice', 'user_id')->where();
     }
 
