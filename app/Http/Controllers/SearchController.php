@@ -23,12 +23,12 @@ class SearchController extends Controller
         // return response()->json(['test'=> $products_test,],200);
         $error = ['error' => 'No results found'];
         if (!$request['keywords']) {
-            return response()->json($error, 421);
+            return response()->json($error, 200);
         }
 
         //$user = Auth::user()->id;
         // $products = Auth::user()->products()->where('name', $request->keywords)->get();
-        $products = Auth::user()->products()->where('name','LIKE','%'.$request['keywords']."%")->get();
+        $products = Auth::user()->products()->where('name','LIKE','%'.$request['keywords']."%")->take(10)->get();
         
         //$products = Product::search($request['keywords'])->get();
         if ($products->count()) {
@@ -39,6 +39,6 @@ class SearchController extends Controller
                 200
             );
         }
-        return response()->json($error, 420);
+        return response()->json($error, 200);
     }
 }

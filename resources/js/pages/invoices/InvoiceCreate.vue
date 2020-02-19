@@ -54,8 +54,8 @@
               </span>
             </template>
             <template v-slot:cell(name)='name_data'>
-              <b-form-group>
-                <b-form-input
+              <!-- <b-form-group> -->
+                <!-- <b-form-input
                   :id='`line_name${name_data.index}`'
                   type='text'
                   :name='`line_name${name_data.index}`'
@@ -64,13 +64,27 @@
                   :value='name_data'
                   v-model='invoice.products[name_data.index].name'
                   @input='searchProducts(name_data.index)'
-                ></b-form-input>
-                <datalist v-if="searchResults" :id='`line_name_list${name_data.index}`'>
+                ></b-form-input> -->
+                <!-- datalist v-if="searchResults" :id='`line_name_list${name_data.index}`'>
                   <option>Test</option>
-                  <!-- <option  v-for="searchResult in searchResults" v-bind='searchResult'>{{ searchResult }}</option> -->
-                </datalist>
+                  <option  v-for="searchResult in searchResults" v-bind='searchResult'>{{ searchResult }}</option>
+                </datalist> -->
+                
+<!-- 
                 <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
-              </b-form-group>
+              </b-form-group> -->
+              <vue-bootstrap-typeahead 
+                  :data="searchResults"
+                  :id='`line_name${name_data.index}`'
+                  :name='`line_name${name_data.index}`'
+                  autocomplete='line_name'
+                  :serializer='s=>s.name'
+                  :value='name_data'
+                  @hit='fillWithResult(name_data.index)'
+                  :minMatchingChars='1'
+                  v-model='invoice.products[name_data.index].name'
+                  @input='searchProducts(name_data.index)'
+                />
             </template>
 
             <template v-slot:cell(description)='description_data'>
@@ -193,6 +207,7 @@ import DeleteButton from "../../components/DeleteButton";
 import LoadingPage from "../../components/LoadingPage";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
@@ -205,7 +220,8 @@ export default {
     DeleteButton,
     LoadingPage,
     BIcon,
-    Dragable
+    Dragable,
+    VueBootstrapTypeahead
   },
   props: {
     invoice: {
@@ -219,19 +235,13 @@ export default {
           currency: "eur",
           products: [
             {
-              name: "1",
+              name: "",
               description: "",
               cost: "",
               quantity: "",
               save: false
             },
-            {
-              name: "12",
-              description: "",
-              cost: "",
-              quantity: "",
-              save: false
-            }
+        
           ],
           services: []
         };
@@ -308,15 +318,18 @@ export default {
         })
         .then(res=>{
           console.log(res)
+          this.searchResults=res.data.products;
         })
         .catch(err=>{
-          console.log(err)});
+          console.log('CANT FETCH',err)});
     },
-    highlight(text) {
-      return text.replace(
-        new RegExp(this.keywords, "gi"),
-        '<span class="highlighted">$&</span>'
-      );
+    fillWithResult(index){
+      const newProduct =this.searchResults.filter(result => result.name == this.invoice.products[index].name);
+      console.log(newProduct);
+      this.invoice.products[index].description=newProduct[0].description;
+      this.invoice.products[index].cost=newProduct[0].cost;
+      this.invoice.products[index].quantity=1;
+      this.totalCost();
     },
     submit() {
       const app = this;
@@ -339,7 +352,6 @@ export default {
             })
             .catch(err => {});
         }
-
         app.submiting = false;
       }
     }
@@ -353,7 +365,6 @@ export default {
       axios
         .get("/api/invoice/create")
         .then(res => {
-          console.log(res);
           app.invoice.invoice_number = res.data.invoice_number;
         })
         .catch(err => {
