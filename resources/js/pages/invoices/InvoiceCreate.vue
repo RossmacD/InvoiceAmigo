@@ -370,7 +370,4 @@ export default {
   padding: 0.5em 0.5em!important;
   border-radius: 45% !important;
 }
-
-
-
 </style>

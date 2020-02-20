@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if='isProfileLoaded=true'>
+    <LoadingPage v-if="profileLoading"></LoadingPage>
+    <div v-else-if='isProfileLoaded="success"'>
       <h1>Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
     </div>
@@ -13,6 +14,7 @@ import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
 import { CardPlugin, ButtonPlugin, LayoutPlugin } from "bootstrap-vue";
 import ErrorPage from "../components/ErrorPage";
+import LoadingPage from "../components/LoadingPage";
 Vue.use(CardPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(LayoutPlugin);
@@ -20,13 +22,15 @@ Vue.use(LayoutPlugin);
 export default {
   name: "DashBoard",
   components: {
-    ErrorPage
+    ErrorPage,
+    LoadingPage
   },
   computed: {
     ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
     ...mapState({
       authLoading: state => state.auth.status === "loading",
-      name: state => `${state.user.profile.name}`
+      name: state => `${state.user.profile.name}`,
+      profileLoading: state => state.user.status === "loading",
     })
   }
 };
