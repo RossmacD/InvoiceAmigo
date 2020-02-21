@@ -25,5 +25,6 @@ class Invoice extends Model
         'client_id' => 0,
         'status' =>'unseen',
         'currency' => 'eur',
+        'total_cost'=>'0'
      ];
 }

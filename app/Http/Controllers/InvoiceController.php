@@ -8,6 +8,7 @@ use App\Invoice;
 use Validator;
 use App\InvoiceItems;
 use App\Product;
+use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -32,10 +33,10 @@ class InvoiceController extends Controller
         }
         return response()->json(
             [
-            'invoices' => $invoices,
-            'user' => $user,
-            ]
-            ,200
+                'invoices' => $invoices,
+                'user' => $user,
+            ],
+            200
         );
     }
 
@@ -46,10 +47,10 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $invoice= Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
-        if(isset($invoice)){
-            return response()->json(['invoice_number'=> $invoice->invoice_number+1], 200);
-        }else{
+        $invoice = Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
+        if (isset($invoice)) {
+            return response()->json(['invoice_number' => $invoice->invoice_number + 1], 200);
+        } else {
             return response()->json(['invoice_number' => 0], 200);
         }
     }
@@ -74,7 +75,7 @@ class InvoiceController extends Controller
         //     // 'product.*.quantity' => 'required|numeric',
         //     // 'product.*.cost' => 'required|numeric',
         // ];
-       
+
         //custom validation error messages
         // $messages = [
         //     'product.*.name.required' => 'Name Required', //syntax: field_name.rule
@@ -97,7 +98,7 @@ class InvoiceController extends Controller
         //Validate the form data
         // $request->validate($rules, $messages);
         //Get the arrays from the form
-       //TEMP $itemAmount = $request->input('product');
+        //TEMP $itemAmount = $request->input('product');
 
         //Create an Invoice
         $invoice = new Invoice;
@@ -108,42 +109,52 @@ class InvoiceController extends Controller
         $invoice->note = $request->note;
         $invoice->user_id = Auth::id();
 
-        //Calculate total cost
-        $total_cost=0;
-        foreach ($request->products as $product) {
-            $total_cost+=($product['cost'] * $product['quantity']);
+        //Calculate total cost + adjust for stripe
+        $total_cost = 0;
+        foreach ($request->invoiceLines as $line) {
+            $total_cost += ($line['cost'] * $line['quantity']) * 100;
         }
-        
-        //Adjust to be accurate for stripe
-        $invoice->total_cost=$total_cost*100;
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
-     //TEMP  $client = User::where('email', strtolower($request->client_email))->firstOrFail();
-     //TEMP   $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
-        
+        //TEMP  $client = User::where('email', strtolower($request->client_email))->firstOrFail();
+        //TEMP   $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
+
         $invoice->save();
 
         //Attach each product as invoice item
-        foreach ($request->products as $product) {
-            $invoiceItem=new InvoiceItems([
-                'name'=>$product['name'],
-                'description' => $product['description'],
-                'cost' => $product['cost']*100,
-                'quantity' => $product['quantity'],
-                'sub_total'=>$product['cost']*$product['quantity']*100
+        foreach ($request->invoiceLines as $line) {
+            $invoiceItem = new InvoiceItems([
+                'name' => $line['name'],
+                'description' => $line['description'],
+                'cost' => $line['cost'] * 100,
+                'quantity' => $line['quantity'],
+                'sub_total' => $line['cost'] * $line['quantity'] * 100
             ]);
+            if(isset($line['rate_unit'])){$invoiceItem->rate_unit = $line['rate_unit'];};
+            
             $invoice->invoiceItems()->save($invoiceItem);
-            if($product['save']){
-                $savedProd=new Product([
-                    'name' => $product['name'],
-                    'description' => $product['description'],
-                    'cost' => $product['cost'] * 100,
-                    'user_id' => Auth::id()
+            if ($line['save']) {
+                if ($line['type'] == 'product') {
+                    $savedLine = new Product([
+                        'name' => $line['name'],
+                        'description' => $line['description'],
+                        'cost' => $line['cost'] * 100,
+                        'user_id' => Auth::id()
                     ]);
-                $savedProd->save();
+                } else {
+                    $savedLine = new Service([
+                        'name' => $line['name'],
+                        'description' => $line['description'],
+                        'cost' => $line['cost'] * 100,
+                        'rate_unit' => $line['rate_unit'],
+                        'user_id' => Auth::id()
+                    ]);
+                }
+
+                $savedLine->save();
             }
         }
-       
+
         return response()->json(200);
     }
 
@@ -169,18 +180,6 @@ class InvoiceController extends Controller
             ],
             200
         );
-
-        // $invoice = Invoice::findOrFail($id);
-        // $invoiceItems=InvoiceItems::where('invoice_id', $id)->get();
-        // // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
-        // return response()->json(
-        //     [
-        //         'invoice' => $invoice,
-        //         'invoiceItems'=>$invoiceItems,
-        //     //TEMP 'client'=>$client
-        //     ]
-        //     ,200
-        // );
     }
 
     /**
