@@ -17,7 +17,7 @@ class CreateServicesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('description');
-            $table->bigInteger('rate');
+            $table->bigInteger('cost');
             $table->enum('rate_unit', ['hour', 'day', 'week']);
             $table->timestamps();
         });

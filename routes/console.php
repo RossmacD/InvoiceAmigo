@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,9 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('ia:regen',function(){
+    $this->call('migrate:refresh');
+    $this->call('passport:client', ['--personal'=>true]);
+    $this->info("Invoice Amigo successfully regenerated");
+})->describe('Regenerate InvoiceAmigo DB with personal access key');

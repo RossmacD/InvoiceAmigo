@@ -41,7 +41,7 @@ class ServiceController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
-            'rate' => 'required|numeric',
+            'cost' => 'required|numeric',
             'rate_unit'=>'required',
         ]);
         if ($validator->fails()) {
@@ -51,7 +51,7 @@ class ServiceController extends Controller
         $service = new Service;
         $service->name = $request->name;
         $service->description = $request->description;
-        $service->rate = $request->rate;
+        $service->cost = $request->cost;
         $service->rate_unit = $request->rate_unit;
         $service->user_id = Auth::id();
         $service->save();
@@ -88,7 +88,7 @@ class ServiceController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
-            'rate' => 'required|numeric',
+            'cost' => 'required|numeric',
             'rate_unit' => 'required',
         ]);
         if ($validator->fails()) {
@@ -98,7 +98,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         $service->name = $request->name;
         $service->description = $request->description;
-        $service->rate = $request->rate;
+        $service->cost = $request->cost;
         $service->rate_unit = $request->rate_unit;
         $service->user_id = Auth::id();
         $service->save();

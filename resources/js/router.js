@@ -6,6 +6,7 @@ import Home from "./pages/HomePage";
 import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
+import InvoiceView from "./pages/invoices/InvoiceView.vue";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
@@ -128,9 +129,15 @@ const routes = [
         beforeEnter: onlyLoggedIn
     },
     {
-        path: "/invoices/:id",
+        path: "/invoices/edit/:id",
         name: "invoiceupdate",
         component: InvoiceUpdate,
+        beforeEnter: onlyLoggedIn
+    },
+    {
+        path: "/invoices/:id",
+        name: "invoiceview",
+        component: InvoiceView,
         beforeEnter: onlyLoggedIn
     }
 ];

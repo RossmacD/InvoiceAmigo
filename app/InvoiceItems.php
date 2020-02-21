@@ -11,6 +11,6 @@ class InvoiceItems extends Model
         return $this->belongsTo('App\Invoice');
     }
 
-    protected $fillable = ['name','description','cost','quantity'];
+    protected $fillable = ['name','description','cost','quantity','sub_total'];
 
 }

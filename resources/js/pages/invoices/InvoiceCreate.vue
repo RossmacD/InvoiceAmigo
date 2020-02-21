@@ -25,14 +25,12 @@
         <b-row>
           <b-col>
             <b-form-group label='Invoice Date' label-for='invoice_date'>
-              <b-form-datepicker id="example-datepicker" v-model="invoice.invoice_date" ></b-form-datepicker>
+              <b-form-datepicker id='example-datepicker' v-model='invoice.invoice_date'></b-form-datepicker>
             </b-form-group>
-            
-
           </b-col>
           <b-col>
             <b-form-group label='Due Date' label-for='due_date'>
-              <b-form-datepicker id="due_date" v-model="invoice.due_date" ></b-form-datepicker>
+              <b-form-datepicker id='due_date' v-model='invoice.due_date'></b-form-datepicker>
             </b-form-group>
           </b-col>
         </b-row>
@@ -136,21 +134,10 @@
             </b-row>
           </template>
           <template v-slot:foot(quantity)>Total Cost: €{{total}}</template>
-          <template v-slot:foot(cost)>
-            <br />
-          </template>
-          <template v-slot:foot(no.)>
-            <b-button variant='success' @click='addRow'>+</b-button>
-          </template>
-          <template v-slot:foot(name)>
-            <br />
-          </template>
-          <template v-slot:foot(description)>
-            <br />
-          </template>
-          <template v-slot:foot(options)>
-            <br />
-          </template>
+          
+           <template v-slot:foot()>
+             <br>
+           </template>
         </b-table>
         <!-- </Dragable> -->
         <hr />
@@ -178,11 +165,11 @@ import axios from "axios";
 import Dragable from "vuedraggable";
 import {
   FormPlugin,
-  ButtonPlugin,
   SpinnerPlugin,
   TablePlugin,
   BIcon,
-  FormDatepickerPlugin 
+  FormDatepickerPlugin,
+  ButtonPlugin
 } from "bootstrap-vue";
 import Vue from "vue";
 import DeleteButton from "../../components/DeleteButton";
@@ -366,8 +353,8 @@ export default {
 };
 </script>
 <style>
-  div.b-calendar-grid-body > div > div > span{
-  padding: 0.5em 0.5em!important;
+div.b-calendar-grid-body > div > div > span {
+  padding: 0.5em 0.5em !important;
   border-radius: 45% !important;
 }
 </style>

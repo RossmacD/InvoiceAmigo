@@ -14,8 +14,8 @@ const actions = {
     [USER_REQUEST]: ({ commit, dispatch }) => {
         commit(USER_REQUEST);
         axios({ url: 'api/user', method: 'GET' })
-            .then(resp => {
-                commit(USER_SUCCESS, resp);
+            .then(res => {
+                commit(USER_SUCCESS, res);
             })
             .catch(err => {
                 commit(USER_ERROR);

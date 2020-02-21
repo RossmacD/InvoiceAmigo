@@ -14,8 +14,8 @@
         <b-form-invalid-feedback v-if='messages.service.description' force-show>{{messages.service.description[0]}}</b-form-invalid-feedback>
       </b-form-group>
         <b-form-group label='Service Rate' label-for='service_rate'>
-          <b-form-input id='service_rate' type='number' name='service_rate' required autocomplete='service_rate' autofocus v-model='service.rate'></b-form-input>
-          <b-form-invalid-feedback v-if='messages.service.rate' force-show>{{messages.service.rate[0]}}</b-form-invalid-feedback>
+          <b-form-input id='service_rate' type='number' name='service_rate' required autocomplete='service_rate' autofocus v-model='service.cost'></b-form-input>
+          <b-form-invalid-feedback v-if='messages.service.cost' force-show>{{messages.service.cost[0]}}</b-form-invalid-feedback>
         </b-form-group>
         <b-form-group label='Service Rate' label-for='service_rate'>
           <b-form-select plain v-model='service.rate_unit' :options='options' class='mt-3'></b-form-select>
@@ -56,7 +56,7 @@ export default {
         return {
           name: "",
           description: "",
-          rate: "",
+          cost: "",
           rate_unit: "hour"
         };
       }
@@ -72,7 +72,7 @@ export default {
         service: {
           name: [],
           description: [],
-          rate: [],
+          cost: [],
           rate_unit: []
         }
       },

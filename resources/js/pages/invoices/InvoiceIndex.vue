@@ -13,7 +13,7 @@
             <h3 class="text-light">#{{ invoice.invoice_number }}: </h3>
           </b-col>
           <b-col>
-            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to="'invoices/'+invoice.id" size='sm'>
+            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to="'invoices/edit/'+invoice.id" size='sm'>
               <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
             </b-button>
             <DeleteButton class='float-right mx-1' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index'></DeleteButton>
@@ -23,7 +23,9 @@
         <b-row>
           <b-col>{{invoice.note}}</b-col>
           <b-col>
-            
+            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to="'invoices/'+invoice.id" size='sm'>
+              <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
+            </b-button>
           </b-col>
         </b-row>
     </b-card>

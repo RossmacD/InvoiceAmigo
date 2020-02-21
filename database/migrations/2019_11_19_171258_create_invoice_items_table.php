@@ -17,8 +17,8 @@ class CreateInvoiceItemsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('description');
-            $table->bigInteger('cost')->nullable();
-            $table->bigInteger('rate')->nullable();
+            $table->bigInteger('cost');
+            $table->bigInteger('sub_total');
             $table->enum('rate_unit', ['hour', 'day', 'week'])->nullable();
             $table->bigInteger('quantity');
             $table->enum('type', ['product','service']);

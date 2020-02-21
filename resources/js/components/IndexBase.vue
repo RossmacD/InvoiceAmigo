@@ -24,7 +24,7 @@
           <b-col></b-col>
           <b-col>
             <h4 v-if="item.cost" class='float-right'>€{{ item.cost }} EUR</h4>
-            <h4 class='float-right' v-else>€{{ item.rate }} per {{ item.rate_unit }}</h4>
+            <h4 class='float-right' v-else>€{{ item.cost }} per {{ item.rate_unit }}</h4>
           </b-col>
         </b-row>
         </b-card>

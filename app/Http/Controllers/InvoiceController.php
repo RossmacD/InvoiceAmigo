@@ -130,6 +130,7 @@ class InvoiceController extends Controller
                 'description' => $product['description'],
                 'cost' => $product['cost']*100,
                 'quantity' => $product['quantity'],
+                'sub_total'=>$product['cost']*$product['quantity']*100
             ]);
             $invoice->invoiceItems()->save($invoiceItem);
             if($product['save']){
@@ -142,7 +143,7 @@ class InvoiceController extends Controller
                 $savedProd->save();
             }
         }
-        //Redirect to a specified route with flash message.
+       
         return response()->json(200);
     }
 
@@ -157,9 +158,9 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $invoiceItems = InvoiceItems::where('invoice_id', $id)->get();
-        $invoice->products= $invoiceItems->where('type','product');
-        $invoice->services = $invoiceItems->where('type', 'service');
+        $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
+        // $invoice->products= $invoiceItems->where('type','product')->values();
+        // $invoice->services = $invoiceItems->where('type', 'service')->values();
         // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
         return response()->json(
             [
