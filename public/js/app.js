@@ -2993,6 +2993,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3027,11 +3041,13 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
           invoice_date: "",
           due_date: "",
           currency: "eur",
-          products: [{
+          invoiceLines: [{
             name: "",
             description: "",
             cost: "",
             quantity: "",
+            type: "product",
+            dropText: "Product",
             save: false
           }],
           services: []
@@ -3051,6 +3067,9 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       drag: true,
       fields: ["no.", "name", "description", {
         key: "cost",
+        variant: "active"
+      }, {
+        key: "type",
         variant: "active"
       }, {
         key: " ",
@@ -3082,9 +3101,25 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
   },
   methods: {
     totalCost: function totalCost() {
-      this.total = this.invoice.products.reduce(function (acc, product) {
-        return acc + product.cost * product.quantity;
+      this.total = this.invoice.invoiceLines.reduce(function (acc, line) {
+        return acc + line.cost * line.quantity;
       }, 0);
+    },
+    setDropText: function setDropText(index, type, unit) {
+      this.invoice.invoiceLines[index].rate_unit = unit; //Set Text for dropdown + update line type
+
+      if (type === "product") {
+        this.invoice.invoiceLines[index].type = type;
+        this.invoice.invoiceLines[index].dropText = "Product";
+      } else {
+        this.invoice.invoiceLines[index].type = "service";
+
+        if (unit === "day") {
+          this.invoice.invoiceLines[index].dropText = "Daily";
+        } else {
+          this.invoice.invoiceLines[index].dropText = unit.charAt(0).toUpperCase() + unit.slice(1) + "ly";
+        }
+      }
     },
     getDate: function getDate(addon) {
       var toTwoDigits = function toTwoDigits(num) {
@@ -3098,59 +3133,60 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       return "".concat(year, "-").concat(month, "-").concat(day);
     },
     addRow: function addRow() {
-      this.invoice.products.push({
+      this.invoice.invoiceLines.push({
         name: "",
         description: "",
         cost: "",
         quantity: "",
+        type: "product",
+        dropText: "Product",
         save: false
       });
     },
     deleteRow: function deleteRow(id, index) {
-      this.invoice.products.splice(index, 1);
+      this.invoice.invoiceLines.splice(index, 1);
     },
     searchProducts: function searchProducts(index) {
-      var _this = this;
-
-      // this.invoice.products[name_data.index].name
+      var app = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/search/products", {
         params: {
-          keywords: this.invoice.products[index].name
+          keywords: app.invoice.invoiceLines[index].name
         }
       }).then(function (res) {
         console.log(res);
-        _this.searchResults = res.data.products;
+        app.searchResults = res.data.products;
       })["catch"](function (err) {
         console.log("CANT FETCH", err);
       });
     },
     fillWithResult: function fillWithResult(index) {
-      var _this2 = this;
+      var _this = this;
 
+      //Fill in Invoice Line after autocomplete is selected
       var newProduct = this.searchResults.filter(function (result) {
-        return result.name == _this2.invoice.products[index].name;
+        return result.name == _this.invoice.invoiceLines[index].name;
       });
-      this.invoice.products[index].description = newProduct[0].description;
-      this.invoice.products[index].cost = newProduct[0].cost;
-      this.invoice.products[index].quantity = 1;
+      this.invoice.invoiceLines[index].description = newProduct[0].description;
+      this.invoice.invoiceLines[index].cost = newProduct[0].cost;
+      this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
     },
     submit: function submit() {
-      var _this3 = this;
+      var _this2 = this;
 
       var app = this;
       app.submiting = true;
 
       if (app.isAuthenticated) {
         if (app.editing) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoices/" + app.invoice.id, app.invoice).then(function (response) {
-            _this3.$router.push("/invoices");
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoices" + app.invoice.id, app.invoice).then(function (response) {
+            _this2.$router.push("/invoices");
           })["catch"](function (err) {
             console.log(err.response);
           });
         } else {
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/invoices/", app.invoice).then(function (response) {
-            _this3.$router.push("/invoices");
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/invoices", app.invoice).then(function (response) {
+            _this2.$router.push("/invoices");
           })["catch"](function (err) {});
         }
 
@@ -3159,16 +3195,15 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     }
   },
   mounted: function mounted() {
-    var _this4 = this;
+    var _this3 = this;
 
     if (!this.editing) {
       this.invoice.due_date = this.getDate(1);
       this.invoice.invoice_date = this.getDate(0);
       var app = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoice/create").then(function (res) {
-        console.log(res.data.invoice_number);
         app.invoice.invoice_number = res.data.invoice_number;
-        _this4.loaded = true;
+        _this3.loaded = true;
       })["catch"](function (err) {
         console.log(err);
       });
@@ -3380,6 +3415,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -40185,7 +40222,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\ndiv.b-calendar-grid-body > div > div > span {\r\n  padding: 0.5em 0.5em !important;\r\n  border-radius: 45% !important;\n}\r\n", ""]);
+exports.push([module.i, "\ndiv.b-calendar-grid-body > div > div > span {\r\n  padding: 0.5em 0.5em !important;\r\n  border-radius: 45% !important;\n}\n.append-fix > .btn {\r\n  border-radius: 0px 15px 15px 0px !important;\n}\r\n", ""]);
 
 // exports
 
@@ -68465,15 +68502,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("h3", [_vm._v("Invoice Items")]),
                   _vm._v(" "),
-                  _c("h4", [_vm._v("Products")]),
-                  _vm._v(" "),
                   _c("b-table", {
                     attrs: {
                       responsive: "md",
                       striped: "",
                       hover: "",
                       fields: _vm.fields,
-                      items: _vm.invoice.products,
+                      items: _vm.invoice.invoiceLines,
                       "foot-clone": ""
                     },
                     scopedSlots: _vm._u([
@@ -68529,16 +68564,17 @@ var render = function() {
                               },
                               model: {
                                 value:
-                                  _vm.invoice.products[name_data.index].name,
+                                  _vm.invoice.invoiceLines[name_data.index]
+                                    .name,
                                 callback: function($$v) {
                                   _vm.$set(
-                                    _vm.invoice.products[name_data.index],
+                                    _vm.invoice.invoiceLines[name_data.index],
                                     "name",
                                     $$v
                                   )
                                 },
                                 expression:
-                                  "invoice.products[name_data.index].name"
+                                  "invoice.invoiceLines[name_data.index].name"
                               }
                             })
                           ]
@@ -68566,12 +68602,12 @@ var render = function() {
                                   },
                                   model: {
                                     value:
-                                      _vm.invoice.products[
+                                      _vm.invoice.invoiceLines[
                                         description_data.index
                                       ].description,
                                     callback: function($$v) {
                                       _vm.$set(
-                                        _vm.invoice.products[
+                                        _vm.invoice.invoiceLines[
                                           description_data.index
                                         ],
                                         "description",
@@ -68579,7 +68615,7 @@ var render = function() {
                                       )
                                     },
                                     expression:
-                                      "invoice.products[description_data.index].description"
+                                      "invoice.invoiceLines[description_data.index].description"
                                   }
                                 }),
                                 _vm._v(" "),
@@ -68617,17 +68653,19 @@ var render = function() {
                                   },
                                   model: {
                                     value:
-                                      _vm.invoice.products[cost_data.index]
+                                      _vm.invoice.invoiceLines[cost_data.index]
                                         .cost,
                                     callback: function($$v) {
                                       _vm.$set(
-                                        _vm.invoice.products[cost_data.index],
+                                        _vm.invoice.invoiceLines[
+                                          cost_data.index
+                                        ],
                                         "cost",
                                         $$v
                                       )
                                     },
                                     expression:
-                                      "invoice.products[cost_data.index].cost"
+                                      "invoice.invoiceLines[cost_data.index].cost"
                                   }
                                 }),
                                 _vm._v(" "),
@@ -68635,6 +68673,111 @@ var render = function() {
                                   "b-form-invalid-feedback",
                                   { attrs: { id: "input-live-feedback" } },
                                   [_vm._v("Required")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "cell(type)",
+                        fn: function(type_data) {
+                          return [
+                            _c(
+                              "b-dropdown",
+                              {
+                                attrs: {
+                                  id: "dropdown-1",
+                                  text:
+                                    _vm.invoice.invoiceLines[type_data.index]
+                                      .dropText
+                                }
+                              },
+                              [
+                                _c(
+                                  "b-dropdown-group",
+                                  { attrs: { id: "dropdown-product" } },
+                                  [
+                                    _c(
+                                      "b-dropdown-item",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.setDropText(
+                                              type_data.index,
+                                              "product",
+                                              null
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Product")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c("b-dropdown-divider"),
+                                _vm._v(" "),
+                                _c(
+                                  "b-dropdown-group",
+                                  {
+                                    attrs: {
+                                      id: "dropdown-service",
+                                      header: "Service"
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "b-dropdown-item",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.setDropText(
+                                              type_data.index,
+                                              "service",
+                                              "hour"
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Hourly")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "b-dropdown-item",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.setDropText(
+                                              type_data.index,
+                                              "service",
+                                              "day"
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Daily")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "b-dropdown-item",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.setDropText(
+                                              type_data.index,
+                                              "service",
+                                              "week"
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Weekly")]
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
                               1
@@ -68665,11 +68808,12 @@ var render = function() {
                                   },
                                   model: {
                                     value:
-                                      _vm.invoice.products[quantity_data.index]
-                                        .quantity,
+                                      _vm.invoice.invoiceLines[
+                                        quantity_data.index
+                                      ].quantity,
                                     callback: function($$v) {
                                       _vm.$set(
-                                        _vm.invoice.products[
+                                        _vm.invoice.invoiceLines[
                                           quantity_data.index
                                         ],
                                         "quantity",
@@ -68677,7 +68821,7 @@ var render = function() {
                                       )
                                     },
                                     expression:
-                                      "invoice.products[quantity_data.index].quantity"
+                                      "invoice.invoiceLines[quantity_data.index].quantity"
                                   }
                                 }),
                                 _vm._v(" "),
@@ -68730,12 +68874,12 @@ var render = function() {
                                       },
                                       model: {
                                         value:
-                                          _vm.invoice.products[
+                                          _vm.invoice.invoiceLines[
                                             options_data.index
                                           ].save,
                                         callback: function($$v) {
                                           _vm.$set(
-                                            _vm.invoice.products[
+                                            _vm.invoice.invoiceLines[
                                               options_data.index
                                             ],
                                             "save",
@@ -68743,7 +68887,7 @@ var render = function() {
                                           )
                                         },
                                         expression:
-                                          "invoice.products[options_data.index].save"
+                                          "invoice.invoiceLines[options_data.index].save"
                                       }
                                     })
                                   ],
@@ -68779,6 +68923,19 @@ var render = function() {
                       }
                     ])
                   }),
+                  _vm._v(" "),
+                  _c(
+                    "b-button",
+                    {
+                      attrs: { variant: "success" },
+                      on: {
+                        click: function($event) {
+                          return _vm.addRow()
+                        }
+                      }
+                    },
+                    [_vm._v("+")]
+                  ),
                   _vm._v(" "),
                   _c("hr"),
                   _vm._v(" "),
@@ -69085,7 +69242,7 @@ var render = function() {
               _vm._v(" "),
               _c("hr"),
               _vm._v(" "),
-              _c("h5", [_vm._v("Products")]),
+              _c("h5", [_vm._v("Invoice Items")]),
               _vm._v(" "),
               _c("b-table", {
                 attrs: {
@@ -69170,7 +69327,11 @@ var render = function() {
                     proxy: true
                   }
                 ])
-              })
+              }),
+              _vm._v(" "),
+              _c("h5", [_vm._v("Notes:")]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(_vm.invoice.notes))])
             ],
             1
           )

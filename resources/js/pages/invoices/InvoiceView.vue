@@ -6,7 +6,7 @@
       <h5>Sent: {{invoice.invoice_date}}</h5>
       <h5>Due: {{invoice.due_date}}</h5>
       <hr />
-      <h5>Products</h5>
+      <h5>Invoice Items</h5>
       <b-table responsive='md' striped hover :fields='fields' :items='invoice.invoiceLines' foot-clone foot-variant="light">
           <template v-slot:cell(no.)='data'>
             <span>
@@ -32,6 +32,8 @@
            </template>
 
       </b-table>
+      <h5>Notes:</h5>
+      <p>{{invoice.notes}}</p>
     </div>
   </div>
 </template>

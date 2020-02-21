@@ -36,7 +36,6 @@
         </b-row>
         <hr />
         <h3>Invoice Items</h3>
-        <h4>Products</h4>
         <!-- handle=".handle" :options="{draggable:'.table-responsive-md > table > tbody > tr',handle:'.handle'}"  @start="drag = true" @end="drag = false"-->
         <!-- ORDER:
         <Dragable v-model='invoice.products'>
@@ -44,7 +43,7 @@
         </Dragable>-->
 
         <!-- <Dragable v-model='invoice.products' tag='span' draggable='.table-light'> -->
-        <b-table responsive='md' striped hover :fields='fields' :items='invoice.products' foot-clone>
+        <b-table responsive='md' striped hover :fields='fields' :items='invoice.invoiceLines' foot-clone>
           <template v-slot:cell(no.)='data'>
             <span>
               {{ data.index + 1 }}
@@ -61,7 +60,7 @@
               :value='name_data'
               @hit='fillWithResult(name_data.index)'
               :minMatchingChars='1'
-              v-model='invoice.products[name_data.index].name'
+              v-model='invoice.invoiceLines[name_data.index].name'
               @input='searchProducts(name_data.index)'
             />
           </template>
@@ -75,7 +74,7 @@
                 required
                 autocomplete='line_description'
                 :value='description_data'
-                v-model='invoice.products[description_data.index].description'
+                v-model='invoice.invoiceLines[description_data.index].description'
               ></b-form-input>
               <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
             </b-form-group>
@@ -91,10 +90,24 @@
                 required
                 autocomplete='line_cost'
                 :value='cost_data'
-                v-model='invoice.products[cost_data.index].cost'
+                v-model='invoice.invoiceLines[cost_data.index].cost'
               ></b-form-input>
               <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
             </b-form-group>
+          </template>
+          <template v-slot:cell(type)='type_data'>
+            <!-- <b-form-select v-model="invoice.invoiceLines[type_data.index]"  options="{product}"></b-form-select> -->
+            <b-dropdown id='dropdown-1' :text='invoice.invoiceLines[type_data.index].dropText'>
+              <b-dropdown-group id='dropdown-product'>
+                <b-dropdown-item @click='setDropText(type_data.index,`product`,null)'>Product</b-dropdown-item>
+              </b-dropdown-group>
+              <b-dropdown-divider></b-dropdown-divider>
+              <b-dropdown-group id='dropdown-service' header='Service'>
+                <b-dropdown-item @click='setDropText(type_data.index,`service`,`hour`)'>Hourly</b-dropdown-item>
+                <b-dropdown-item @click='setDropText(type_data.index,`service`,`day`)'>Daily</b-dropdown-item>
+                <b-dropdown-item @click='setDropText(type_data.index,`service`,`week`)'>Weekly</b-dropdown-item>
+              </b-dropdown-group>
+            </b-dropdown>
           </template>
 
           <template v-slot:cell(quantity)='quantity_data'>
@@ -107,7 +120,7 @@
                 required
                 autocomplete='line_quantity'
                 :value='quantity_data'
-                v-model='invoice.products[quantity_data.index].quantity'
+                v-model='invoice.invoiceLines[quantity_data.index].quantity'
               ></b-form-input>
               <b-form-invalid-feedback id='input-live-feedback'>Required</b-form-invalid-feedback>
             </b-form-group>
@@ -127,18 +140,19 @@
                   required
                   autocomplete='line_options'
                   value='true'
-                  v-model='invoice.products[options_data.index].save'
+                  v-model='invoice.invoiceLines[options_data.index].save'
                 ></b-form-checkbox>
               </b-form-group>
               <DeleteButton v-on:on-confirm='deleteRow' :id='options_data.index' :index='options_data.index'></DeleteButton>
             </b-row>
           </template>
           <template v-slot:foot(quantity)>Total Cost: €{{total}}</template>
-          
-           <template v-slot:foot()>
-             <br>
-           </template>
+
+          <template v-slot:foot()>
+            <br />
+          </template>
         </b-table>
+        <b-button v-on:click='addRow()' variant='success'>+</b-button>
         <!-- </Dragable> -->
         <hr />
         <b-form-group label='Invoice Notes' label-for='notes'>
@@ -203,12 +217,14 @@ export default {
           invoice_date: "",
           due_date: "",
           currency: "eur",
-          products: [
+          invoiceLines: [
             {
               name: "",
               description: "",
               cost: "",
               quantity: "",
+              type: "product",
+              dropText: "Product",
               save: false
             }
           ],
@@ -232,6 +248,7 @@ export default {
         "name",
         "description",
         { key: "cost", variant: "active" },
+        { key: "type", variant: "active" },
         { key: " ", variant: "active" },
         { key: "quantity", variant: "active" },
         "options"
@@ -254,10 +271,26 @@ export default {
   },
   methods: {
     totalCost() {
-      this.total = this.invoice.products.reduce(
-        (acc, product) => acc + product.cost * product.quantity,
+      this.total = this.invoice.invoiceLines.reduce(
+        (acc, line) => acc + line.cost * line.quantity,
         0
       );
+    },
+    setDropText(index, type, unit) {
+      this.invoice.invoiceLines[index].rate_unit = unit;
+      //Set Text for dropdown + update line type
+      if (type === "product") {
+        this.invoice.invoiceLines[index].type = type;
+        this.invoice.invoiceLines[index].dropText = "Product";
+      } else {
+        this.invoice.invoiceLines[index].type = "service";
+        if (unit === "day") {
+          this.invoice.invoiceLines[index].dropText = "Daily";
+        } else {
+          this.invoice.invoiceLines[index].dropText =
+            unit.charAt(0).toUpperCase() + unit.slice(1) + "ly";
+        }
+      }
     },
     getDate(addon) {
       const toTwoDigits = num => (num < 10 ? "0" + num : num);
@@ -268,38 +301,41 @@ export default {
       return `${year}-${month}-${day}`;
     },
     addRow() {
-      this.invoice.products.push({
+      this.invoice.invoiceLines.push({
         name: "",
         description: "",
         cost: "",
         quantity: "",
+        type: "product",
+        dropText: "Product",
         save: false
       });
     },
     deleteRow(id, index) {
-      this.invoice.products.splice(index, 1);
+      this.invoice.invoiceLines.splice(index, 1);
     },
     searchProducts(index) {
-      // this.invoice.products[name_data.index].name
+      const app = this;
       axios
         .get("/api/search/products", {
-          params: { keywords: this.invoice.products[index].name }
+          params: { keywords: app.invoice.invoiceLines[index].name }
         })
         .then(res => {
           console.log(res);
-          this.searchResults = res.data.products;
+          app.searchResults = res.data.products;
         })
         .catch(err => {
           console.log("CANT FETCH", err);
         });
     },
     fillWithResult(index) {
+      //Fill in Invoice Line after autocomplete is selected
       const newProduct = this.searchResults.filter(
-        result => result.name == this.invoice.products[index].name
+        result => result.name == this.invoice.invoiceLines[index].name
       );
-      this.invoice.products[index].description = newProduct[0].description;
-      this.invoice.products[index].cost = newProduct[0].cost;
-      this.invoice.products[index].quantity = 1;
+      this.invoice.invoiceLines[index].description = newProduct[0].description;
+      this.invoice.invoiceLines[index].cost = newProduct[0].cost;
+      this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
     },
     submit() {
@@ -308,7 +344,7 @@ export default {
       if (app.isAuthenticated) {
         if (app.editing) {
           axios
-            .put("/api/invoices/" + app.invoice.id, app.invoice)
+            .put("/api/invoices" + app.invoice.id, app.invoice)
             .then(response => {
               this.$router.push("/invoices");
             })
@@ -317,7 +353,7 @@ export default {
             });
         } else {
           axios
-            .post("/api/invoices/", app.invoice)
+            .post("/api/invoices", app.invoice)
             .then(response => {
               this.$router.push("/invoices");
             })
@@ -335,7 +371,6 @@ export default {
       axios
         .get("/api/invoice/create")
         .then(res => {
-          console.log(res.data.invoice_number);
           app.invoice.invoice_number = res.data.invoice_number;
           this.loaded = true;
         })
@@ -356,5 +391,8 @@ export default {
 div.b-calendar-grid-body > div > div > span {
   padding: 0.5em 0.5em !important;
   border-radius: 45% !important;
+}
+.append-fix > .btn {
+  border-radius: 0px 15px 15px 0px !important;
 }
 </style>
