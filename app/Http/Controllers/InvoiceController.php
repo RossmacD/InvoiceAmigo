@@ -130,8 +130,9 @@ class InvoiceController extends Controller
                 'quantity' => $line['quantity'],
                 'sub_total' => $line['cost'] * $line['quantity'] * 100
             ]);
-            if(isset($line['rate_unit'])){$invoiceItem->rate_unit = $line['rate_unit'];};
-            
+            if (isset($line['rate_unit'])) {
+                $invoiceItem->rate_unit = $line['rate_unit'];
+            }
             $invoice->invoiceItems()->save($invoiceItem);
             if ($line['save']) {
                 if ($line['type'] == 'product') {

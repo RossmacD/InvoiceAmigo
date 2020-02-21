@@ -28,13 +28,16 @@ class SearchController extends Controller
 
         //$user = Auth::user()->id;
         // $products = Auth::user()->products()->where('name', $request->keywords)->get();
-        $products = Auth::user()->products()->where('name','LIKE','%'.$request['keywords']."%")->take(10)->get();
-        
+        //Get Matching products and services then combine
+        $products = Auth::user()->products()->where('name','LIKE','%'.$request['keywords']."%")->take(5)->get();
+        $services = Auth::user()->services()->where('name','LIKE','%'.$request['keywords']."%")->take(5)->get();
+        // $invoiceLines = $services->merge($products);
+        $invoiceLines=array_merge($products->toArray(), $services->toArray());
         //$products = Product::search($request['keywords'])->get();
-        if ($products->count()) {
+        if (!empty($invoiceLines)) {
             return response()->json(
                 [
-                    'products' => $products,
+                    'invoiceLines'=>$invoiceLines
                 ],
                 200
             );

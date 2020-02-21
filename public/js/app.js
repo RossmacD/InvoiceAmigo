@@ -3154,7 +3154,7 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
         }
       }).then(function (res) {
         console.log(res);
-        app.searchResults = res.data.products;
+        app.searchResults = res.data.invoiceLines;
       })["catch"](function (err) {
         console.log("CANT FETCH", err);
       });
@@ -3168,6 +3168,7 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       });
       this.invoice.invoiceLines[index].description = newProduct[0].description;
       this.invoice.invoiceLines[index].cost = newProduct[0].cost;
+      newProduct[0].type === "product" ? "" : this.invoice.invoiceLines[index].rate_unit = newProduct[0].rate_unit;
       this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
     },

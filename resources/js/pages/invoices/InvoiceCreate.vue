@@ -322,7 +322,7 @@ export default {
         })
         .then(res => {
           console.log(res);
-          app.searchResults = res.data.products;
+          app.searchResults = res.data.invoiceLines;
         })
         .catch(err => {
           console.log("CANT FETCH", err);
@@ -335,6 +335,7 @@ export default {
       );
       this.invoice.invoiceLines[index].description = newProduct[0].description;
       this.invoice.invoiceLines[index].cost = newProduct[0].cost;
+      newProduct[0].type ==="product"?"":this.invoice.invoiceLines[index].rate_unit=newProduct[0].rate_unit;
       this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
     },
