@@ -16,7 +16,7 @@
 
         <template v-slot:cell(cost)='data'>
             <span>
-              {{curPrefix + invoice.invoiceLines[data.index].cost +" "+ invoice.invoiceLines[data.index].rate_unit+"ly" }}
+              {{curPrefix + invoice.invoiceLines[data.index].cost}} {{ invoice.invoiceLines[data.index].rate_unit?invoice.invoiceLines[data.index].rate_unit+"ly":'' }}
             </span>
           </template> 
 

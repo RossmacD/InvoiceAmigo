@@ -69121,11 +69121,14 @@ var render = function() {
                             "\n            " +
                               _vm._s(
                                 _vm.curPrefix +
-                                  _vm.invoice.invoiceLines[data.index].cost +
-                                  " " +
-                                  _vm.invoice.invoiceLines[data.index]
-                                    .rate_unit +
-                                  "ly"
+                                  _vm.invoice.invoiceLines[data.index].cost
+                              ) +
+                              " " +
+                              _vm._s(
+                                _vm.invoice.invoiceLines[data.index].rate_unit
+                                  ? _vm.invoice.invoiceLines[data.index]
+                                      .rate_unit + "ly"
+                                  : ""
                               ) +
                               "\n          "
                           )
