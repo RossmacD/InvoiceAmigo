@@ -276,22 +276,7 @@ export default {
         0
       );
     },
-    setDropText(index, type, unit) {
-      this.invoice.invoiceLines[index].rate_unit = unit;
-      //Set Text for dropdown + update line type
-      if (type === "product") {
-        this.invoice.invoiceLines[index].type = type;
-        this.invoice.invoiceLines[index].dropText = "Product";
-      } else {
-        this.invoice.invoiceLines[index].type = "service";
-        if (unit === "day") {
-          this.invoice.invoiceLines[index].dropText = "Daily";
-        } else {
-          this.invoice.invoiceLines[index].dropText =
-            unit.charAt(0).toUpperCase() + unit.slice(1) + "ly";
-        }
-      }
-    },
+    
     getDate(addon) {
       const toTwoDigits = num => (num < 10 ? "0" + num : num);
       let today = new Date();
@@ -321,7 +306,6 @@ export default {
           params: { keywords: app.invoice.invoiceLines[index].name }
         })
         .then(res => {
-          console.log(res);
           app.searchResults = res.data.invoiceLines;
         })
         .catch(err => {
@@ -335,9 +319,33 @@ export default {
       );
       this.invoice.invoiceLines[index].description = newProduct[0].description;
       this.invoice.invoiceLines[index].cost = newProduct[0].cost;
-      newProduct[0].type ==="product"?"":this.invoice.invoiceLines[index].rate_unit=newProduct[0].rate_unit;
+      if ("undefined" === typeof(newProduct[0]["rate_unit"])) {
+        console.log('undefined')
+        //Update the type + dropdown Text
+        this.setDropText(index,  "product", null);
+      } else {
+        console.log('defined')
+        this.invoice.invoiceLines[index].rate_unit = newProduct[0].rate_unit;
+        this.setDropText(index,"service", newProduct[0].rate_unit);
+      }
       this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
+    },
+    setDropText(index, type, unit) {
+      this.invoice.invoiceLines[index].rate_unit = unit;
+      //Set Text for dropdown + update line type
+      if (type === "product") {
+        this.invoice.invoiceLines[index].type = type;
+        this.invoice.invoiceLines[index].dropText = "Product";
+      } else {
+        this.invoice.invoiceLines[index].type = "service";
+        if (unit === "day") {
+          this.invoice.invoiceLines[index].dropText = "Daily";
+        } else {
+          this.invoice.invoiceLines[index].dropText =
+            unit.charAt(0).toUpperCase() + unit.slice(1) + "ly";
+        }
+      }
     },
     submit() {
       const app = this;
