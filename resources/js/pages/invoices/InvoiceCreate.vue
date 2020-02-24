@@ -345,7 +345,7 @@ export default {
       if (app.isAuthenticated) {
         if (app.editing) {
           axios
-            .put("/api/invoices" + app.invoice.id, app.invoice)
+            .put("/api/invoices/" + app.invoice.id, app.invoice)
             .then(response => {
               this.$router.push("/invoices");
             })

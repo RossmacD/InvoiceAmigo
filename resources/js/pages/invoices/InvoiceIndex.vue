@@ -62,9 +62,10 @@ export default {
     const app=this;
     if (app.isAuthenticated) {
       axios
-        .get("/api/invoices/")
+        .get("/api/invoices")
         .then(response => {
-          app.invoices = response.data.invoices.data;
+          app.invoices = response.data.outgoingInvoices.data;
+          // console.log(response);
         })
         .catch(err => {
           console.log(err);

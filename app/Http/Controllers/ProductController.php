@@ -21,7 +21,8 @@ class ProductController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $products = $user->products()->orderBy('created_at', 'desc')->paginate(10);
+        $business = $user->business;
+        $products = $business->products()->orderBy('created_at', 'desc')->paginate(10);
 
         return response()->json(
             [
@@ -48,12 +49,12 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
         }
-        //Create a Todo
+        //Create a product
         $product = new Product;
         $product->name = $request->name;
         $product->description = $request->description;
         $product->cost = $request->cost;
-        $product->user_id = Auth::id();
+        $product->business_id = Auth::user()->business->id;
         $product->save();
         //Redirect to a specified route with flash message.
         return response()->json(200);
@@ -110,7 +111,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
-        //Create a Todo
+        //Update a product
         $product =  Product::findOrFail($id);
         $product->name = $request->name;
         $product->description = $request->description;

@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+use App\Invoice;
+
 
 class Business extends Model
 {
@@ -12,8 +15,9 @@ class Business extends Model
 
     public function invoices()
     {
-        return $this->hasMany('App\Invoice');
+        return $this->hasMany('App\Invoice','business_id');
     }
+
     public function products()
     {
         return $this->hasMany('App\Product', 'business_id');
@@ -22,5 +26,5 @@ class Business extends Model
     {
         return $this->hasMany('App\Service', 'business_id');
     }
-    
+
 }

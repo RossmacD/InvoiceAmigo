@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+
+    public function business() {
+      return $this->belongsTo('App\Business');
+    }
     //Set default values
     protected $attributes = [
         // 'user_id' => 0,

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Business;
 
-class AddUserIdAndForeignConstraintToBusinesses extends Migration
+class AddUserIdAndForeignConstraintToBusinessesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddUserIdAndForeignConstraintToBusinesses extends Migration
      */
     public function up()
     {
-
-        Business::truncate(); // empty the table
+        // Business::truncate(); // empty the table
         Schema::table('businesses', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id'); // unsigned for foreign key.
             $table->foreign('user_id') // foreign key column name.

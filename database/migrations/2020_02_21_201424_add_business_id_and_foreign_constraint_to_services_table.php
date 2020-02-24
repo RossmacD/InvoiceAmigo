@@ -1,11 +1,11 @@
 <?php
 
-use App\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Service;
 
-class AddUserIdAndForeignConstraintToServicesTable extends Migration
+class AddBusinessIdAndForeignConstraintToServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class AddUserIdAndForeignConstraintToServicesTable extends Migration
      */
     public function up()
     {
-        Schema::table('servies', function (Blueprint $table) {
+        Schema::table('services', function (Blueprint $table) {
             Service::truncate(); // empty the table
             Schema::table('services', function (Blueprint $table) {
-                $table->unsignedBigInteger('user_id'); // unsigned for foreign key.
-                $table->foreign('user_id') // foreign key column name.
+                $table->unsignedBigInteger('business_id'); // unsigned for foreign key.
+                $table->foreign('business_id') // foreign key column name.
                     ->references('id') // parent table primary key.
-                    ->on('users') // parent table name.
+                    ->on('businesses') // parent table name.
                     ->onDelete('cascade'); // this will delete all the children rows when the parent row is deleted.
             });
         });

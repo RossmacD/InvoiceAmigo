@@ -9,6 +9,7 @@ use Laravel\Passport\HasApiTokens;
 use App\Product;
 use App\Service;
 use App\Invoice;
+use App\Business;
 
 
 class User extends Authenticatable
@@ -30,22 +31,41 @@ class User extends Authenticatable
     //     return $this->hasMany('App\Invoice', 'client_id');
     // }
 
-    public function outgoingInvoices()
-    {
-        return $this->hasMany('App\Invoice', 'user_id');
-    }
+    // public function outgoingInvoices()
+    // {
+    //     return $this->hasMany('App\Invoice', 'business_id');
+    // }
 
-    public function products()
-    {
-        return $this->hasMany('App\Product', 'user_id');
-    }
-    public function services()
-    {
-        return $this->hasMany('App\Service', 'user_id');
-    }
+    // public function products()
+    // {
+    //     return $this->hasMany('App\Product', 'user_id');
+    // }
+    // public function services()
+    // {
+    //     return $this->hasMany('App\Service', 'user_id');
+    // }
 
     public function business() {
         return $this->hasOne('App\Business');
+    }
+
+    public function roles(){
+      return $this->belongsToMany('App\Role', 'user_role');
+    }
+
+    public function hasRole($role){
+      return null !== $this->roles()->where('name', $role)->first();
+    }
+
+    public function hasAnyRole($roles){
+      return null !== $this->roles()->whereIn('name', $roles)->first();
+    }
+
+    public function authoriseRoles($roles){
+      if(is_array($roles)){
+        return $this->hasAnyRoles($roles) || abort(401, 'this action is unauthorised');
+      }
+        return $this->hasRole($roles) || abort(401, 'this action is unauthorised');
     }
 
 

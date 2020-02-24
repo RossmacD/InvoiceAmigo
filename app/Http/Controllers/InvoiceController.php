@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\User;
+use App\Business;
 use App\Invoice;
 use Validator;
 use App\InvoiceItems;
@@ -27,15 +28,39 @@ class InvoiceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $invoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(16);
-        foreach ($invoices as $invoice) {
-            $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
-        }
-        return response()->json(
-            [
-                'invoices' => $invoices,
-                'user' => $user,
-            ],
+        $business = $user->business;
+        $outgoingInvoices = $business->invoices()->orderBy('created_at', 'desc')->paginate(16);
+        $incomingInvoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(16);
+
+
+//temp: uncomment when roles are working
+        // if($user->hasRole('business')){
+        //     $jsonResponse=[
+        //         'user' => $user,
+        //         'business' => $business,
+        //         'incomingInvoices' => $incomingInvoices,
+        //         'outgoingInvoices' => $outgoingInvoices
+        //       ];
+        // } else {
+        //     $jsonResponse=[
+        //         'user' => $user,
+        //         'incomingInvoices' => $incomingInvoices,
+        //       ];
+        // }
+
+        $jsonResponse=[
+                    'user' => $user,
+                    'business' => $business,
+                    'incomingInvoices' => $incomingInvoices,
+                    'outgoingInvoices' => $outgoingInvoices
+                  ];
+
+
+        //temp - checked if the user id
+        // foreach ($outgoingInvoices as $outgoingInvoice) {
+        //     $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
+        // }
+        return response()->json($jsonResponse,
             200
         );
     }
@@ -63,6 +88,10 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+
+        $user = Auth::user();
+        $business = $user->business;
+
         //validation rules
         // $rules = [
         //     'invoice_number' => 'required|numeric|integer',
@@ -108,6 +137,7 @@ class InvoiceController extends Controller
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
         $invoice->user_id = Auth::id();
+        $invoice->business_id = $business->id;
 
         //Calculate total cost + adjust for stripe
         $total_cost = 0;

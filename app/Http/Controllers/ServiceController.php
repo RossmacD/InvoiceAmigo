@@ -21,7 +21,8 @@ class ServiceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $services = $user->services()->orderBy('created_at', 'desc')->paginate(10);
+        $business = $user->business;
+        $services = $business->services()->orderBy('created_at', 'desc')->paginate(10);
         return response()->json(
             [
                 'services' => $services,
@@ -47,13 +48,13 @@ class ServiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
         }
-        //Create a Todo
+        //Create a service
         $service = new Service;
         $service->name = $request->name;
         $service->description = $request->description;
         $service->cost = $request->cost;
         $service->rate_unit = $request->rate_unit;
-        $service->user_id = Auth::id();
+        $service->business_id = Auth::user()->business->id;
         $service->save();
         //Redirect to a specified route with flash message.
         return response()->json(200);
@@ -94,13 +95,13 @@ class ServiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
         }
-        //Create a Todo
+        //Update a service
         $service = Service::findOrFail($id);
         $service->name = $request->name;
         $service->description = $request->description;
         $service->cost = $request->cost;
         $service->rate_unit = $request->rate_unit;
-        $service->user_id = Auth::id();
+        // $service->user_id = Auth::id();
         $service->save();
         //Redirect to a specified route with flash message.
         return response()->json(200);

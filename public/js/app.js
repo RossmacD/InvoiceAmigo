@@ -3180,7 +3180,7 @@ vue__WEBPACK_IMPORTED_MODULE_3___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
       if (app.isAuthenticated) {
         if (app.editing) {
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoices" + app.invoice.id, app.invoice).then(function (response) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/api/invoices/" + app.invoice.id, app.invoice).then(function (response) {
             _this2.$router.push("/invoices");
           })["catch"](function (err) {
             console.log(err.response);
@@ -3305,8 +3305,8 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
     var app = this;
 
     if (app.isAuthenticated) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoices/").then(function (response) {
-        app.invoices = response.data.invoices.data;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoices").then(function (response) {
+        app.invoices = response.data.outgoingInvoices.data; // console.log(response);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -91389,8 +91389,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_user__WEB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\rossm\InvoiceApp1\Vue\InvoiceAmigo\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\rossm\InvoiceApp1\Vue\InvoiceAmigo\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Ultan-Laptop\Desktop\Web Application Frameworks\sync\InvoiceAmigo\InvoiceAmigo\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Ultan-Laptop\Desktop\Web Application Frameworks\sync\InvoiceAmigo\InvoiceAmigo\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

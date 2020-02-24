@@ -15,6 +15,16 @@ class CreateBusinessesTable extends Migration
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('business_name');
+            $table->string('website');
+            $table->string('address');
+            $table->string('country');
+            $table->string('postcode');
+            // $table->unsignedBigInteger('user_id'); // unsigned for foreign key
+            // $table->foreign('user_id') // foreign key column name.
+            // ->references('id') // parent table primary key.
+            // ->on('users') // parent table name.
+            // ->onDelete('cascade'); // this will delete all the children rows when the parent row is deleted.
             $table->timestamps();
         });
     }
