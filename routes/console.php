@@ -20,6 +20,7 @@ Artisan::command('inspire', function () {
 
 Artisan::command('ia:regen',function(){
     $this->call('migrate:refresh');
+    $this->call('db:seed');
     $this->call('passport:client', ['--personal'=>true]);
     $this->info("Invoice Amigo successfully regenerated");
 })->describe('Regenerate InvoiceAmigo DB with personal access key');
