@@ -2138,7 +2138,16 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__["ButtonPlugin"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "EmptyIndex",
-  props: ["indexType"],
+  props: {
+    indexType: {
+      type: String,
+      required: true
+    },
+    button: {
+      type: Boolean,
+      "default": true
+    }
+  },
   date: function date() {
     return {
       link: this.indexType + "/create"
@@ -3411,6 +3420,117 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3432,7 +3552,8 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
   },
   data: function data() {
     return {
-      invoices: null
+      incomingInvoices: null,
+      outgoingInvoices: null
     };
   },
   mounted: function mounted() {
@@ -3440,7 +3561,11 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
 
     if (app.isAuthenticated) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/invoices").then(function (response) {
-        app.invoices = response.data.outgoingInvoices.data; // console.log(response);
+        app.incomingInvoices = response.data.incomingInvoices.data;
+
+        if (app.isBusiness) {
+          app.outgoingInvoices = response.data.outgoingInvoices.data; // console.log(response);
+        }
       })["catch"](function (err) {
         console.log(err);
       });
@@ -3456,7 +3581,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_M
       });
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["isAuthenticated"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({}))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["isAuthenticated", "isBusiness"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({}))
 });
 
 /***/ }),
@@ -67694,15 +67819,17 @@ var render = function() {
         _vm._v("You have no " + _vm._s(_vm.indexType) + "s 😢")
       ]),
       _vm._v(" "),
-      _c(
-        "b-button",
-        {
-          staticClass: "mt-1",
-          staticStyle: { "text-transform": "capitalize" },
-          attrs: { to: _vm.indexType + "s/create", variant: "success" }
-        },
-        [_vm._v("+ Add New " + _vm._s(_vm.indexType))]
-      )
+      _vm.button
+        ? _c(
+            "b-button",
+            {
+              staticClass: "mt-1",
+              staticStyle: { "text-transform": "capitalize" },
+              attrs: { to: _vm.indexType + "s/create", variant: "success" }
+            },
+            [_vm._v("+ Add New " + _vm._s(_vm.indexType))]
+          )
+        : _vm._e()
     ],
     1
   )
@@ -69495,135 +69622,391 @@ var render = function() {
         { staticClass: "mb-4" },
         [
           _vm._v("\n    Your Invoices\n    "),
-          _c(
-            "b-button",
-            { staticClass: "float-right", attrs: { to: "/invoices/create" } },
-            [_vm._v("+ New")]
-          )
+          _vm.isBusiness
+            ? _c(
+                "b-button",
+                {
+                  staticClass: "float-right",
+                  attrs: { to: "/invoices/create" }
+                },
+                [_vm._v("+ New")]
+              )
+            : _vm._e()
         ],
         1
       ),
       _vm._v(" "),
-      !_vm.invoices
-        ? _c("LoadingPage")
-        : _vm.invoices.length === 0
-        ? _c("EmptyIndex", { attrs: { indexType: "invoice" } })
-        : _vm._l(_vm.invoices, function(invoice, index) {
-            return _c(
-              "b-card",
-              {
-                key: invoice.id,
-                staticClass: "my-2",
-                attrs: {
-                  "footer-bg-variant": "light",
-                  footer: invoice.created_at,
-                  header: "",
-                  "header-bg-variant": "dark"
-                },
-                scopedSlots: _vm._u(
-                  [
-                    {
-                      key: "header",
-                      fn: function() {
-                        return [
-                          _c(
-                            "b-row",
-                            [
-                              _c("b-col", [
-                                _c("h3", { staticClass: "text-light" }, [
-                                  _vm._v(
-                                    "#" + _vm._s(invoice.invoice_number) + ": "
-                                  )
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "b-col",
-                                [
-                                  _c(
-                                    "b-button",
-                                    {
-                                      staticClass: "float-right mx-1",
-                                      attrs: {
-                                        variant: "secondary",
-                                        pressed: false,
-                                        to: "invoices/edit/" + invoice.id,
-                                        size: "sm"
-                                      }
-                                    },
-                                    [
-                                      _c("b-icon", {
-                                        staticStyle: {
-                                          width: "20px",
-                                          height: "20px"
-                                        },
-                                        attrs: { variant: "light", icon: "pen" }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c("DeleteButton", {
-                                    staticClass: "float-right mx-1",
-                                    attrs: { id: invoice.id, index: index },
-                                    on: { "on-confirm": _vm.deleteInvoice }
-                                  })
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ]
-                      },
-                      proxy: true
-                    }
-                  ],
-                  null,
-                  true
-                )
-              },
-              [
-                _vm._v(" "),
-                _c(
-                  "b-row",
-                  [
-                    _c("b-col", [_vm._v(_vm._s(invoice.note))]),
-                    _vm._v(" "),
-                    _c(
-                      "b-col",
-                      [
-                        _c(
-                          "b-button",
+      _vm.isBusiness
+        ? _c(
+            "b-tabs",
+            { attrs: { pills: "" } },
+            [
+              _c(
+                "b-tab",
+                { attrs: { title: "Sent", active: "" } },
+                [
+                  !_vm.outgoingInvoices
+                    ? _c("LoadingPage")
+                    : _vm.outgoingInvoices.length === 0
+                    ? _c("EmptyIndex", { attrs: { indexType: "invoice" } })
+                    : _vm._l(_vm.outgoingInvoices, function(invoice, index) {
+                        return _c(
+                          "b-card",
                           {
-                            staticClass: "float-right mx-1",
+                            key: invoice.id,
+                            staticClass: "my-2",
                             attrs: {
-                              variant: "secondary",
-                              pressed: false,
-                              to: "invoices/" + invoice.id,
-                              size: "sm"
-                            }
+                              "footer-bg-variant": "light",
+                              footer: invoice.created_at,
+                              header: "",
+                              "header-bg-variant": "dark"
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "header",
+                                  fn: function() {
+                                    return [
+                                      _c(
+                                        "b-row",
+                                        [
+                                          _c("b-col", [
+                                            _c(
+                                              "h3",
+                                              { staticClass: "text-light" },
+                                              [
+                                                _vm._v(
+                                                  "#" +
+                                                    _vm._s(
+                                                      invoice.invoice_number
+                                                    ) +
+                                                    ":"
+                                                )
+                                              ]
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c(
+                                            "b-col",
+                                            [
+                                              _c(
+                                                "b-button",
+                                                {
+                                                  staticClass:
+                                                    "float-right mx-1",
+                                                  attrs: {
+                                                    variant: "secondary",
+                                                    pressed: false,
+                                                    to:
+                                                      "invoices/edit/" +
+                                                      invoice.id,
+                                                    size: "sm"
+                                                  }
+                                                },
+                                                [
+                                                  _c("b-icon", {
+                                                    staticStyle: {
+                                                      width: "20px",
+                                                      height: "20px"
+                                                    },
+                                                    attrs: {
+                                                      variant: "light",
+                                                      icon: "pen"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c("DeleteButton", {
+                                                staticClass: "float-right mx-1",
+                                                attrs: {
+                                                  id: invoice.id,
+                                                  index: index
+                                                },
+                                                on: {
+                                                  "on-confirm":
+                                                    _vm.deleteInvoice
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  },
+                                  proxy: true
+                                }
+                              ],
+                              null,
+                              true
+                            )
                           },
                           [
-                            _c("b-icon", {
-                              staticStyle: { width: "20px", height: "20px" },
-                              attrs: { variant: "light", icon: "eye-fill" }
-                            })
+                            _vm._v(" "),
+                            _c(
+                              "b-row",
+                              [
+                                _c("b-col", [_vm._v(_vm._s(invoice.note))]),
+                                _vm._v(" "),
+                                _c(
+                                  "b-col",
+                                  [
+                                    _c(
+                                      "b-button",
+                                      {
+                                        staticClass: "float-right mx-1",
+                                        attrs: {
+                                          variant: "secondary",
+                                          pressed: false,
+                                          to: "invoices/" + invoice.id,
+                                          size: "sm"
+                                        }
+                                      },
+                                      [
+                                        _c("b-icon", {
+                                          staticStyle: {
+                                            width: "20px",
+                                            height: "20px"
+                                          },
+                                          attrs: {
+                                            variant: "light",
+                                            icon: "eye-fill"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "b-tab",
+                { attrs: { title: "Received" } },
+                [
+                  !_vm.incomingInvoices
+                    ? _c("LoadingPage")
+                    : _vm.incomingInvoices.length === 0
+                    ? _c("EmptyIndex", {
+                        attrs: { button: false, indexType: "invoice" }
+                      })
+                    : _vm._l(_vm.incomingInvoices, function(invoice, index) {
+                        return _c(
+                          "b-card",
+                          {
+                            key: invoice.id,
+                            staticClass: "my-2",
+                            attrs: {
+                              "footer-bg-variant": "light",
+                              footer: invoice.created_at,
+                              header: "",
+                              "header-bg-variant": "dark"
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "header",
+                                  fn: function() {
+                                    return [
+                                      _c(
+                                        "b-row",
+                                        [
+                                          _c("b-col", [
+                                            _c(
+                                              "h3",
+                                              { staticClass: "text-light" },
+                                              [
+                                                _vm._v(
+                                                  "#" +
+                                                    _vm._s(
+                                                      invoice.invoice_number
+                                                    ) +
+                                                    ":"
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  },
+                                  proxy: true
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          },
+                          [
+                            _vm._v(" "),
+                            _c(
+                              "b-row",
+                              [
+                                _c("b-col", [_vm._v(_vm._s(invoice.note))]),
+                                _vm._v(" "),
+                                _c(
+                                  "b-col",
+                                  [
+                                    _c(
+                                      "b-button",
+                                      {
+                                        staticClass: "float-right mx-1",
+                                        attrs: {
+                                          variant: "secondary",
+                                          pressed: false,
+                                          to: "invoices/" + invoice.id,
+                                          size: "sm"
+                                        }
+                                      },
+                                      [
+                                        _c("b-icon", {
+                                          staticStyle: {
+                                            width: "20px",
+                                            height: "20px"
+                                          },
+                                          attrs: {
+                                            variant: "light",
+                                            icon: "eye-fill"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      })
+                ],
+                2
+              )
+            ],
+            1
+          )
+        : _c(
+            "div",
+            [
+              !_vm.incomingInvoices
+                ? _c("LoadingPage")
+                : _vm.incomingInvoices.length === 0
+                ? _c("EmptyIndex", {
+                    attrs: { button: false, indexType: "invoice" }
+                  })
+                : _vm._l(_vm.incomingInvoices, function(invoice, index) {
+                    return _c(
+                      "b-card",
+                      {
+                        key: invoice.id,
+                        staticClass: "my-2",
+                        attrs: {
+                          "footer-bg-variant": "light",
+                          footer: invoice.created_at,
+                          header: "",
+                          "header-bg-variant": "dark"
+                        },
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "header",
+                              fn: function() {
+                                return [
+                                  _c(
+                                    "b-row",
+                                    [
+                                      _c("b-col", [
+                                        _c(
+                                          "h3",
+                                          { staticClass: "text-light" },
+                                          [
+                                            _vm._v(
+                                              "#" +
+                                                _vm._s(invoice.invoice_number) +
+                                                ":"
+                                            )
+                                          ]
+                                        )
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ]
+                              },
+                              proxy: true
+                            }
+                          ],
+                          null,
+                          true
+                        )
+                      },
+                      [
+                        _vm._v(" "),
+                        _c(
+                          "b-row",
+                          [
+                            _c("b-col", [_vm._v(_vm._s(invoice.note))]),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              [
+                                _c(
+                                  "b-button",
+                                  {
+                                    staticClass: "float-right mx-1",
+                                    attrs: {
+                                      variant: "secondary",
+                                      pressed: false,
+                                      to: "invoices/" + invoice.id,
+                                      size: "sm"
+                                    }
+                                  },
+                                  [
+                                    _c("b-icon", {
+                                      staticStyle: {
+                                        width: "20px",
+                                        height: "20px"
+                                      },
+                                      attrs: {
+                                        variant: "light",
+                                        icon: "eye-fill"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
                           ],
                           1
                         )
                       ],
                       1
                     )
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          })
+                  })
+            ],
+            2
+          )
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -92011,6 +92394,9 @@ var getters = {
   },
   isProfileLoaded: function isProfileLoaded(state) {
     return !!state.profile.name;
+  },
+  isBusiness: function isBusiness(state) {
+    return !!state.profile.business;
   }
 };
 

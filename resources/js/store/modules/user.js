@@ -7,7 +7,8 @@ const state = { status: "", profile: {} };
 
 const getters = {
     getProfile: state => state.profile,
-    isProfileLoaded: state => !!state.profile.name
+    isProfileLoaded: state => !!state.profile.name,
+    isBusiness: state => !!state.profile.business
 };
 
 const actions = {
