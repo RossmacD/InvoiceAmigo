@@ -7,6 +7,7 @@ import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
 import InvoiceView from "./pages/invoices/InvoiceView.vue";
+import LogIndex from "./pages/logs/LogIndex.vue";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
@@ -59,7 +60,7 @@ const routes = [
         component: Login,
         beforeEnter: onlyLoggedOut,
         meta: {
-            depthIndex: 5
+            depthIndex: 6
         }
     },
     {
@@ -68,7 +69,7 @@ const routes = [
         component: Register,
         beforeEnter: onlyLoggedOut,
         meta: {
-            depthIndex: 6
+            depthIndex: 7
         }
     },
     {
@@ -139,7 +140,16 @@ const routes = [
         name: "invoiceview",
         component: InvoiceView,
         beforeEnter: onlyLoggedIn
-    }
+    },
+    {
+        path: "/logs",
+        name: "logs",
+        component: LogIndex,
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 5
+        }
+    },
 ];
 
 const router = new VueRouter({

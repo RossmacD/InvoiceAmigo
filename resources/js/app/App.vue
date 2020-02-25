@@ -15,6 +15,7 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import { USER_REQUEST } from "../store/actions/user";
 
+
 export default {
   name: "App",
   components: {
@@ -25,11 +26,15 @@ export default {
       transitionName: "slide-right"
     };
   },
+  // beforeMount(){
+  //   if (!!localStorage.getItem("token")) {
+  //     this.$store.dispatch(USER_REQUEST);
+  //   }
+  // },
   created: function() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(USER_REQUEST);
     }
-
     //Logout on Unauthourised
     // axios.interceptors.response.use(undefined, function(err) {
     //   return new Promise(function(resolve, reject) {

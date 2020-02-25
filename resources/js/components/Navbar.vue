@@ -8,12 +8,16 @@
     </b-navbar-brand>
     <b-navbar-toggle target='navbarCollapse' class='float-right'></b-navbar-toggle>
     <b-collapse id='navbarCollapse' is-nav>
+      <b-navbar-nav >
+      <b-nav-item active to='/dash' v-if='isAuthenticated'>Dash</b-nav-item>
+      </b-navbar-nav>
       <b-navbar-nav class='ml-auto'>
         <!-- Show when logged in -->
         
         <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
         <b-nav-item active to='/services' v-if='isAuthenticated'>Services</b-nav-item>
+        <b-nav-item active to='/logs' v-if='isAuthenticated'>Logger</b-nav-item>
         <b-nav-item active @click='logout()' v-if='isAuthenticated'>Log Out</b-nav-item>
         
         <!-- Show when not logged in -->
