@@ -49,6 +49,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Business');
     }
 
+    public function incomingInvoices()
+    {
+        return $this->hasMany('App\Invoice','user_id');
+    }
+
     public function roles(){
       return $this->belongsToMany('App\Role', 'user_roles');
     }

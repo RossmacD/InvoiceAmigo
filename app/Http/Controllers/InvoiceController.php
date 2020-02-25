@@ -29,8 +29,10 @@ class InvoiceController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
-        $outgoingInvoices = $business->invoices()->orderBy('created_at', 'desc')->paginate(16);
-        $incomingInvoices = $user->invoices()->orderBy('created_at', 'desc')->paginate(16);
+        if($user->hasRole('business')){
+            $outgoingInvoices = $business->outgoingInvoices()->orderBy('created_at', 'desc')->paginate(16);
+        }
+        $incomingInvoices = $user->incomingInvoices()->orderBy('created_at', 'desc')->paginate(16);
 
 
 //temp: uncomment when roles are working
@@ -47,12 +49,15 @@ class InvoiceController extends Controller
         //         'incomingInvoices' => $incomingInvoices,
         //       ];
         // }
-
+        
+        if(!$user->hasRole('business')){
+            $outgoingInvoices = null;
+        }
         $jsonResponse=[
                     'user' => $user,
                     'business' => $business,
+                    'outgoingInvoices' => $outgoingInvoices,
                     'incomingInvoices' => $incomingInvoices,
-                    'outgoingInvoices' => $outgoingInvoices
                   ];
 
 

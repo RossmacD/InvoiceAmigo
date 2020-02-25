@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Validator;
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
 
 class PassportController extends Controller
@@ -59,7 +60,15 @@ class PassportController extends Controller
 
     public function user()
     {
-        return response()->json(['user' => auth()->user()], 200);
+
+        $user = auth()->user();
+        // $user->roles = $user->roles
+        if(Auth::user()->hasRole('business')){
+            $user->business = true;
+        } else {
+            $user->business = false;
+        };
+        return response()->json(['user' => $user], 200);
     }
 
     public function logout(Request $request)

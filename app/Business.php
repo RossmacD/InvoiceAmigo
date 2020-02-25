@@ -13,7 +13,7 @@ class Business extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function invoices()
+    public function outgoingInvoices()
     {
         return $this->hasMany('App\Invoice','business_id');
     }
