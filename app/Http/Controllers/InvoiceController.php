@@ -141,7 +141,7 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
-        $invoice->user_id = Auth::id();
+        $invoice->user_id = $request->user_id;
         $invoice->business_id = $business->id;
 
         //Calculate total cost + adjust for stripe
@@ -244,6 +244,7 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
+        $invoice->user_id = $request->user_id;
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
         return response(200);
