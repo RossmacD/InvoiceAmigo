@@ -85,20 +85,6 @@ export default {
   components: {
     LoadingPage
   },
-  // props: {
-  //   business: {
-  //     type: Object,
-  //     default: function() {
-  //       return {
-  //         business_name: "",
-  //         website: "",
-  //         address: "",
-  //         country: "",
-  //         postcode: ""
-  //       };
-  //     }
-  //   }
-  // },
   data() {
     return {
       checked: false,
@@ -163,7 +149,7 @@ export default {
   },
   mounted() {
     const app = this;
-    if (app.isAuthenticated && app.isBusiness) {
+    if (app.isBusiness) {
       app.checked = true;
       app.editing = true;
       axios
