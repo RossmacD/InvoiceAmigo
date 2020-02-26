@@ -15,9 +15,9 @@
         <!-- Show when logged in -->
         
         <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
-        <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
-        <b-nav-item active to='/services' v-if='isAuthenticated'>Services</b-nav-item>
-        <b-nav-item active to='/logs' v-if='isAuthenticated'>Logger</b-nav-item>
+        <b-nav-item active to='/products' v-if='isBusiness'>Products</b-nav-item>
+        <b-nav-item active to='/services' v-if='isBusiness'>Services</b-nav-item>
+        <b-nav-item active to='/logs' v-if='isBusiness '>Logger</b-nav-item>
 
         <b-nav-item-dropdown v-if='isAuthenticated' id="my-nav-dropdown" text="Account" toggle-class="nav-link-custom" right>
           <b-dropdown-item active to='/settings' >Settings</b-dropdown-item>
@@ -54,7 +54,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
+    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded", "isBusiness"]),
     ...mapState({
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`
