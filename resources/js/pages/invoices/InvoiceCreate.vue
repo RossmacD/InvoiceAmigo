@@ -50,10 +50,11 @@
               <b-icon class='handle' icon='arrows-expand' style='width: 20px; height: 20px'></b-icon>
             </span>
           </template>
-          <template v-slot:cell(name)='name_data'>
+          <template v-slot:cell(name)='name_data' >
             <vue-bootstrap-typeahead
               :data='searchResults'
               :id='`line_name${name_data.index}`'
+              v-multi-ref:lineName
               :name='`line_name${name_data.index}`'
               autocomplete='line_name'
               :serializer='s=>s.name'
@@ -152,7 +153,41 @@
             <br />
           </template>
         </b-table>
-        <b-button v-on:click='addRow()' variant='success'>+</b-button>
+        <b-button v-on:click='addRow()' variant='success'>Add Line</b-button>
+        <b-button v-b-modal.helper-modal variant='success'>Add Line with helper</b-button>
+
+        <!-- Modals -->
+        <b-modal hide-footer id='helper-modal' title='Add Invoice Line'>
+          <b-button class='mt-3' block @click='getAllProducts()'>Add Product</b-button>
+          <div v-if='helperShow==`Products`'>
+            <h5 class='mt-4'>Search:</h5>
+            <vue-bootstrap-typeahead :data='helperProducts' autocomplete='line_name' :serializer='s=>s.name' @hit='fillHelperResult()' v-model='helperKeyword' :minMatchingChars='1' />
+            <h3>Your {{helperShow}}</h3>
+            <b-spinner v-if='!helperProducts[0]' small label='Loading...'></b-spinner>
+            <b-list-group v-for='(item,index) in helperProducts' v-bind:key='item.id'>
+              <b-list-group-item :active='helperProducts[index].selected'>
+                {{index+1}}. {{item.name}}
+                <!-- <b-button class='float-right' @click='helperProducts[index].quantity=1;helperProducts[index].selected=true;helperCart.push(helperProducts[index]);'>Add</b-button> -->
+                <b-form-checkbox class='float-right' v-model='helperProducts[index].selected' @change='groupToggle(index)' switch name='check-button' />
+              </b-list-group-item>
+            </b-list-group>
+          </div>
+          <div>
+            <b-button class='mt-3' block @click='getAllServices()'>Add Service</b-button>
+            <b-button class='mt-3' block>Add new</b-button>
+          </div>
+          <h3 class='mt-4'>Add Items to invoice:</h3>
+          <b-list-group v-for='(item,index) in helperCart' v-bind:key='item.id'>
+            <b-list-group-item>
+              {{index+1}}. {{item.name}}
+              <b-form-spinbutton class='float-right' style='width:25%;' v-model='helperCart[index].quantity' min='1' max='100'></b-form-spinbutton>
+            </b-list-group-item>
+          </b-list-group>
+          <b-button class='mt-3' variant='success' block @click='saveCart()'>Save</b-button>
+          <hr />
+          <b-button class='mt-3' variant='light' block @click='$bvModal.hide(`helper-modal`)'>Cancel</b-button>
+        </b-modal>
+
         <!-- </Dragable> -->
         <hr />
         <b-form-group label='Invoice Notes' label-for='notes'>
@@ -183,7 +218,8 @@ import {
   TablePlugin,
   BIcon,
   FormDatepickerPlugin,
-  ButtonPlugin
+  ButtonPlugin,
+  ModalPlugin
 } from "bootstrap-vue";
 import Vue from "vue";
 import DeleteButton from "../../components/DeleteButton";
@@ -195,8 +231,46 @@ Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
 Vue.use(TablePlugin);
+Vue.use(ModalPlugin);
 // Vue.use(Dragable);
 Vue.use(FormDatepickerPlugin);
+
+
+//Vue directive to allow refs to bind to an array without v-for - Nessacary to update bootstrap vue typeahead within the bootstrap table as table does not seem to render using v-for
+function addRef (el, binding, vnode) {
+  const ref = binding.arg
+  const vm = vnode.context
+  const thing = vnode.componentInstance || vnode.elm
+  if (!vm.$refs.hasOwnProperty(ref)) {
+    vm.$refs[ref] = []
+  }
+  const index = vm.$refs[ref].indexOf(thing)
+  if (index == -1) {
+  	vnode.context.$refs[ref].push(thing)
+ 	}
+}
+
+function removeRef (el, {arg: ref }, {context: vm }, vnode) {
+    if (vm.$refs.hasOwnProperty(ref)) {
+      const arr = vm.$refs[ref]
+      const thing = vnode.componentInstance || vnode.elm
+    	const index = arr.indexOf(thing)
+      if (index) {
+        arr.splice(index, 1)
+      }
+  	}
+  }
+
+Vue.directive('multi-ref', {
+  bind: addRef,
+  update: addRef,
+  unbind: removeRef
+})
+
+
+
+
+
 
 export default {
   name: "InvoiceCreate",
@@ -266,7 +340,12 @@ export default {
         }
       },
       submiting: false,
-      total: 0
+      total: 0,
+      helperProducts: [],
+      helperServices: [],
+      helperCart: [],
+      helperShow: null,
+      helperKeyword: ""
     };
   },
   methods: {
@@ -276,7 +355,7 @@ export default {
         0
       );
     },
-    
+
     getDate(addon) {
       const toTwoDigits = num => (num < 10 ? "0" + num : num);
       let today = new Date();
@@ -298,6 +377,39 @@ export default {
     },
     deleteRow(id, index) {
       this.invoice.invoiceLines.splice(index, 1);
+      this.updateTypeahead();
+    },
+    getAllProducts() {
+      const app = this;
+      if (app.isAuthenticated) {
+        app.helperShow = "Products";
+        if (!!!app.helperProducts[0]) {
+          axios
+            .get("/api/products")
+            .then(response => {
+              app.helperProducts = response.data.products.data;
+            })
+            .catch(err => {
+              console.log(error);
+            });
+        }
+      }
+    },
+    getAllServices() {
+      const app = this;
+      if (app.isAuthenticated) {
+        app.helperShow = "Services";
+        if (!!app.helperServices) {
+          axios
+            .get("/api/services")
+            .then(response => {
+              app.helperServices = response.data.services.data;
+            })
+            .catch(err => {
+              console.log(error);
+            });
+        }
+      }
     },
     searchProducts(index) {
       const app = this;
@@ -312,6 +424,19 @@ export default {
           console.log("CANT FETCH", err);
         });
     },
+    groupToggle(index) {
+      const app = this;
+      //Delete Product if selected otherwise add to cart
+      if (app.helperProducts[index].selected) {
+        app.helperCart = app.helperCart.filter(item => {
+          item.id !== app.helperProducts[index].id;
+        });
+      } else {
+        app.helperProducts[index].quantity = 1;
+        app.setDropTextForItem(app.helperProducts[index]);
+        app.helperCart.push(app.helperProducts[index]);
+      }
+    },
     fillWithResult(index) {
       //Fill in Invoice Line after autocomplete is selected
       const newProduct = this.searchResults.filter(
@@ -319,17 +444,53 @@ export default {
       );
       this.invoice.invoiceLines[index].description = newProduct[0].description;
       this.invoice.invoiceLines[index].cost = newProduct[0].cost;
-      if ("undefined" === typeof(newProduct[0]["rate_unit"])) {
-        console.log('undefined')
+      if ("undefined" === typeof newProduct[0]["rate_unit"]) {
+        console.log("undefined");
         //Update the type + dropdown Text
-        this.setDropText(index,  "product", null);
+        this.setDropText(index, "product", null);
       } else {
-        console.log('defined')
+        console.log("defined");
         this.invoice.invoiceLines[index].rate_unit = newProduct[0].rate_unit;
-        this.setDropText(index,"service", newProduct[0].rate_unit);
+        this.setDropText(index, "service", newProduct[0].rate_unit);
       }
       this.invoice.invoiceLines[index].quantity = 1;
       this.totalCost();
+    },
+    fillHelperResult() {
+      //Add to helper autocomplete is selected
+      const newProduct = this.helperProducts.filter(
+        result => result.name == this.helperKeyword
+      );
+      newProduct[0].quantity = 1;
+      newProduct[0].selected = true;
+      if (newProduct[0].type === "product") {
+        newProduct[0].dropText = "Product";
+      } else if (unit === "day") {
+        newProduct[0].dropText = "Daily";
+      } else {
+        newProduct[0].dropText =
+          newProduct[0].rate_unit.charAt(0).toUpperCase() +
+          newProduct[0].rate_unit.slice(1) +
+          "ly";
+      }
+
+      this.helperCart.push(newProduct[0]);
+    },
+    saveCart() {
+      this.invoice.invoiceLines = [].concat(
+        this.invoice.invoiceLines,
+        this.helperCart
+      );
+      this.updateTypeahead();
+this.totalCost();
+      this.$bvModal.hide("helper-modal");
+    },
+    updateTypeahead(){
+      //Update the Vue bootstrap typeahead - component has a bug where inputted info is not displayed
+    //Refs are not reactive and must be accesed on next vue tick to give proper value
+      Vue.nextTick(() => {
+        this.$refs.lineName.forEach(line => (line.inputValue = line.value));
+      }); 
     },
     setDropText(index, type, unit) {
       this.invoice.invoiceLines[index].rate_unit = unit;
@@ -345,6 +506,18 @@ export default {
           this.invoice.invoiceLines[index].dropText =
             unit.charAt(0).toUpperCase() + unit.slice(1) + "ly";
         }
+      }
+    },
+    setDropTextForItem(item) {
+      if (item.type === "product") {
+        item.dropText = "Product";
+      } else if (unit === "day") {
+        item.dropText = "Daily";
+      } else {
+        item.dropText =
+          item.rate_unit.charAt(0).toUpperCase() +
+          item.rate_unit.slice(1) +
+          "ly";
       }
     },
     submit() {

@@ -8,18 +8,21 @@
     </b-navbar-brand>
     <b-navbar-toggle target='navbarCollapse' class='float-right'></b-navbar-toggle>
     <b-collapse id='navbarCollapse' is-nav>
+      <b-navbar-nav >
+      <b-nav-item active to='/dash' v-if='isAuthenticated'>Dash</b-nav-item>
+      </b-navbar-nav>
       <b-navbar-nav class='ml-auto'>
         <!-- Show when logged in -->
         
         <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
         <b-nav-item active to='/products' v-if='isAuthenticated'>Products</b-nav-item>
         <b-nav-item active to='/services' v-if='isAuthenticated'>Services</b-nav-item>
+        <b-nav-item active to='/logs' v-if='isAuthenticated'>Logger</b-nav-item>
 
         <b-nav-item-dropdown v-if='isAuthenticated' id="my-nav-dropdown" text="Account" toggle-class="nav-link-custom" right>
           <b-dropdown-item active to='/settings' >Settings</b-dropdown-item>
           <b-dropdown-item active @click='logout()'>Log Out</b-dropdown-item>
         </b-nav-item-dropdown>
-
         
         <!-- Show when not logged in -->
         <b-nav-item class='btn btn-success text-dark' active to='/login' v-if='!isAuthenticated'>Login</b-nav-item>

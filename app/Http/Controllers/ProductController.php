@@ -23,7 +23,9 @@ class ProductController extends Controller
         $user = Auth::user();
         $business = $user->business;
         $products = $business->products()->orderBy('created_at', 'desc')->paginate(10);
-
+        foreach ($products as  &$product) {
+            $product->type = "product";
+        }
         return response()->json(
             [
                 'products' => $products,
@@ -77,22 +79,6 @@ class ProductController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-    //     $product = Product::findOrFail($id);
-    //     return response()->json(
-    //         [
-    //             'product' => $product
-    //         ],
-    //         200
-    //     );
-    // }
 
     /**
      * Update the specified resource in storage.

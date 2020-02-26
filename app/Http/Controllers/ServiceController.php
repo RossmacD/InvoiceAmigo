@@ -23,6 +23,9 @@ class ServiceController extends Controller
         $user = Auth::user();
         $business = $user->business;
         $services = $business->services()->orderBy('created_at', 'desc')->paginate(10);
+        foreach($services as  &$service){
+            $service->type="service";
+        }
         return response()->json(
             [
                 'services' => $services,
