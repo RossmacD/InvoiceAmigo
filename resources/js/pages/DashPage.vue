@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoadingPage v-if="profileLoading"></LoadingPage>
-    <div v-else-if='isProfileLoaded="success"'>
+    <div v-else-if='profileLoaded'>
       <h1>Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
     </div>
@@ -31,6 +31,7 @@ export default {
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`,
       profileLoading: state => state.user.status === "loading",
+      profileLoaded: state=> state.user.status === "success"
     })
   }
 };

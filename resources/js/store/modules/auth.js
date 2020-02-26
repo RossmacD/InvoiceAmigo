@@ -84,9 +84,7 @@ const mutations = {
         state.hasLoadedOnce = true;
     }, 
     [SOCIAL_AUTH_REQUEST]: (state, resp) => {
-        state.status = "success";
-        state.token = resp;
-        state.hasLoadedOnce = true;
+        state.status = "loading";
     },
     [AUTH_ERROR]: state => {
         state.status = "error";
