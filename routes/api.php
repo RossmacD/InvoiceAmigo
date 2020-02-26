@@ -32,3 +32,5 @@ Route::middleware('auth:api')->group(function () {
 //User Auth
 Route::post('login', 'PassportController@login');
 Route::post('register', 'PassportController@register');
+
+Route::post('/callback', 'SocialController@callback');

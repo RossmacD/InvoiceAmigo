@@ -15,4 +15,6 @@
 //     return view('welcome');
 // });
 
+Route::get('/redirect', 'SocialController@redirect');
+// Route::get('/callback', 'SocialController@callback');
 Route::get('/{any}', 'AppController@index')->where('any', '.*');

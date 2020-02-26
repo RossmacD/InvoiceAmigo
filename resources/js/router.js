@@ -1,4 +1,5 @@
 import VueRouter from "vue-router";
+import CallbackHandler from "./pages/auth/CallbackHandler.vue";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import DashBoard from "./pages/DashPage";
@@ -149,6 +150,12 @@ const routes = [
         meta: {
             depthIndex: 5
         }
+    },
+    {
+        path: "/callback",
+        name: "callback",
+        component: CallbackHandler,
+        beforeEnter: onlyLoggedOut,
     },
 ];
 
