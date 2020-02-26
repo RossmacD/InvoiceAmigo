@@ -4,6 +4,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import DashBoard from "./pages/DashPage";
 import Home from "./pages/HomePage";
+import Settings from "./pages/Settings";
 import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
@@ -71,6 +72,15 @@ const routes = [
         beforeEnter: onlyLoggedOut,
         meta: {
             depthIndex: 7
+        }
+    },
+    {
+        path: "/settings",
+        name: "settings",
+        component: Settings,
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 6
         }
     },
     {

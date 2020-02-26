@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
+use Auth;
 use App\Business;
+use App\Role;
 use Illuminate\Http\Request;
 
 class BusinessController extends Controller
@@ -14,7 +17,15 @@ class BusinessController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $business = $user->business;
+
+        return response()->json(
+            [
+                'business' => $business,
+            ],
+            200
+        );
     }
 
     /**
@@ -35,7 +46,33 @@ class BusinessController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|string',
+            'website' => 'required|string',
+            'address' => 'required|string',
+            'country' => 'required|string',
+            'postcode' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
+        }
+
+        $role_business = Role::where('name', 'business')->first();
+
+        $user = Auth::user();
+        //Create a business
+        $business = new Business;
+        $business->business_name = $request->business_name;
+        $business->website = $request->website;
+        $business->address = $request->address;
+        $business->country = $request->country;
+        $business->postcode = $request->postcode;
+        $business->user_id = $user->id;
+        $business->save();
+        $user->roles()->attach($role_business);
+
+        //Redirect to a specified route with flash message.
+        return response()->json(200);
     }
 
     /**
@@ -69,7 +106,26 @@ class BusinessController extends Controller
      */
     public function update(Request $request, Business $business)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|string',
+            'website' => 'required|string',
+            'address' => 'required|string',
+            'country' => 'required|string',
+            'postcode' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
+        }
+        //Update a business
+        $business = Business::findOrFail($request->id);
+        $business->business_name = $request->business_name;
+        $business->website = $request->website;
+        $business->address = $request->address;
+        $business->country = $request->country;
+        $business->postcode = $request->postcode;
+        $business->save();
+        //Redirect to a specified route with flash message.
+        return response(200);
     }
 
     /**

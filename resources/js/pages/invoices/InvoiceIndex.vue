@@ -179,7 +179,6 @@ export default {
           app.incomingInvoices = response.data.incomingInvoices.data;
           if (app.isBusiness) {
             app.outgoingInvoices = response.data.outgoingInvoices.data;
-            // console.log(response);
           }
         })
         .catch(err => {
