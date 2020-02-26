@@ -50,10 +50,11 @@
               <b-icon class='handle' icon='arrows-expand' style='width: 20px; height: 20px'></b-icon>
             </span>
           </template>
-          <template v-slot:cell(name)='name_data'>
+          <template v-slot:cell(name)='name_data' >
             <vue-bootstrap-typeahead
               :data='searchResults'
               :id='`line_name${name_data.index}`'
+              v-multi-ref:lineName
               :name='`line_name${name_data.index}`'
               autocomplete='line_name'
               :serializer='s=>s.name'
@@ -234,6 +235,43 @@ Vue.use(ModalPlugin);
 // Vue.use(Dragable);
 Vue.use(FormDatepickerPlugin);
 
+
+//Vue directive to allow refs to bind to an array without v-for - Nessacary to update bootstrap vue typeahead within the bootstrap table as table does not seem to render using v-for
+function addRef (el, binding, vnode) {
+  const ref = binding.arg
+  const vm = vnode.context
+  const thing = vnode.componentInstance || vnode.elm
+  if (!vm.$refs.hasOwnProperty(ref)) {
+    vm.$refs[ref] = []
+  }
+  const index = vm.$refs[ref].indexOf(thing)
+  if (index == -1) {
+  	vnode.context.$refs[ref].push(thing)
+ 	}
+}
+
+function removeRef (el, {arg: ref }, {context: vm }, vnode) {
+    if (vm.$refs.hasOwnProperty(ref)) {
+      const arr = vm.$refs[ref]
+      const thing = vnode.componentInstance || vnode.elm
+    	const index = arr.indexOf(thing)
+      if (index) {
+        arr.splice(index, 1)
+      }
+  	}
+  }
+
+Vue.directive('multi-ref', {
+  bind: addRef,
+  update: addRef,
+  unbind: removeRef
+})
+
+
+
+
+
+
 export default {
   name: "InvoiceCreate",
   components: {
@@ -339,6 +377,7 @@ export default {
     },
     deleteRow(id, index) {
       this.invoice.invoiceLines.splice(index, 1);
+      this.updateTypeahead();
     },
     getAllProducts() {
       const app = this;
@@ -442,7 +481,16 @@ export default {
         this.invoice.invoiceLines,
         this.helperCart
       );
+      this.updateTypeahead();
+this.totalCost();
       this.$bvModal.hide("helper-modal");
+    },
+    updateTypeahead(){
+      //Update the Vue bootstrap typeahead - component has a bug where inputted info is not displayed
+    //Refs are not reactive and must be accesed on next vue tick to give proper value
+      Vue.nextTick(() => {
+        this.$refs.lineName.forEach(line => (line.inputValue = line.value));
+      }); 
     },
     setDropText(index, type, unit) {
       this.invoice.invoiceLines[index].rate_unit = unit;
