@@ -1,7 +1,7 @@
 <template>
     <div>
     <LoadingPage v-if="profileLoading"></LoadingPage>
-    <div v-else-if='isProfileLoaded="success"'>
+    <div v-else-if='profileLoaded'>
       <h1>Account Settings</h1>
       <h4>Name:</h4> <p>{{name}}</p>
       <span>Business Account</span><b-form-checkbox v-model="checked"  :disabled="checked" name="business-account-switch" switch>
@@ -145,6 +145,7 @@ export default {
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`,
       profileLoading: state => state.user.status === "loading",
+      profileLoaded: state=> state.user.status === "success"
     })
   },
   mounted() {
