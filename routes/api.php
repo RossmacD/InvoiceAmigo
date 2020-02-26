@@ -27,6 +27,9 @@ Route::middleware('auth:api')->group(function () {
     //Invoices
     Route::apiResource('/invoices', 'InvoiceController');
     Route::get('/invoice/create','InvoiceController@create');
+
+    //Businesses
+    Route::apiResource('/businesses', 'BusinessController');
 });
 
 //User Auth
