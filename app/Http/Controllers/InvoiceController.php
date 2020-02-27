@@ -12,6 +12,7 @@ use App\Product;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Events\NotificationEvent;
 
 class InvoiceController extends Controller
 {
@@ -27,6 +28,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
+        event(new NotificationEvent('hello world'));
         $user = Auth::user();
         $business = $user->business;
         if($user->hasRole('business')){

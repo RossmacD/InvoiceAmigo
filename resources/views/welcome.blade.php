@@ -29,6 +29,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
 </head>
 
 <body>
