@@ -27,17 +27,17 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        $user = Auth::user();
-        //Set the api key
-        Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
-        $intent = \Stripe\PaymentIntent::create([
-            'amount' => 69420,
-            'currency' => 'eur',
-        ]);
-        return response()->json(['intent' => $intent], 200);
-    }
+    // public function index()
+    // {
+    //     $user = Auth::user();
+    //     //Set the api key
+    //     Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
+    //     $intent = \Stripe\PaymentIntent::create([
+    //         'amount' => 69420,
+    //         'currency' => 'eur',
+    //     ]);
+    //     return response()->json(['intent' => $intent], 200);
+    // }
 
     public function paySingleInvoice($id)
     {
@@ -58,33 +58,5 @@ class PaymentController extends Controller
         ], 200);
     }
 
-    public function webhooks(Request $request)
-    {
-        $payload = $request->getContent();
-        $event = null;
-        try {
-            $event = Stripe\Event::constructFrom(
-                json_decode($payload, true)
-            );
-        } catch (\UnexpectedValueException $e) {
-            // Invalid payload
-            return new Response('Webhook Fucked', 400);
-        }
-        // Handle the event
-        switch ($event->type) {
-            case 'payment_intent.succeeded':
-                $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
-                handlePaymentIntentSucceeded($paymentIntent);
-                break;
-            case 'payment_method.attached':
-                $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
-                handlePaymentMethodAttached($paymentMethod);
-                break;
-                // ... handle other event types
-            default:
-                // Unexpected event type
-                return new Response('Webhook Fucked', 400);
-        }
-        return new Response('Webhook Handled', 200);
-    }
+
 }

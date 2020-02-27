@@ -16,5 +16,5 @@
 // });
 
 Route::get('/redirect', 'SocialController@redirect');
-// Route::get('/callback', 'SocialController@callback');
+Route::post('/stripe/webhooks', 'WebhookController@webhooks');
 Route::get('/{any}', 'AppController@index')->where('any', '.*');
