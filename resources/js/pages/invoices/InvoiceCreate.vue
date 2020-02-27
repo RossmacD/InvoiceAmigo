@@ -21,7 +21,7 @@
           </b-col>
           <b-col md='6'>
             <b-form-group label='Recipient' label-for='recipient'>
-              <b-form-input id='recipient' type='number' name='recipient' required autocomplete='recipient' autofocus v-model='invoice.user_id'></b-form-input>
+              <b-form-input id='recipient' type='email' name='recipient' required autocomplete='recipient' autofocus v-model='invoice.user_email'></b-form-input>
               <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
             </b-form-group>
           </b-col>
@@ -293,7 +293,7 @@ export default {
       default() {
         return {
           invoice_number: "",
-          user_id: "1",
+          user_email: "john@smyth.com",
           invoice_date: "",
           due_date: "",
           currency: "eur",

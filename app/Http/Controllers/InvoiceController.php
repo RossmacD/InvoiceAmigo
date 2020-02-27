@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\User;
 use App\Business;
+use App\Role;
 use App\Invoice;
 use Validator;
 use App\InvoiceItems;
@@ -27,6 +28,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
+
         $user = Auth::user();
         $business = $user->business;
         if($user->hasRole('business')){
@@ -134,6 +136,25 @@ class InvoiceController extends Controller
         //Get the arrays from the form
         //TEMP $itemAmount = $request->input('product');
 
+        //Get the user by the specified email
+        $user = User::where('email', $request->user_email)->first();
+
+        //Check if the user exists, if not, create a new user with specified email
+        if(!isset($user)) {
+            $role_user = Role::where('name', 'user')->first();
+
+            $user = new User();
+            $user->name = 'Unregistered';
+            $user->email = $request->user_email;
+            $user->password = bcrypt('secret');
+            $user->save();
+            $user->roles()->attach($role_user);
+            $user_id = $user->id;
+        } else {
+            $user_id = $user->id;
+        }
+
+
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -141,7 +162,7 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
-        $invoice->user_id = $request->user_id;
+        $invoice->user_id = $user_id;
         $invoice->business_id = $business->id;
 
         //Calculate total cost + adjust for stripe
@@ -195,7 +216,6 @@ class InvoiceController extends Controller
     }
 
 
-
     /**
      * Display the specified resource.
      *
@@ -206,6 +226,10 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
+
+        $user = User::findOrFail($invoice->user_id);
+        $invoice->user_email = $user->email;
+
         // $invoice->products= $invoiceItems->where('type','product')->values();
         // $invoice->services = $invoiceItems->where('type', 'service')->values();
         // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
@@ -237,14 +261,17 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
-        //Create a Todo
+
+        $user = User::where('email', $request->user_email)->firstOrFail();
+
+        //Update an invoice
         $invoice =  Invoice::findOrFail($id);
         $invoice->invoice_number = $request->invoice_number;
         $invoice->invoice_date = $request->invoice_date;
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
-        $invoice->user_id = $request->user_id;
+        $invoice->user_id = $user->id;
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
         return response(200);
