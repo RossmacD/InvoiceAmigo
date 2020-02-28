@@ -14,7 +14,6 @@
         </b-navbar-nav>
         <b-navbar-nav class='ml-auto'>
           <!-- Show when logged in -->
-
           <b-nav-item active to='/invoices' v-if='isAuthenticated'>Invoices</b-nav-item>
           <b-nav-item active to='/products' v-if='isBusiness'>Products</b-nav-item>
           <b-nav-item active to='/services' v-if='isBusiness'>Services</b-nav-item>

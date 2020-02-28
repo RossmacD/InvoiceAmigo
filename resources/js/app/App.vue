@@ -28,11 +28,6 @@ export default {
       transitionName: "slide-right"
     };
   },
-  // beforeMount(){
-  //   if (!!localStorage.getItem("token")) {
-  //     this.$store.dispatch(USER_REQUEST);
-  //   }
-  // },
   created: function() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(USER_REQUEST);
