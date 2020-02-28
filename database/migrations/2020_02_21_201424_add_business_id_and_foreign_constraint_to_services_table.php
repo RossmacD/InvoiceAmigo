@@ -34,7 +34,8 @@ class AddBusinessIdAndForeignConstraintToServicesTable extends Migration
     public function down()
     {
         Schema::table('services', function (Blueprint $table) {
-            //
+            $table->dropForeign(['business_id']);
+            $table->dropColumn('business_id');
         });
     }
 }

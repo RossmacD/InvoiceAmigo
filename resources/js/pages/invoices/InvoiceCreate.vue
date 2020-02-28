@@ -4,7 +4,7 @@
     <div v-else>
       <h3 class='text-center'>
         <span v-if='editing'>Update</span>
-        <span v-else>Create</span> Invoice
+        <span v-else>Create</span> Invoice #{{ invoice.invoice_number }}
       </h3>
       <b-form>
         <b-row>
@@ -17,6 +17,12 @@
           <b-col md='3'>
             <b-form-group label='Currency' label-for='currency'>
               <b-form-select plain v-model='invoice.currency' :options='currencyOptions'></b-form-select>
+            </b-form-group>
+          </b-col>
+          <b-col md='6'>
+            <b-form-group label='Recipient' label-for='recipient'>
+              <b-form-input id='recipient' type='email' name='recipient' required autocomplete='recipient' autofocus v-model='invoice.user_email'></b-form-input>
+              <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
             </b-form-group>
           </b-col>
         </b-row>
@@ -287,7 +293,7 @@ export default {
       default() {
         return {
           invoice_number: "",
-          client_id: "",
+          user_email: "john@smyth.com",
           invoice_date: "",
           due_date: "",
           currency: "eur",
@@ -561,6 +567,7 @@ this.totalCost();
         });
     } else {
       this.loaded = true;
+      this.updateTypeahead();
     }
   },
   computed: {
