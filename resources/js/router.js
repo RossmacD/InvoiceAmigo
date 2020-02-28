@@ -16,6 +16,7 @@ import ProductUpdate from "./pages/products/ProductUpdate.vue";
 import ServiceIndex from "./pages/services/ServiceIndex.vue";
 import ServiceCreate from "./pages/services/ServicesCreate.vue";
 import ServiceUpdate from "./pages/services/ServiceUpdate.vue";
+import PasswordReset from "./pages/auth/PasswordReset.vue";
 import store from "./store";
 
 
@@ -165,6 +166,12 @@ const routes = [
         path: "/callback",
         name: "callback",
         component: CallbackHandler,
+        beforeEnter: onlyLoggedOut,
+    },
+    {
+        path: "/passwordreset/:token",
+        name: "passwordreset",
+        component: PasswordReset,
         beforeEnter: onlyLoggedOut,
     },
 ];
