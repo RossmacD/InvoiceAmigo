@@ -14,6 +14,8 @@
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import { USER_REQUEST } from "../store/actions/user";
+Pusher.logToConsole = true;
+import { mapGetters, mapState } from "vuex";
 
 
 export default {
@@ -46,6 +48,11 @@ export default {
     //     throw err;
     //   });
     // });
+  },
+  computed: {
+    ...mapGetters(["getProfile"]),
+    ...mapState({
+    })
   },
   watch: {
     $route(to, from) {

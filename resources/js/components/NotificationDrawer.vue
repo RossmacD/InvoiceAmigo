@@ -1,10 +1,8 @@
 <template>
   <div class='drawer'>
-    <b-nav vertical>
-      <b-nav-item disabled>
-        <h1>Notifications:</h1>
-      </b-nav-item>
-      <b-nav-item disabled v-for='notification in notifications' :key='notification'>{{notification.message}}</b-nav-item>
+    <h1>Notifications:</h1>
+    <b-nav vertical v-for='notification in notifications' :key='notification'>
+      <b-nav-item :disabled="!!!notification.link">{{notification.message}}</b-nav-item>
     </b-nav>
   </div>
 </template>
@@ -13,29 +11,14 @@
 import axios from "axios";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
-import { ADD_NOTIFICATIONS } from "../store/actions/notification";
 
-Pusher.logToConsole = true;
 
 export default {
   name: "Notifications",
   data() {
-    return {
-    };
+    return {};
   },
-  mounted() {
-    const app = this;
-    let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
-      cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-      forceTLS: true
-    });
-
-    let channel = pusher.subscribe("notifications." + this.id);
-    channel.bind("notification", function(data) {
-        // data=data);
-      app.$store.dispatch(ADD_NOTIFICATIONS, data);
-    });
-  },
+  
   computed: {
     ...mapGetters(["notifications", "getProfile"]),
     ...mapState({
