@@ -27,7 +27,10 @@
       </b-table>
       <h5>Notes:</h5>
       <p>{{invoice.notes}}</p>
-      <StripePayment :id="invoice.id"/>
+      <b-badge pill class="mx-3 px-1" variant='success' v-if="invoice.status==`paid`"><h4 >Invoice Paid</h4></b-badge>
+      <b-badge pill variant='danger' v-else><h4 >Invoice Unpaid</h4></b-badge>
+      <StripePayment v-if="invoice.user_id==id&&invoice.status!=`paid`" :id="invoice.id"/>
+      
     </div>
   </div>
 </template>
@@ -35,7 +38,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import { ButtonPlugin, SpinnerPlugin, TablePlugin } from "bootstrap-vue";
+import { ButtonPlugin, SpinnerPlugin, TablePlugin,BadgePlugin } from "bootstrap-vue";
 import { mapGetters, mapState } from "vuex";
 import InvoiceCreate from "./InvoiceCreate";
 import LoadingPage from "../../components/LoadingPage";
@@ -43,6 +46,7 @@ import StripePayment from "../../components/StripePayment";
 Vue.use(ButtonPlugin);
 Vue.use(SpinnerPlugin);
 Vue.use(TablePlugin);
+Vue.use(BadgePlugin);
 export default {
   name: "InvoiceView",
   components: {
@@ -67,8 +71,10 @@ export default {
   },
   methods: {},
   computed: {
-    ...mapGetters(["isAuthenticated"]),
-    ...mapState({})
+    ...mapGetters(["isAuthenticated","getProfile"]),
+    ...mapState({
+      id: state => `${state.user.profile.id}`,
+    })
   },
   mounted() {
     const app = this;
