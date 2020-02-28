@@ -13,6 +13,7 @@ use App\Product;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Events\NotificationEvent;
 
 class InvoiceController extends Controller
 {
@@ -28,7 +29,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-
+        event(new NotificationEvent('Invoice Page Opened',  Auth::id()));
         $user = Auth::user();
         $business = $user->business;
         if($user->hasRole('business')){
@@ -211,7 +212,8 @@ class InvoiceController extends Controller
                 $savedLine->save();
             }
         }
-
+        event(new NotificationEvent('Invoice Received from '.Auth::user()->name, $user->id));
+        event(new NotificationEvent('Invoice Sent Sucessfully',  Auth::id()));
         return response()->json(200);
     }
 

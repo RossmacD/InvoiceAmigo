@@ -15,6 +15,8 @@
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
         "nesbot/carbon": "^2.30"
+        "pusher/pusher-php-server": "^4.1",
+        "stripe/stripe-php": "^7.26"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

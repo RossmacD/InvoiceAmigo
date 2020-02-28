@@ -17,6 +17,15 @@ const actions = {
         axios({ url: 'api/user', method: 'GET' })
             .then(res => {
                 commit(USER_SUCCESS, res);
+                let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                    forceTLS: false
+                });
+                console.log("CONNECTION MADE")
+                let channel = pusher.subscribe("notifications." + res.data.user.id);
+                channel.bind("notification", function (data) {
+                    dispatch("ADD_NOTIFICATIONS", data);
+                });
             })
             .catch(err => {
                 commit(USER_ERROR);

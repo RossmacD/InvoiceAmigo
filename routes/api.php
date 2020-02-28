@@ -30,6 +30,10 @@ Route::middleware('auth:api')->group(function () {
 
     //Businesses
     Route::apiResource('/businesses', 'BusinessController');
+
+    //Stripe
+    // Route::get('/stripe', 'PaymentController@index')->name('stripe.index');
+    Route::get('/pay/{id}', 'PaymentController@paySingleInvoice')->name('stripe.paySingleInvoice');
 });
 
 //User Auth
