@@ -6,6 +6,7 @@ use Stripe\Stripe;
 use Auth;
 use App\User;
 use App\Invoice;
+use App\Business;
 use App\InvoiceItems;
 use App\Product;
 use Illuminate\Http\Request;
@@ -41,8 +42,10 @@ class PaymentController extends Controller
 
     public function paySingleInvoice($id)
     {
-        // $user = Auth::user();
+        $user = Auth::user();
         $invoice = Invoice::findOrFail($id);
+        $business = Business::findOrFail($invoice->business->id);
+
         // $invoiceItems = InvoiceItems::where('invoice_id', $id)->get();
         // $client =  User::where('id', $invoice->user_id)->firstOrFail();
         //dd($invoice);
@@ -51,6 +54,13 @@ class PaymentController extends Controller
         $intent = \Stripe\PaymentIntent::create([
             'amount' => $invoice->total_cost,
             'currency' => 'eur',
+            'payment_method_types' => ['card'],
+            'statement_descriptor' => 'Invoice Amigo',
+            'metadata' => [
+                'invoice_id'=> $invoice->id,
+                'seller_id' => $business->user_id,
+                'customer_id' => $user->id
+            ],
         ]);
 
         return  response()->json([

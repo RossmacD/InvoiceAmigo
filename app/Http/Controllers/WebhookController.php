@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Stripe;
+use App\Events\NotificationEvent;
+
 
 
 class WebhookController extends Controller
@@ -27,8 +29,9 @@ class WebhookController extends Controller
         switch ($event->type) {
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
-                error_log($paymentIntent);
-                // handlePaymentIntentSucceeded($paymentIntent);
+                // error_log($paymentIntent->metadata->invoice);
+                event(new NotificationEvent('Invoice Payment Successful, ID: '. $paymentIntent->id, $paymentIntent->metadata->seller_id));
+                event(new NotificationEvent('Invoice Paid by ' . $paymentIntent->metadata->seller_id, $paymentIntent->metadata->customer_id));
                 break;
                 // ... handle other event types
             default:

@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -16,5 +15,5 @@
 // });
 
 Broadcast::channel('notifications.{id}', function ($user, $id) {
-    return true;
+    return Auth::check();
 });
