@@ -14,14 +14,14 @@ let mutations = {
     [GET_NOTIFICATIONS]: (state, comments) => {
         state.comments = comments
     },
-    [ADD_NOTIFICATIONS]: (state, comment) => {
-        state.comments = [...state.comments, comment]
+    [ADD_NOTIFICATIONS]: (state, notification) => {
+        state.notifications = [...state.notifications, notification]
     }
 }
 
 let actions = {
-    [ADD_NOTIFICATIONS]: ({ commit }, comment) => {
-
+    [ADD_NOTIFICATIONS]: ({ commit }, notification) => {
+        commit(ADD_NOTIFICATIONS, notification);
         // return new Promise((resolve, reject) => {
         //     axios.post(`/comments`, comment)
         //         .then(response => {
@@ -44,6 +44,9 @@ let actions = {
         //         })
     }
 }
+
+
+
 export default {
     state,
     getters,

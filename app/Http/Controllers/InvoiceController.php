@@ -28,7 +28,6 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        event(new NotificationEvent('hello world'));
         $user = Auth::user();
         $business = $user->business;
         if($user->hasRole('business')){
@@ -192,7 +191,7 @@ class InvoiceController extends Controller
                 $savedLine->save();
             }
         }
-
+        event(new NotificationEvent('Invoice Sent', $user->id));
         return response()->json(200);
     }
 

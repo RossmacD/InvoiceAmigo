@@ -4,7 +4,7 @@
       <b-nav-item disabled>
         <h1>Notifications:</h1>
       </b-nav-item>
-      <b-nav-item disabled v-for='message in messages' :key='message'>{{message}}</b-nav-item>
+      <b-nav-item disabled v-for='notification in notifications' :key='notification'>{{notification.message}}</b-nav-item>
     </b-nav>
   </div>
 </template>
@@ -13,6 +13,7 @@
 import axios from "axios";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
+import { ADD_NOTIFICATIONS } from "../store/actions/notification";
 
 Pusher.logToConsole = true;
 
@@ -20,7 +21,6 @@ export default {
   name: "Notifications",
   data() {
     return {
-      messages: []
     };
   },
   mounted() {
@@ -30,14 +30,18 @@ export default {
       forceTLS: true
     });
 
-    let channel = pusher.subscribe("notifications");
+    let channel = pusher.subscribe("notifications." + this.id);
     channel.bind("notification", function(data) {
-      app.messages.push(JSON.stringify(data));
+        // data=data);
+      app.$store.dispatch(ADD_NOTIFICATIONS, data);
     });
   },
   computed: {
-    ...mapGetters(['notifications']),
-    ...mapState({})
+    ...mapGetters(["notifications", "getProfile"]),
+    ...mapState({
+      name: state => `${state.user.profile.name}`,
+      id: state => `${state.user.profile.id}`
+    })
   }
 };
 </script>
