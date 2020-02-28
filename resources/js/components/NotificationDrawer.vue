@@ -2,7 +2,8 @@
   <div class='drawer'>
     <h1>Notifications:</h1>
     <b-nav vertical v-for='notification in notifications' :key='notification'>
-      <b-nav-item :disabled="!!!notification.link">{{notification.message}}</b-nav-item>
+      <!-- <b-nav-item :disabled="!!!notification.link">{{notification.message}}</b-nav-item> -->
+      <b-nav-item :disabled="!!!notification.link" :to="notification.link">{{notification.message}}</b-nav-item>
     </b-nav>
   </div>
 </template>
@@ -33,10 +34,16 @@ export default {
 .drawer {
   position: fixed;
   background-color: white;
-  width: 500px;
+  width: 40%;
   height: 100%;
   right: 0px;
   top: 66.74px;
   z-index: 99999999;
+}
+@media only screen 
+   and (max-width : 425px) {
+     .drawer {
+    width:90%;
+   }
 }
 </style>
