@@ -79,4 +79,13 @@ class PassportController extends Controller
         $request->user()->token()->revoke();
         return response()->json(['message' => 'Logged Out'], 200);
     }
+
+    //Generates a password change token for 'unregistered' users
+    public function generatePasswordChangeToken(Request $request) {
+        $user = $request->user;
+        $passwordChangeToken = str_random(60);
+        DB::table('users')->where('id', $user->id)->update(['password_change_token' => $passwordChangeToken]);
+
+        
+    }
 }
