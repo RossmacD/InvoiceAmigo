@@ -232,7 +232,8 @@ import DeleteButton from "../../components/DeleteButton";
 import LoadingPage from "../../components/LoadingPage";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
-import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
+// import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
+import VueBootstrapTypeahead from 'vue-typeahead-bootstrap'
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);

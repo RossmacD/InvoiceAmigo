@@ -1,14 +1,15 @@
 import VueRouter from "vue-router";
 import CallbackHandler from "./pages/auth/CallbackHandler.vue";
 import Login from "./pages/auth/Login";
+import PasswordReset from "./pages/auth/PasswordReset.vue";
 import Register from "./pages/auth/Register";
 import DashBoard from "./pages/DashPage";
 import Home from "./pages/HomePage";
-import Settings from "./pages/Settings";
 import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
 import InvoiceIndex from "./pages/invoices/InvoiceIndex";
 import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
 import InvoiceView from "./pages/invoices/InvoiceView.vue";
+import LogCreate from "./pages/logs/LogCreate.vue";
 import LogIndex from "./pages/logs/LogIndex.vue";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
@@ -16,7 +17,7 @@ import ProductUpdate from "./pages/products/ProductUpdate.vue";
 import ServiceIndex from "./pages/services/ServiceIndex.vue";
 import ServiceCreate from "./pages/services/ServicesCreate.vue";
 import ServiceUpdate from "./pages/services/ServiceUpdate.vue";
-import PasswordReset from "./pages/auth/PasswordReset.vue";
+import Settings from "./pages/Settings";
 import store from "./store";
 
 
@@ -161,6 +162,12 @@ const routes = [
         meta: {
             depthIndex: 5
         }
+    },
+    {
+        path: "/logs/create",
+        name: "logcreate",
+        component: LogCreate,
+        beforeEnter: onlyLoggedIn,
     },
     {
         path: "/callback",

@@ -72,9 +72,10 @@ const actions = {
                 .catch(err => {
                     commit(AUTH_ERROR, err);
                     localStorage.removeItem("token"); // if the request fails, remove any possible user token if possible
+                    
                     reject(err);
                 });
-
+            pusher.disconnect()
             resolve(resp);
         });
     }
