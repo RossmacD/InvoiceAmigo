@@ -24,9 +24,15 @@
             <b-dropdown-item active @click='logout()'>Log Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <!-- <b-nav-item active> -->
-            <b-form-checkbox switch v-model='notificationDrawer'>
-              <!-- <b-icon icon='bell-fill' font-scale='1.5'></b-icon> -->
-            </b-form-checkbox>
+          <b-nav-item active @click='switchDrawer'>
+            <b-icon icon='bell-fill' font-scale='1.5'></b-icon>
+            <b-badge pill variant='info' v-if='notificationCount!=0'>{{notificationCount}}</b-badge>
+          </b-nav-item>
+
+          <!-- <b-form-checkbox switch v-model='notificationDrawer'>
+              
+          </b-form-checkbox>-->
+
           <!-- </b-nav-item> -->
           <!-- Show when not logged in -->
           <b-nav-item class='btn btn-success text-dark' active to='/login' v-if='!isAuthenticated'>Login</b-nav-item>
@@ -40,7 +46,13 @@
 
 <script>
 import Vue from "vue";
-import { ButtonPlugin, NavPlugin, NavbarPlugin, BIcon } from "bootstrap-vue";
+import {
+  ButtonPlugin,
+  NavPlugin,
+  NavbarPlugin,
+  BIcon,
+  BadgePlugin
+} from "bootstrap-vue";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_LOGOUT } from "../store/actions/auth";
 import NotificationDrawer from "./NotificationDrawer";
@@ -48,6 +60,7 @@ import NotificationDrawer from "./NotificationDrawer";
 Vue.use(ButtonPlugin);
 Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
+Vue.use(BadgePlugin);
 
 export default {
   data() {
@@ -69,6 +82,11 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    switchDrawer() {
+      this.notificationDrawer = !this.notificationDrawer
+        ? (this.notificationDrawer = true)
+        : (this.notificationDrawer = false);
     }
   },
   computed: {
@@ -76,11 +94,16 @@ export default {
       "getProfile",
       "isAuthenticated",
       "isProfileLoaded",
-      "isBusiness"
+      "isBusiness",
+      "notifications"
     ]),
     ...mapState({
       authLoading: state => state.auth.status === "loading",
-      name: state => `${state.user.profile.name}`
+      name: state => `${state.user.profile.name}`,
+      notificationCount: state =>
+        !!state.notification.notifications
+          ? state.notification.notifications.length
+          : 0
     })
   }
 };

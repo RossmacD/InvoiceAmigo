@@ -17,11 +17,12 @@ class NotificationEvent implements ShouldBroadcast
     public $id;
 
 
-    public function __construct($message,$id,$link= null)
+    public function __construct($message,$id,$link= null,$push=false)
     {
         $this->message = $message;
         $this->id = $id;
         $this->link=$link;
+        $this->push=$push;
     }
 
 

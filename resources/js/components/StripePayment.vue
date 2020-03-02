@@ -5,7 +5,7 @@
     </b-col>
     <b-col>
       <b-button :disabled="intentStatus" v-on:click='purchase'><b-spinner v-if="intentStatus" variant='light' label='Loading...'></b-spinner><span v-else>Pay Now</span></b-button>
-      <h1 v-if="success">Payment processing!!!</h1>
+      <h4 v-if="success">Processing...</h4>
     </b-col>
   </b-row>
 </template>
@@ -90,8 +90,8 @@ export default {
         app.intentStatus=true;
           } else {
             // The payment has succeeded. Display a success message.
-            console.log("Success");
             app.success=true;
+            app.$router.push('/invoices')
             //   document.location.href = "{{URL::to('success')}}";
             //document.location.href ="/success"
           }

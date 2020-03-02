@@ -29,7 +29,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        event(new NotificationEvent('Invoice Page Opened',  Auth::id()));
+        // event(new NotificationEvent('Invoice Page Opened',  Auth::id()));
         $user = Auth::user();
         $business = $user->business;
         if($user->hasRole('business')){
