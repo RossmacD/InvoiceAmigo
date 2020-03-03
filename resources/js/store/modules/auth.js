@@ -17,7 +17,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             // The Promise used for router redirect in login
             commit(AUTH_REQUEST);
-            axios({ url: "api/login", data: user, method: "POST" })
+            axios({ url: "/api/login", data: user, method: "POST" })
                 .then(resp => {
                     const token = resp.data.token;
                     localStorage.setItem("token", token); // store the token in localstorage

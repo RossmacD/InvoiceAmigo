@@ -14,6 +14,7 @@ use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Events\NotificationEvent;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 class InvoiceController extends Controller
 {
@@ -80,7 +81,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $invoice = Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
+        $invoice = Auth::user()->business->outgoingInvoices()->orderBy('invoice_number', 'desc')->first();
         if (isset($invoice)) {
             return response()->json(['invoice_number' => $invoice->invoice_number + 1], 200);
         } else {
@@ -151,6 +152,18 @@ class InvoiceController extends Controller
             $user->save();
             $user->roles()->attach($role_user);
             $user_id = $user->id;
+
+            //Send password reset email to the new user
+
+            // $req = new Request();
+            // $req->email = $request->user_email;
+            //  return response()->json($request->user_email,420);
+            // $request->put('email', $request->user_email);
+
+            //  return response()->json($request,420);
+            $passwordreset = new PasswordResetController();
+            // PasswordResetController::create($request);
+            $passwordreset->create($request);
         } else {
             $user_id = $user->id;
         }
@@ -167,9 +180,9 @@ class InvoiceController extends Controller
         $invoice->business_id = $business->id;
 
         //Calculate total cost + adjust for stripe
-        $total_cost = 0;
+        $invoice->total_cost = 0;
         foreach ($request->invoiceLines as $line) {
-            $total_cost += ($line['cost'] * $line['quantity']) * 100;
+            $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
         }
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();

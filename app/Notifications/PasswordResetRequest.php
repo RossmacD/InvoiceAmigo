@@ -42,7 +42,7 @@ class PasswordResetRequest extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/api/password/find/'.$this->token);
+        $url = url('/passwordreset/'.$this->token);
         return (new MailMessage)
             ->line('You have received an invoice via InvoiceAmigo. Please set a password to view it.')
             ->action('Set Password', url($url));

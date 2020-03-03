@@ -568,6 +568,7 @@ this.totalCost();
     } else {
       this.loaded = true;
       this.updateTypeahead();
+      this.totalCost();
     }
   },
   computed: {
