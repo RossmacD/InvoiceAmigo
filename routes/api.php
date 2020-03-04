@@ -18,6 +18,10 @@ Route::middleware('auth:api')->group(function () {
     //User Auth
     Route::get('user', 'PassportController@user');
     Route::get('logout', 'PassportController@logout');
+
+    //Dashboard
+    Route::get('dashboard','DashboardController');
+
     //Products
     Route::apiResource('/products', 'ProductController');
     Route::get('/search/products', 'SearchController@searchProducts')->name('products.search');

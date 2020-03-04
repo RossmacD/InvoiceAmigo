@@ -5,22 +5,22 @@
       <h1>Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
       </br>
-      <h3>Business Overview</h3>
+      <h3>Business Overview: {{ business.business_name }}</h3>
       <b-row>
         <b-col md="4">
           <b-card>
-            <h4>Total Income: </h4><p>€847.50</p>
+            <h4>Total Income: </h4><p>€ {{ dashInfo.totalIncome }}</p>
           </b-card>
         </b-col>
         <b-col md="4">
           <b-card>
-            <h4>Total Outstanding: </h4><p>€18.50</p>
+            <h4>Total Outstanding: </h4><p>€{{ dashInfo.totalOutstanding }}</p>
           </b-card>
             
         </b-col>
         <b-col md="4">
           <b-card>
-            <h4>Invoices Created: </h4><p>13</p>
+            <h4>Invoices Created: </h4><p>{{ dashInfo.invoicesCreated }}</p>
           </b-card>
         </b-col>
       </b-row>
@@ -60,13 +60,21 @@ export default {
   },
   data() {
     return {
-      // invoiceData: {labels: ["Paid", "Unpaid"], series: [[1, 3], [4, 6]]},
+      dashInfo: {
+        unseenCount: 0,
+        totalOutstanding: 0,
+        invoicesCreated: 0
+      },
+      unseenCount: 0,
+      totalOutstanding: 0,
+      invoicesCreated: 0,
+    
       invoiceDataOptions: {
         chart: {
           id: 'invoice-data',
         },
         xaxis: {
-          categories: ['Paid', 'Unpaid'],
+          categories: ['Paid', 'Unseen'],
         },
         title: {
               text: 'Invoice Data',
@@ -80,7 +88,7 @@ export default {
       },
       invoiceDataSeries: [{
         name: '',
-        data: [30, 2]
+        data: [0,0]
       }],
 
       salesDataOptions: {
@@ -107,11 +115,32 @@ export default {
 
     }
   },
+  mounted() {
+    const app = this;
+    axios
+    .get("/api/dashboard")
+    .then(response => {
+        app.dashInfo = response.data;
+        this.updateInvoiceStatusChart();
+        app.loaded = true;
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  },
+  methods: {
+    updateInvoiceStatusChart() {
+      this.invoiceDataSeries = [{
+        data: [this.dashInfo.paidCount,this.dashInfo.unseenCount]
+      }]
+    }
+  },
   computed: {
-    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
+    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded", "isBusiness"]),
     ...mapState({
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`,
+      business: state => state.user.profile.business,
       profileLoading: state => state.user.status === "loading",
       profileLoaded: state => state.user.status === "success"
     })
