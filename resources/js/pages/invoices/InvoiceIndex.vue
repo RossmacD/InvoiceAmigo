@@ -34,6 +34,7 @@
                   variant="secondary"
                   :pressed="false"
                   :to="'invoices/edit/'+invoice.id"
+                  v-if="invoice.status==`draft`"
                   size="sm"
                 >
                   <b-icon variant="light" icon="pen" style="width: 20px; height: 20px"></b-icon>
@@ -43,7 +44,15 @@
                   v-on:on-confirm="deleteInvoice"
                   :id="invoice.id"
                   :index="index"
+                  v-if="invoice.status==`draft`"
                 ></DeleteButton>
+                <ReversalButton
+                  class="float-right mx-1"
+                  v-on:on-confirm="deleteInvoice"
+                  :id="invoice.id"
+                  :index="index"
+                  v-else
+                ></ReversalButton>
               </b-col>
             </b-row>
           </template>
@@ -153,6 +162,7 @@ import EmptyIndex from "../../components/EmptyIndex";
 import LoadingPage from "../../components/LoadingPage";
 import ErrorPage from "../../components/ErrorPage";
 import DeleteButton from "../../components/DeleteButton";
+import ReversalButton from "../../components/ReversalButton";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(CardPlugin);
@@ -162,7 +172,8 @@ export default {
     EmptyIndex,
     LoadingPage,
     ErrorPage,
-    DeleteButton
+    DeleteButton,
+    ReversalButton
   },
   data() {
     return {

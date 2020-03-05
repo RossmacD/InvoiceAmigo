@@ -18,7 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->bigInteger('invoice_number');
             $table->date('invoice_date');
             $table->date('due_date');
-            $table->enum('status', ['unseen','unpaid','paid']);
+            $table->enum('status', ['draft','unseen','unpaid','paid']);
             $table->enum('currency', ['eur', 'gbp','usd']);
             $table->bigInteger('total_cost');
             $table->text('note')->nullable();

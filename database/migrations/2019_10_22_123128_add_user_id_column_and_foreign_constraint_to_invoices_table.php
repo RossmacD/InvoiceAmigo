@@ -17,7 +17,8 @@ class AddUserIdColumnAndForeignConstraintToInvoicesTable extends Migration
         Schema::table('invoices', function (Blueprint $table) {
             Invoice::truncate(); // empty the table
             Schema::table('invoices', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id'); // unsigned for foreign key.
+            $table->dropColumn('client_id'); //drop exisiting client_id column
+            $table->unsignedBigInteger('user_id')->nullable(); // unsigned for foreign key.
             $table->foreign('user_id') // foreign key column name.
             ->references('id') // parent table primary key.
             ->on('users') // parent table name.
@@ -36,6 +37,7 @@ class AddUserIdColumnAndForeignConstraintToInvoicesTable extends Migration
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
+            $table->bigInteger('client_id');
         });
     }
 }
