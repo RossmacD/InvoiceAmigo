@@ -44,4 +44,24 @@ class SearchController extends Controller
         }
         return response()->json($error, 200);
     }
+
+    public function searchServicesOnly(Request $request)
+    {
+        $error = ['error' => 'Empty Query'];
+        if (!$request['keywords']) {
+            return response()->json($error, 200);
+        }
+
+        $services = Auth::user()->business->services()->where('name', 'LIKE', '%' . $request['keywords'] . "%")->take(5)->get();
+        if (!empty($services)) {
+            return response()->json(
+                [
+                    'invoiceLines' => $services
+                ],
+                200
+            );
+        }
+        $error = ['error' => 'No results found'];
+        return response()->json($error, 200);
+    }
 }
