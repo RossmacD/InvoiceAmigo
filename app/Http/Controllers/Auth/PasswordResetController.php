@@ -19,13 +19,33 @@ class PasswordResetController extends Controller
      *
      * @param  [string] email
      * @return [string] message
-     */
-    public function create(Request $request)
-    {
-        $request->validate([
+    */
+    public function create(Request $request) {
+        // $request->validate([
+        //     'email' => 'required|string|email',
+        // ]);
+
+        //Check whether user_email or email is included in request
+        if(isset($request->user_email)) {
+            $email = $request->user_email;
+        } else {
+            $request->validate([
             'email' => 'required|string|email',
-        ]);
-        $user = User::where('email', $request->email)->first();
+            ]);
+            $email = $request->email;
+        }
+        // $email = $request->user_email;
+
+        $resp=PasswordResetController::createToken($email);
+        // return response()->json($resp,200)
+        return $resp;
+    }
+    public function createToken($email)
+    {
+        // $request->validate([
+        //     'email' => 'required|string|email',
+        // ]);
+        $user = User::where('email', $email)->first();
         if (!$user)
             return response()->json([
                 'message' => "We can't find a user with that e-mail address."
@@ -42,6 +62,7 @@ class PasswordResetController extends Controller
                 new PasswordResetRequest($passwordReset->token)
             );
         return response()->json([
+            'token' => $passwordReset->token,
             'message' => 'We have e-mailed your password reset link!'
         ]);
     }
@@ -110,7 +131,7 @@ class PasswordResetController extends Controller
             return response()->json([
                 'message' => "We can't find a user with that e-mail address."
             ], 404);
-        $user->name = ($request->name);
+        $user->name = $request->name;
         $user->password = bcrypt($request->password);
         $user->save();
         $passwordReset->delete();

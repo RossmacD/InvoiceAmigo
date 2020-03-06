@@ -14,7 +14,7 @@ const getters = {
 const actions = {
     [USER_REQUEST]: ({ commit, dispatch }) => {
         commit(USER_REQUEST);
-        axios({ url: 'api/user', method: 'GET' })
+        axios({ url: '/api/user', method: 'GET' })
             .then(res => {
                 commit(USER_SUCCESS, res);
                 let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {

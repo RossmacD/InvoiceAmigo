@@ -34,6 +34,7 @@ import Vue from "vue";
 import axios from "axios";
 import { ButtonPlugin, SpinnerPlugin, FormPlugin } from "bootstrap-vue";
 import { mapGetters, mapState } from "vuex";
+import {AUTH_REQUEST} from "../../store/actions/auth"
 import PasswordReset from "./PasswordReset";
 import LoadingPage from "../../components/LoadingPage";
 Vue.use(ButtonPlugin);
@@ -71,19 +72,24 @@ export default {
             token: app.pwResetInfo.token
           })
           .then(function(response) {
+            console.log("Yes - response wokred")
             app.settingPw = false;
+            console.log("Logging In")
             app.login();
           })
           .catch(function(error) {
             app.settingPw = false;
-            app.messages = error.response.data;
+            console.log(error);
+            console.log(error.response);
+            app.messages = error.response;
           });
         app.settingPw = false;
       }
     },
     login() {
+      const app=this;
       this.$store
-        .dispatch(AUTH_REQUEST, { email: pwResetInfo.email, password: this.password })
+        .dispatch(AUTH_REQUEST, { email: app.pwResetInfo.email, password: app.pwResetInfo.password })
         .then(() => {
           this.$router.push("/");
         })

@@ -201,12 +201,15 @@
         </b-form-group>
         <b-form-group class='mb-0'>
           <div class='col-md-4'>
-            <b-button v-on:click='submit()' v-if='!submiting' class='btn btn-primary'>
-              <span v-if='editing'>Update</span>
-              <span v-else>Create</span>
+            <b-button v-on:click='submit(false)' v-if='!submiting' class='btn btn-primary'>
+              <span v-if='editing'>Update Draft</span>
+              <span v-else>Save Draft</span>
             </b-button>
             <b-button v-else class='btn btn-info'>
               <b-spinner small label='Loading...'></b-spinner>
+            </b-button>
+            <b-button v-on:click='submit(true)' v-if='!submiting' class='btn btn-primary' variant='success'>
+              <span>Send</span>
             </b-button>
           </div>
         </b-form-group>
@@ -527,10 +530,15 @@ this.totalCost();
           "ly";
       }
     },
-    submit() {
+    submit(isSending) {
       const app = this;
       app.submiting = true;
       if (app.isAuthenticated) {
+        if(isSending){
+          app.invoice.status = 'unseen';
+        } else {
+          app.invoice.status = 'draft';
+        }
         if (app.editing) {
           axios
             .put("/api/invoices/" + app.invoice.id, app.invoice)
@@ -569,6 +577,7 @@ this.totalCost();
     } else {
       this.loaded = true;
       this.updateTypeahead();
+      this.totalCost();
     }
   },
   computed: {

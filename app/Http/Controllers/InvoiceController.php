@@ -14,6 +14,7 @@ use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Events\NotificationEvent;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 class InvoiceController extends Controller
 {
@@ -36,22 +37,6 @@ class InvoiceController extends Controller
             $outgoingInvoices = $business->outgoingInvoices()->orderBy('created_at', 'desc')->paginate(16);
         }
         $incomingInvoices = $user->incomingInvoices()->orderBy('created_at', 'desc')->paginate(16);
-
-
-//temp: uncomment when roles are working
-        // if($user->hasRole('business')){
-        //     $jsonResponse=[
-        //         'user' => $user,
-        //         'business' => $business,
-        //         'incomingInvoices' => $incomingInvoices,
-        //         'outgoingInvoices' => $outgoingInvoices
-        //       ];
-        // } else {
-        //     $jsonResponse=[
-        //         'user' => $user,
-        //         'incomingInvoices' => $incomingInvoices,
-        //       ];
-        // }
         
         if(!$user->hasRole('business')){
             $outgoingInvoices = null;
@@ -80,7 +65,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $invoice = Auth::user()->invoices()->orderBy('invoice_number', 'desc')->first();
+        $invoice = Auth::user()->business->outgoingInvoices()->orderBy('invoice_number', 'desc')->first();
         if (isset($invoice)) {
             return response()->json(['invoice_number' => $invoice->invoice_number + 1], 200);
         } else {
@@ -137,25 +122,6 @@ class InvoiceController extends Controller
         //Get the arrays from the form
         //TEMP $itemAmount = $request->input('product');
 
-        //Get the user by the specified email
-        $user = User::where('email', $request->user_email)->first();
-
-        //Check if the user exists, if not, create a new user with specified email
-        if(!isset($user)) {
-            $role_user = Role::where('name', 'user')->first();
-
-            $user = new User();
-            $user->name = 'Unregistered';
-            $user->email = $request->user_email;
-            $user->password = bcrypt('secret');
-            $user->save();
-            $user->roles()->attach($role_user);
-            $user_id = $user->id;
-        } else {
-            $user_id = $user->id;
-        }
-
-
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -163,13 +129,22 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
-        $invoice->user_id = $user_id;
+        if($request->status == 'draft'){
+            $invoice->draft_email = $request->user_email;
+            $invoice->user_id = null;
+        } else {
+            $invoice->status = $request->status;
+
+            $invoice->draft_email = null;
+            $user = InvoiceController::createUser($request);
+            $invoice->user_id = $user->id;
+        }
         $invoice->business_id = $business->id;
 
         //Calculate total cost + adjust for stripe
-        $total_cost = 0;
+        $invoice->total_cost = 0;
         foreach ($request->invoiceLines as $line) {
-            $total_cost += ($line['cost'] * $line['quantity']) * 100;
+            $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
         }
 
         //$client_id= User::where('email', $request->client_email)->firstOrFail();
@@ -229,16 +204,16 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
         $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
 
-        $user = User::findOrFail($invoice->user_id);
-        $invoice->user_email = $user->email;
+        $user = User::find($invoice->user_id);
+        if(isset($user)){
+            $invoice->user_email = $user->email;
+        } else {
+            $invoice->user_email = $invoice->draft_email;
+        }
 
-        // $invoice->products= $invoiceItems->where('type','product')->values();
-        // $invoice->services = $invoiceItems->where('type', 'service')->values();
-        // TEMP $client =  User::where('id', $invoice->client_id)->firstOrFail();
         return response()->json(
             [
                 'invoice' => $invoice,
-                //TEMP 'client'=>$client
             ],
             200
         );
@@ -264,8 +239,6 @@ class InvoiceController extends Controller
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
 
-        $user = User::where('email', $request->user_email)->firstOrFail();
-
         //Update an invoice
         $invoice =  Invoice::findOrFail($id);
         $invoice->invoice_number = $request->invoice_number;
@@ -273,7 +246,20 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
-        $invoice->user_id = $user->id;
+        if($request->status == 'draft'){
+            $invoice->draft_email = $request->user_email;
+            $invoice->user_id = null;
+        } else {
+            $invoice->status = $request->status;
+
+            $invoice->draft_email = null;
+            $user = User::where('email', $request->user_email)->first();
+
+            if(!isset($user)){
+                $user = InvoiceController::createUser($request);
+            } 
+            $invoice->user_id = $user->id;
+        }
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.
         return response(200);
@@ -290,5 +276,31 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
         $invoice->delete();
         return response()->json(200);
+    }
+
+    public static function createUser($request){
+        $role_user = Role::where('name', 'user')->first();
+
+        $user = new User();
+        $user->name = 'Unregistered';
+        $user->email = $request->user_email;
+        $user->password = bcrypt('secret');
+        $user->save();
+        $user->roles()->attach($role_user);
+        $user_id = $user->id;
+
+        //Send password reset email to the new user
+
+        // $req = new Request();
+        // $req->email = $request->user_email;
+        //  return response()->json($request->user_email,420);
+        // $request->put('email', $request->user_email);
+
+        //  return response()->json($request,420);
+        $passwordreset = new PasswordResetController();
+        // PasswordResetController::create($request);
+        $passwordreset->create($request);
+
+        return $user;
     }
 }

@@ -18,6 +18,10 @@ Route::middleware('auth:api')->group(function () {
     //User Auth
     Route::get('user', 'PassportController@user');
     Route::get('logout', 'PassportController@logout');
+
+    //Dashboard
+    Route::get('dashboard','DashboardController');
+
     //Products
     Route::apiResource('/products', 'ProductController');
     Route::get('/search/products', 'SearchController@searchProducts')->name('products.search');
@@ -42,13 +46,11 @@ Route::post('register', 'PassportController@register');
 
 Route::post('/callback', 'SocialController@callback');
 
-//Reset password routes
 Route::group([    
-    'namespace' => 'Auth',    
-    'middleware' => 'api',    
-    'prefix' => 'password'
+    'namespace' => 'Auth'
 ], function () {    
-    Route::post('create', 'PasswordResetController@create');
-    Route::get('find/{token}', 'PasswordResetController@find');
-    Route::post('reset', 'PasswordResetController@reset');
+    Route::post('/password/create', 'PasswordResetController@create');
+    Route::get('/password/find/{token}', 'PasswordResetController@find');
+    Route::post('/password/reset', 'PasswordResetController@reset');
 });
+
