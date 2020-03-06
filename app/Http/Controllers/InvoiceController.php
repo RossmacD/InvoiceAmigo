@@ -136,7 +136,11 @@ class InvoiceController extends Controller
             $invoice->status = $request->status;
 
             $invoice->draft_email = null;
-            $user = InvoiceController::createUser($request);
+            $user = User::where('email', $request->user_email)->first();
+
+            if(!isset($user)){
+                $user = InvoiceController::createUser($request);
+            } 
             $invoice->user_id = $user->id;
         }
         $invoice->business_id = $business->id;
