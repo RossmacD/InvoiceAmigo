@@ -9,6 +9,7 @@ use App\Events\NotificationEvent;
 use App\User;
 use App\Business;
 use App\Role;
+use App\Transactions;
 use App\Invoice;
 use Validator;
 use App\InvoiceItems;
@@ -40,11 +41,18 @@ class WebhookController extends Controller
                 $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
                 $seller=User::findOrFail($paymentIntent->metadata->seller_id);
                 $invoice = Invoice::findOrFail($paymentIntent->metadata->invoice_id);
-                // error_log($paymentIntent->metadata->invoice);
+                // error_log($paymentIntent);
                 event(new NotificationEvent('Invoice Payment Successful', $paymentIntent->metadata->customer_id),"/invoices",true);
                 event(new NotificationEvent('Invoice #'.$invoice->invoice_number.' paid by ' . $seller->email, $paymentIntent->metadata->seller_id,"/invoice"."/".$invoice->id));
                 $invoice->status = 'paid';
                 $invoice->save();
+                
+                $transaction=new Transactions;
+                $transaction->invoice_id= $invoice->id;
+                $transaction->cur = "eur";
+                $transaction->stripe_payment_id= $paymentIntent->id;
+                $transaction->amount=$invoice->total_cost;
+                $transaction->save();
                 break;
                 // ... handle other event types
             default:

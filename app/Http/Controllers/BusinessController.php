@@ -7,6 +7,9 @@ use Auth;
 use App\Business;
 use App\Role;
 use Illuminate\Http\Request;
+use PharIo\Manifest\Email;
+use Stripe;
+
 
 class BusinessController extends Controller
 {
@@ -68,8 +71,27 @@ class BusinessController extends Controller
         $business->country = $request->country;
         $business->postcode = $request->postcode;
         $business->user_id = $user->id;
+        Stripe\Stripe::setApiKey('sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1');
+        $account = Stripe\Account::create([
+            'country' => 'IE',
+            'type' => 'custom',
+            'requested_capabilities' => ['card_payments', 'transfers'],
+            'email'=>$user->email
+        ]);
+        $externalAccount=Stripe\Account::createExternalAccount(
+            $account->id,
+            [
+                'external_account' => 'btok_1GJ0Z9JZbG28fquLJi909xkr',
+            ]
+        );
+        
+        $business->stripe_id=$account->id;
         $business->save();
         $user->roles()->attach($role_business);
+
+        
+        error_log($account);
+
 
         //Redirect to a specified route with flash message.
         return response()->json(200);

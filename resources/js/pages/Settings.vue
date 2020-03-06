@@ -49,6 +49,7 @@
                 </b-form-group>
               </b-col>
             </b-row>
+            <IbanCollect v-if="!editing"/>
             <b-form-group class='mb-0'>
               <div>
                 <b-button v-on:click='submit()' v-if='!businessSubmitLoading' class='btn btn-primary'><span v-if='editing'>Update</span>
@@ -76,6 +77,7 @@ import { mapGetters, mapState } from "vuex";
 import { CardPlugin, ButtonPlugin, LayoutPlugin } from "bootstrap-vue";
 import ErrorPage from "../components/ErrorPage";
 import LoadingPage from "../components/LoadingPage";
+import IbanCollect from "../components/IbanCollect";
 Vue.use(CardPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(LayoutPlugin);
@@ -83,7 +85,9 @@ Vue.use(LayoutPlugin);
 export default {
   name: "Settings",
   components: {
-    LoadingPage
+    ErrorPage,
+    LoadingPage,
+    IbanCollect
   },
   data() {
     return {
@@ -135,10 +139,7 @@ export default {
       }
     }
   },
-  components: {
-    ErrorPage,
-    LoadingPage
-  },
+  
   computed: {
     ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded", "isBusiness"]),
     ...mapState({

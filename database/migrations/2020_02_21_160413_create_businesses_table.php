@@ -20,6 +20,7 @@ class CreateBusinessesTable extends Migration
             $table->string('address');
             $table->string('country');
             $table->string('postcode');
+            $table->string("stripe_id")->nullable();
             // $table->unsignedBigInteger('user_id'); // unsigned for foreign key
             // $table->foreign('user_id') // foreign key column name.
             // ->references('id') // parent table primary key.

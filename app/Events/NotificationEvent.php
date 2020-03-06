@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use Auth;
+use App\Notification;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -23,6 +24,12 @@ class NotificationEvent implements ShouldBroadcast
         $this->id = $id;
         $this->link=$link;
         $this->push=$push;
+        $notification=new Notification;
+        $notification->user_id=$id;
+        $notification->message = $message;
+        $notification->link = $link;
+        $notification->status = "unread";
+        $notification->save();
     }
 
 
