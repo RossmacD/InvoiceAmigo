@@ -38,6 +38,10 @@ Route::middleware('auth:api')->group(function () {
     //Stripe
     // Route::get('/stripe', 'PaymentController@index')->name('stripe.index');
     Route::get('/pay/{id}', 'PaymentController@paySingleInvoice')->name('stripe.paySingleInvoice');
+
+    //cPanel
+    Route::get('/cpanel', 'CpanelController@searchAccounts');
+
 });
 
 //User Auth
@@ -46,6 +50,7 @@ Route::post('register', 'PassportController@register');
 
 Route::post('/callback', 'SocialController@callback');
 
+//Password Reset
 Route::group([    
     'namespace' => 'Auth'
 ], function () {    

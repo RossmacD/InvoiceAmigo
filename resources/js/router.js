@@ -19,6 +19,7 @@ import ServiceCreate from "./pages/services/ServicesCreate.vue";
 import ServiceUpdate from "./pages/services/ServiceUpdate.vue";
 import Settings from "./pages/Settings";
 import store from "./store";
+import CpanelDash from "./pages/cpanel/CpanelDash.vue";
 
 
 //Middleware
@@ -180,6 +181,15 @@ const routes = [
         name: "passwordreset",
         component: PasswordReset,
         beforeEnter: onlyLoggedOut,
+    },
+    {
+        path: "/cpanel",
+        name: "cpanel",
+        component: CpanelDash,
+        beforeEnter: onlyLoggedIn,
+        meta: {
+            depthIndex: 8
+        }
     },
 ];
 

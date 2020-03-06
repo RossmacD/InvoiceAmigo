@@ -27,4 +27,8 @@ class Business extends Model
         return $this->hasMany('App\Service', 'business_id');
     }
 
+    public function cpanel() {
+        return $this->hasOne('App\Cpanel');
+      }
+
 }

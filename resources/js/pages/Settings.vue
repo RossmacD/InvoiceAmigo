@@ -62,8 +62,52 @@
             </b-form-group>
           </b-form>
 
+          <hr>
           <h2>cPanel Settings</h2>
           <p>These settings are for integration with a cPanel WHM/reseller account.</p>
+          <b-form>
+            <b-row>
+              <b-col md='6'>
+                <b-form-group label='WHM Username' label-for='username'>
+                  <b-form-input aria-describedby='input-live-feedback' id='username' type='text' name='username' required autocomplete='username' autofocus v-model='cpanel.username'></b-form-input>
+                  <b-form-invalid-feedback v-if='messages.cpanel.username' force-show>{{messages.cpanel.username[0]}}</b-form-invalid-feedback>
+                  <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md='6'>
+                <b-form-group label='API token' label-for='api_token'>
+                  <b-form-input id='api_token' type='text' name='api_token' required autocomplete='api_token' autofocus v-model='cpanel.api_token'></b-form-input>
+                  <b-form-invalid-feedback v-if='messages.cpanel.api_token' force-show>{{messages.cpanel.api_token[0]}}</b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md='3'>
+                <b-form-group label='Hostname' label-for='hostname'>
+                  <b-form-input id='hostname' type='text' name='hostname' required autocomplete='hostname' autofocus v-model='cpanel.hostname'></b-form-input>
+                  <b-form-invalid-feedback v-if='messages.cpanel.hostname' force-show>{{messages.cpanel.hostname[0]}}</b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col md='3'>
+                <b-form-group label='Port' label-for='port'>
+                  <b-form-input id='port' type='text' name='port' required autocomplete='port' autofocus v-model='cpanel.port'></b-form-input>
+                  <b-form-invalid-feedback v-if='messages.cpanel.port' force-show>{{messages.cpanel.port[0]}}</b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-form-group class='mb-0'>
+              <div>
+                <b-button v-on:click='submit()' v-if='!cpanelSubmitLoading' class='btn btn-primary'><span v-if='editing'>Update</span>
+                  <span v-else>Create</span>
+                </b-button>
+                <b-button v-else variant='info'>
+                  <b-spinner small label='Loading...'></b-spinner>
+                </b-button>
+              </div>
+            </b-form-group>
+    </b-form>
 
       </div>
     </div>
@@ -100,6 +144,12 @@ export default {
         country: "",
         postcode: ""
       },
+      cpanel: {
+        whm_username: "",
+        api_token: "",
+        hostname: "",
+        port: ""
+      },
       messages: {
         business: {
           business_name: [],
@@ -107,6 +157,12 @@ export default {
           address: [],
           country: [],
           postcode: []
+        },
+        cpanel: {
+          whm_username: [],
+          api_token: [],
+          hostname: [],
+          port: []
         }
       },
       editing: false,
