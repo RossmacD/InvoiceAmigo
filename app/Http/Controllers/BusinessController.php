@@ -78,12 +78,12 @@ class BusinessController extends Controller
             'requested_capabilities' => ['card_payments', 'transfers'],
             'email'=>$user->email
         ]);
-        $externalAccount=Stripe\Account::createExternalAccount(
-            $account->id,
-            [
-                'external_account' => 'btok_1GJ0Z9JZbG28fquLJi909xkr',
-            ]
-        );
+        // $externalAccount=Stripe\Account::createExternalAccount(
+        //     $account->id,
+        //     [
+        //         'external_account' => 'btok_1GJ0Z9JZbG28fquLJi909xkr',
+        //     ]
+        // );
         
         $business->stripe_id=$account->id;
         $business->save();
