@@ -6,7 +6,7 @@
     </h2>
     <b-row>
       <b-card-group deck>
-        <b-card class='my-2'>
+        <!-- <b-card class='my-2'>
           <h3>Ultan@gmail.com</h3>
           <b-list-group flush>
             <b-list-group-item>Web design: 1 Hour</b-list-group-item>
@@ -17,9 +17,9 @@
             <b-button  to='/invoices/edit'>Create Invoice</b-button>
             <b-button to='/logs/create' variant='success' class='float-right'>Add Time</b-button>
           </template>
-        </b-card>
+        </b-card> -->
 
-        <b-card class='my-2 text-center ' border-variant="dark"  style="border-style: dashed!important;" footer-border-variant="dark">
+        <b-card class='my-2 text-center ' border-variant="dark"  style="border-style: dashed!important;width: 294.172px;height: 288.594px;" footer-border-variant="dark">
             <div class="align-middle">
                 <h3>New Log?</h3>
               Create a log for a new customer
