@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{timeCount}}
+    <!-- {{timeCount}} -->
     <h3>Recipient:</h3>
     <EmailField v-on:email-update='getEmail' :messages='[]'></EmailField>
     <hr />
@@ -11,26 +11,29 @@
       <b-col class='my-3'>
         <h4>Timers:</h4>
         <div class='customScroll' style='position:relative; height:50vh; overflow-y:auto; background-color:#dad5dc;border-radius: 15px;padding:15px'>
-          <b-card-group deck v-for='timer in timers' :key='timer.id'>
+          <b-card-group deck v-if="!invoice.invoiceLines[0]"><b-card>
+            Add a service to begin logging
+            </b-card></b-card-group>
+          <b-card-group  v-else deck v-for='invoiceLine in invoice.invoiceLines' :key='invoiceLine.id'>
             <b-card class='my-1'>
-              <b-row no-body class>
+              <b-row no-body class no-gutters>
                 <b-row no-gutters>
                   <b-col md='6' class='text-center'>
                     <b-icon icon='clock-fill' style='height:35%;width:35%;' />
-                    <h4>{{timer.formattedTime}}</h4>
+                    <h4>{{invoiceLine.formattedTime}}</h4>
                     <div class='p-1'>
-                      <b-progress class='mx-1' variant='success' :value='timer.formattedTime.substr(6,2)' striped></b-progress>
+                      <b-progress class='mx-1' variant='success' :value='invoiceLine.formattedTime.substr(6,2)' striped></b-progress>
                     </div>
-                    <b-progress class='mx-1' variant='info' :value='timer.formattedTime.substr(3,2)' striped></b-progress>
+                    <b-progress class='mx-1' variant='info' :value='invoiceLine.formattedTime.substr(3,2)' striped></b-progress>
                   </b-col>
                   <b-col md='6'>
-                    <b-card-body :title='timer.attachedItem.name'>
-                      <b-card-text>{{timer.attachedItem.description}}</b-card-text>
-                      <b-button @click='timer.running?timer.running=false:timer.running=true' block>
-                        <span v-if='timer.running'>Stop</span>
+                    <b-card-body :title='invoiceLine.name'>
+                      <b-card-text>{{invoiceLine.description}}</b-card-text>
+                      <b-button @click='invoiceLine.running?invoiceLine.running=false:invoiceLine.running=true' block>
+                        <span v-if='invoiceLine.running'>Stop</span>
                         <span v-else>Start</span>
                       </b-button>
-                      <b-button @click='timer.sec=0;timer.running=false' block variant='dark'>Reset</b-button>
+                      <b-button @click='invoiceLine.sec=0;invoiceLine.running=false' block variant='dark'>Reset</b-button>
                     </b-card-body>
                   </b-col>
                 </b-row>
@@ -39,24 +42,18 @@
           </b-card-group>
         </div>
       </b-col>
-      <b-col>
+      <b-col class='my-3'>
         <h4>Your Products & Serivces</h4>
-        <b-list-group>
-          <b-list-group-item>
-            Web design
-            <b-form-checkbox class='float-right' switch name='check-button' />
-          </b-list-group-item>
-          <b-list-group-item>
-            Website Testing
-            <b-form-checkbox class='float-right' switch name='check-button' />
-          </b-list-group-item>
-          <b-list-group-item>
-            Wireframes and heuristic analysis
-            <b-form-checkbox class='float-right' switch name='check-button' />
+        <b-list-group v-for="service in services" v-bind:key="service.id" style="height:50vh;overflow-y:auto;">
+          <b-list-group-item >
+            {{service.name}}
+            <!-- <b-icon class='float-right' icon="plus" @click="timeBegan=true" /> -->
+            <b-button class='float-right' style="font-size: 0.8rem;" small>+Add</b-button>
           </b-list-group-item>
         </b-list-group>
         <b-button variant='success'>Save</b-button>
-        <b-button variant='primary'>Create Invoice for {{email?email:"client"}}</b-button>
+        <!-- <b-button variant='primary'>Create Invoice for {{invoice.user_email?invoice.user_email:"client"}}</b-button> -->
+        <!-- <p>Will Round up to closet hour on save.</p> -->
       </b-col>
     </b-row>
     <b-row>
@@ -84,21 +81,6 @@ Vue.use(ButtonPlugin);
 Vue.use(LayoutPlugin);
 Vue.use(ProgressPlugin);
 
-// function clockRunning(){
-//   var currentTime = new Date()
-//   , timeElapsed = new Date(currentTime - timeBegan - stoppedDuration)
-//   , hour = timeElapsed.getUTCHours()
-//   , min = timeElapsed.getUTCMinutes()
-//   , sec = timeElapsed.getUTCSeconds()
-//   , ms = timeElapsed.getUTCMilliseconds();
-
-//   clock.time =
-//     zeroPrefix(hour, 2) + ":" +
-//     zeroPrefix(min, 2) + ":" +
-//     zeroPrefix(sec, 2) + "." +
-//     zeroPrefix(ms, 3);
-// };
-
 export default {
   name: "LogCreate",
   components: {
@@ -106,16 +88,33 @@ export default {
     BIcon,
     VueBootstrapTypeahead
   },
+  props: {
+    invoice: {
+      type: Object,
+      default() {
+        return {
+          user_email: "",
+          currency: "eur",
+          status:"draft",
+          invoiceLines: [
+          ],
+        };
+      }
+    },
+    editing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      email: "",
+      services:[],
       keywords: "",
       searchResults: [],
       timeCount: 0,
       messages: {
         email: ""
       },
-      timers: [],
       timeBegan: null,
       timeStopped: null,
       stoppedDuration: 0,
@@ -124,10 +123,11 @@ export default {
     };
   },
   mounted() {
-    this.$nextTick(function() {
+    const app=this;
+    app.$nextTick(function() {
       window.setInterval(() => {
-        this.timeCount++;
-        this.timers.forEach(timer => {
+        app.timeCount++;
+        app.invoice.invoiceLines.forEach(timer => {
           timer.running ? timer.sec++ : "";
           timer.formattedTime = new Date(timer.sec * 1000)
             .toISOString()
@@ -135,15 +135,26 @@ export default {
         });
       }, 1000);
     });
+    axios
+        .get("/api/services")
+        .then(response => {
+          // console.log(response.data);
+          app.services = response.data.services.data;
+          app.loaded=true
+        })
+        .catch(err => {
+          console.log(err);
+          app.hitError=true;
+        });
   },
   methods: {
     getEmail(email) {
-      this.email = email;
+      this.invoice.user_email = email;
     },
     search() {
       const app = this;
       axios
-        .get("/api/search/products", {
+        .get("/api/search/services", {
           params: { keywords: app.keywords }
         })
         .then(res => {
@@ -159,26 +170,20 @@ export default {
       const attachedItem = this.searchResults.filter(
         result => result.name == app.keywords
       );
-      this.timers.push({
-        id: 0,
+      this.invoice.invoiceLines.push({
+        id: this.invoice.invoiceLines.length,
         sec: 0,
         formattedTime: "00:00:00",
         running: true,
-        attachedItem: attachedItem[0]
+        // attachedItem: attachedItem[0],
+        name: attachedItem[0].name,
+        description: attachedItem[0].description,
+        cost: attachedItem[0].cost,
+        rate_unit: attachedItem[0].rate_unit,
+        // quantity: "",
+        type: "service",
+        dropText: "Hourly"
       });
-      // this.invoice.invoiceLines[index].description = newProduct[0].description;
-      // this.invoice.invoiceLines[index].cost = newProduct[0].cost;
-      // if ("undefined" === typeof newProduct[0]["rate_unit"]) {
-      //   console.log("undefined");
-      //   //Update the type + dropdown Text
-      //   this.setDropText(index, "product", null);
-      // } else {
-      //   console.log("defined");
-      //   this.invoice.invoiceLines[index].rate_unit = newProduct[0].rate_unit;
-      //   this.setDropText(index, "service", newProduct[0].rate_unit);
-      // }
-      // this.invoice.invoiceLines[index].quantity = 1;
-      // this.totalCost();
     }
   }
 };

@@ -28,6 +28,8 @@ Route::middleware('auth:api')->group(function () {
 
     //Services
     Route::apiResource('/services', 'ServiceController');
+    Route::get('/search/services', 'SearchController@searchServicesOnly')->name('service.search');
+
     //Invoices
     Route::apiResource('/invoices', 'InvoiceController');
     Route::get('/invoice/create','InvoiceController@create');

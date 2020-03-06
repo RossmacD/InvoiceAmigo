@@ -14,7 +14,7 @@
             <b-list-group-item>Web design: 1 Hour</b-list-group-item>
           </b-list-group>
           <template v-slot:footer>
-            <b-button  to='/invoices/create'  >Create Invoice</b-button>
+            <b-button  to='/invoices/edit'>Create Invoice</b-button>
             <b-button to='/logs/create' variant='success' class='float-right'>Add Time</b-button>
           </template>
         </b-card>
