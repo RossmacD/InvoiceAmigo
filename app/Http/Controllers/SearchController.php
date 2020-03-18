@@ -65,28 +65,46 @@ class SearchController extends Controller
         return response()->json($error, 200);
     }
 
-    public function searchUsers(Request $request)
+    public function searchInvoicedUsers(Request $request)
     {
         $error = ['error' => 'Empty Query'];
         if (!$request['keywords']) {
             return response()->json($error, 200);
         }
 
-        //GDPR BUG
-        $users = User::all();
-        $emals=[];
-        foreach($user as $users){
-            array_push($emails,$user->email);
-        }
-        if (!empty($users)) {
+        // //GDPR BUG
+        // $users = User::all();
+        // $emals=[];
+        // foreach($user as $users){
+        //     array_push($emails,$user->email);
+        // }
+        // if (!empty($users)) {
+        //     return response()->json(
+        //         [
+        //             'users' => $users
+        //         ],
+        //         200
+        //     );
+        // }
+        // $error = ['error' => 'No results found'];
+        // return response()->json($error, 200);
+
+        // $invoices = Auth::user()->business->outgoingInvoices();
+        // $sent = $invoices->where('');
+        // $draft = null;
+
+        $emails = Auth::user()->business->invoicedUsers()->where('user_email', 'LIKE', '%' . $request['keywords'] . "%")->take(5)->get();
+
+        if (!empty($emails)) {
             return response()->json(
                 [
-                    'users' => $users
+                    'emails' => $emails
                 ],
                 200
             );
         }
         $error = ['error' => 'No results found'];
         return response()->json($error, 200);
+
     }
 }

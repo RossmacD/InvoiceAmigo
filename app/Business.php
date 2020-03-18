@@ -29,6 +29,10 @@ class Business extends Model
 
     public function cpanel() {
         return $this->hasOne('App\Cpanel');
-      }
+    }
+
+    public function invoicedUsers() {
+        return $this->hasMany('App\InvoicedUsers');
+    }
 
 }
