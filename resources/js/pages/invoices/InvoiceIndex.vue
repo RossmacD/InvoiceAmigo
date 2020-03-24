@@ -5,7 +5,7 @@
       <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
     </h2>
 
-    <b-tabs v-if='isBusiness' pills>
+    <b-tabs v-if='isBusiness' pills v-model="tabView">
       <b-tab title='Sent' active>
         <LoadingPage v-if='!outgoingInvoices'></LoadingPage>
         <EmptyIndex indexType='invoice' v-else-if='outgoingInvoices.length===0'></EmptyIndex>
@@ -35,7 +35,7 @@
         </b-card>
       </b-tab>
 
-      <b-tab title='Received'>
+      <b-tab title='Received' v-model="tabView">
         <LoadingPage v-if='!incomingInvoices'></LoadingPage>
         <EmptyIndex :button='false' indexType='invoice' v-else-if='incomingInvoices.length===0'></EmptyIndex>
         <b-card v-else v-for='(invoice,index) in incomingInvoices' v-bind:key='invoice.id' class='my-2' footer-bg-variant='light' :footer='invoice.created_at' header header-bg-variant='dark'>
@@ -108,11 +108,13 @@ export default {
   data() {
     return {
       incomingInvoices: null,
-      outgoingInvoices: null
+      outgoingInvoices: null,
+      tabView:0
     };
   },
   mounted() {
     const app = this;
+    
     if (app.isAuthenticated) {
       axios
         .get("/api/invoices")
@@ -130,10 +132,13 @@ export default {
   methods: {
     deleteInvoice(id, index) {
       const app = this;
+      // console.log(app.isBusiness&&app.tabView===0)
       axios
         .delete("/api/invoices/" + id)
         .then(function(response) {
-          app.$delete(app.invoices, index);
+          app.isBusiness&&app.tabView===0?
+          app.$delete(app.outgoingInvoices, index):
+          app.$delete(app.incomingInvoices, index);
         })
         .catch(function(error) {
           console.log(error);

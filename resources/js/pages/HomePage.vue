@@ -50,10 +50,7 @@
         </b-col>
         <b-col class="purple-bg cutout cut1 d-table" >
           <div class="text-center d-table-cell align-middle" @click="$router.push(`/login`)">
-         
             <h1  class="text-light box-text">Get Started</h1>
-         
-            <!-- <h1 class="text-light box-text">Get Started</h1> -->
           </div>
         </b-col>
       </b-row>

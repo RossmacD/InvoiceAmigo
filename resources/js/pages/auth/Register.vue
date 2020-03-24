@@ -2,8 +2,7 @@
   <div class="morrocan-bg fillScreen">
     <b-container fluid>
       <b-row>
-        <b-col fluid="md"></b-col>
-        <b-col md="6"	class="px-3">
+        <b-col  md="8"  offset-md="2" lg="6" offset-lg="3"	class="px-3">
           <div class='card'>
             <div class='card-body'>
               <div>
@@ -42,8 +41,6 @@
             </div>
           </div>
         </b-col>
-        <b-col fluid="md"></b-col>
-
       </b-row>
     </b-container>
   </div>
