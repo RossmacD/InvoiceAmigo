@@ -44,6 +44,9 @@ Route::middleware('auth:api')->group(function () {
     //cPanel
     Route::get('/cpanel', 'CpanelController@searchAccounts');
 
+    //InvoicedUsers
+    Route::get('/search/invoicedusers', 'SearchController@searchInvoicedUsers')->name('invoicedUsers.search');
+
 });
 
 //User Auth

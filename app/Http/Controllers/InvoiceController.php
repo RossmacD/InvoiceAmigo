@@ -11,6 +11,7 @@ use Validator;
 use App\InvoiceItems;
 use App\Product;
 use App\Service;
+use App\InvoicedUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Events\NotificationEvent;
@@ -130,6 +131,7 @@ class InvoiceController extends Controller
         if($request->status == 'draft'){
             $invoice->draft_email = $request->user_email;
             $invoice->user_id = null;
+
         } else {
             $invoice->status = $request->status;
 
@@ -140,6 +142,12 @@ class InvoiceController extends Controller
                 $user = InvoiceController::createUser($request);
             } 
             $invoice->user_id = $user->id;
+
+            //Add this user's email to the invoiced users table
+            $invoiced_user = new InvoicedUsers();
+            $invoiced_user->user_email = $request->user_email;
+            $invoiced_user->business_id = $business->id;
+            $invoiced_user->save();
         }
         $invoice->business_id = $business->id;
 
@@ -230,6 +238,8 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $business = Auth::user()->business;
+
         $validator = Validator::make($request->all(), [
             'invoice_number' => 'required|numeric|integer',
             'invoice_date' => 'required|date',
@@ -261,6 +271,12 @@ class InvoiceController extends Controller
                 $user = InvoiceController::createUser($request);
             } 
             $invoice->user_id = $user->id;
+
+            //Add this user's email to the invoiced users table
+            $invoiced_user = new InvoicedUsers();
+            $invoiced_user->user_email = $request->user_email;
+            $invoiced_user->business_id = $business->id;
+            $invoiced_user->save();
         }
         $invoice->save(); // save it to the database.
         //Redirect to a specified route with flash message.

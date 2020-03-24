@@ -21,8 +21,22 @@
           </b-col>
           <b-col md='6'>
             <b-form-group label='Recipient' label-for='recipient'>
-              <b-form-input id='recipient' type='email' name='recipient' required autocomplete='recipient' autofocus v-model='invoice.user_email'></b-form-input>
+              <!-- <b-form-input id='recipient' type='email' name='recipient' required autocomplete='recipient' autofocus v-model='invoice.user_email'></b-form-input> -->
               <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
+              <template>
+                <vue-bootstrap-typeahead
+                  :data='invoicedUsers'
+                  :id='user_email'
+                  :name='user_email'
+                  autocomplete='user_email'
+                  :serializer='s=>s.user_email'
+                  :value='user_email'
+                  :minMatchingChars='1'
+                  v-model='invoice.user_email'
+                  @input='searchInvoicedUsers()'
+                />
+              </template>
+
             </b-form-group>
           </b-col>
         </b-row>
@@ -297,7 +311,7 @@ export default {
       default() {
         return {
           invoice_number: "",
-          user_email: "john@smyth.com",
+          user_email: "",
           invoice_date: "",
           due_date: "",
           currency: "eur",
@@ -324,6 +338,7 @@ export default {
   data() {
     return {
       searchResults: [],
+      invoicedUsers: [],
       keywords: "",
       loaded: false,
       drag: true,
@@ -429,6 +444,19 @@ export default {
         })
         .then(res => {
           app.searchResults = res.data.invoiceLines;
+        })
+        .catch(err => {
+          console.log("CANT FETCH", err);
+        });
+    },
+    searchInvoicedUsers() {
+      const app = this;
+      axios
+        .get("/api/search/invoicedusers", {
+          params: { keywords: app.invoice.user_email }
+        })
+        .then(res => {
+          app.invoicedUsers = res.data.emails;
         })
         .catch(err => {
           console.log("CANT FETCH", err);
