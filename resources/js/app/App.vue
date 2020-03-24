@@ -1,18 +1,22 @@
 <template>
   <div>
-    <Navbar></Navbar>
-    <main role='main' class='container mt-4'>
-      <!-- Content -->
-      <transition :name='transitionName' mode='out-in'>
-        <router-view></router-view>
-      </transition>
-    </main>
+    <div class="min100vh">
+      <Navbar></Navbar>
+      <main role='main' :class='mainClass'>
+        <!-- Content -->
+        <transition :name='transitionName' mode='out-in'>
+          <router-view></router-view>
+        </transition>
+      </main>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
+import Footer from "../components/Footer.vue";
 import { USER_REQUEST } from "../store/actions/user";
 Pusher.logToConsole = true;
 import { mapGetters, mapState } from "vuex";
@@ -21,16 +25,19 @@ import { mapGetters, mapState } from "vuex";
 export default {
   name: "App",
   components: {
-    Navbar
+    Navbar,
+    Footer
   },
   data() {
     return {
-      transitionName: "slide-right"
+      transitionName: "slide-right",
+      mainClass: ""
     };
   },
   created: function() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(USER_REQUEST);
+      this.mainClass="container mt-4"
     }
     //Logout on Unauthourised
     // axios.interceptors.response.use(undefined, function(err) {
@@ -45,13 +52,15 @@ export default {
     // });
   },
   computed: {
-    ...mapGetters(["getProfile"]),
+    ...mapGetters(["getProfile","isAuthenticated"]),
     ...mapState({
     })
   },
   watch: {
     $route(to, from) {
-      //Choose transition based on page location or amount of partitions in url
+      this.mainClass= to.meta.mainClass? "" :"container mt-4";
+     
+     //Choose transition based on page location or amount of partitions in url
       if (!!to.meta.depthIndex&&!!from.meta.depthIndex) {
         if(to.meta.depthIndex<from.meta.depthIndex){
           this.transitionName = "slide-right";

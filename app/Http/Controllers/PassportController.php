@@ -61,7 +61,6 @@ class PassportController extends Controller
 
     public function user()
     {
-
         $user = auth()->user();
         // $user->roles = $user->roles
         if(Auth::user()->hasRole('business')){

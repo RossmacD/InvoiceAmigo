@@ -3,6 +3,7 @@ import CallbackHandler from "./pages/auth/CallbackHandler.vue";
 import Login from "./pages/auth/Login";
 import PasswordReset from "./pages/auth/PasswordReset.vue";
 import Register from "./pages/auth/Register";
+import CpanelDash from "./pages/cpanel/CpanelDash.vue";
 import DashBoard from "./pages/DashPage";
 import Home from "./pages/HomePage";
 import InvoiceCreate from "./pages/invoices/InvoiceCreate.vue";
@@ -19,7 +20,6 @@ import ServiceCreate from "./pages/services/ServicesCreate.vue";
 import ServiceUpdate from "./pages/services/ServiceUpdate.vue";
 import Settings from "./pages/Settings";
 import store from "./store";
-import CpanelDash from "./pages/cpanel/CpanelDash.vue";
 
 
 //Middleware
@@ -46,7 +46,8 @@ const routes = [
         name: "home",
         component: Home,
         meta: {
-            depthIndex: 1
+            depthIndex: 1,
+            mainClass: true
         },
         beforeEnter:onlyLoggedOut
     },
@@ -65,7 +66,8 @@ const routes = [
         component: Login,
         beforeEnter: onlyLoggedOut,
         meta: {
-            depthIndex: 6
+            depthIndex: 6,
+            mainClass:true
         }
     },
     {
@@ -74,7 +76,8 @@ const routes = [
         component: Register,
         beforeEnter: onlyLoggedOut,
         meta: {
-            depthIndex: 7
+            depthIndex: 7,
+            mainClass:true
         }
     },
     {

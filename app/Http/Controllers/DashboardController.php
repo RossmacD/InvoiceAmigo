@@ -27,10 +27,16 @@ class DashboardController extends Controller
         foreach ($paidInvoices as $paidInvoice) {
             $totalIncome += $paidInvoice->total_cost;
         }
-        $totalIncome = $totalIncome/100; 
+        $totalIncome = ceil($totalIncome/100); 
 
         //Get invoices created count
-        $invoicesCreated = $business->outgoingInvoices->count();
+        $invoicesCreated = 0;
+        //Get ydata for invoice graph
+        $yData=[];
+        foreach($business->outgoingInvoices as $invoice){
+            array_push ( $yData, $invoice->total_cost);
+            $invoicesCreated++;
+        }
 
         //Get total outstanding from unpaid invoices
         $unseenInvoices = $business->outgoingInvoices->where('status', 'unseen');
@@ -38,7 +44,7 @@ class DashboardController extends Controller
         foreach ($unseenInvoices as $unseenInvoice) {
             $totalOutstanding += $unseenInvoice->total_cost;
         }
-        $totalOutstanding = $totalOutstanding/100; 
+        $totalOutstanding = ceil($totalOutstanding/100); 
 
         //get paid count
         $paidCount = $business->outgoingInvoices->where('status', 'paid')->count();
@@ -46,12 +52,15 @@ class DashboardController extends Controller
         //get unpaid count
         $unseenCount = $business->outgoingInvoices->where('status', 'unseen')->count();
 
+
+
         $jsonResponse=[
             'invoicesCreated' => $invoicesCreated,
             'totalIncome' => $totalIncome,
             'totalOutstanding' => $totalOutstanding,
             'paidCount' => $paidCount,
-            'unseenCount' => $unseenCount
+            'unseenCount' => $unseenCount,
+            'yData'=>$yData
         ];
         return response()->json($jsonResponse,200);
     }

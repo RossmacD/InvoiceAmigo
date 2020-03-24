@@ -42,8 +42,6 @@ class InvoiceController extends Controller
             $outgoingInvoices = null;
         }
         $jsonResponse=[
-                    'user' => $user,
-                    'business' => $business,
                     'outgoingInvoices' => $outgoingInvoices,
                     'incomingInvoices' => $incomingInvoices,
                   ];

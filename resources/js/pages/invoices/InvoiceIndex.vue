@@ -4,10 +4,6 @@
       Your Invoices
       <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
     </h2>
-    <!-- <b-button-group>
-      <b-button>Sent</b-button>
-      <b-button>Received</b-button>
-    </b-button-group>-->
 
     <b-tabs v-if='isBusiness' pills>
       <b-tab title='Sent' active>
@@ -31,7 +27,7 @@
           <b-row>
             <b-col>{{invoice.note}}</b-col>
             <b-col>
-              <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to=''invoices/'+invoice.id' size='sm'>
+              <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
                 <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
               </b-button>
             </b-col>
@@ -76,7 +72,7 @@
         <b-row>
           <b-col>{{invoice.note}}</b-col>
           <b-col>
-            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to=''invoices/'+invoice.id' size='sm'>
+            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
               <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
             </b-button>
           </b-col>

@@ -3,6 +3,7 @@
 /public/storage
 /public/css/
 /public/js/
+/public/fonts
 /storage/*.key
 /vendor
 .env
@@ -15,3 +16,4 @@ yarn-error.log
 composer.lock.json
 public/js/app.js
 *.lock
+package-lock.json
