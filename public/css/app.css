@@ -11220,7 +11220,11 @@ main {
 
 .fillScreen {
   height: 100%;
-  padding: 10% 0;
+  padding: 10vh 0;
+}
+
+.marginScreen {
+  margin-bottom: 11vh;
 }
 
 @media (max-width: 768px) {
