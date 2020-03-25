@@ -53,7 +53,11 @@ Route::middleware('auth:api')->group(function () {
 Route::post('login', 'PassportController@login');
 Route::post('register', 'PassportController@register');
 
+//oAuth callback
 Route::post('/callback', 'SocialController@callback');
+
+//Stipe webhook
+Route::post('/stripe/webhooks', 'WebhookController@webhooks');
 
 //Password Reset
 Route::group([    

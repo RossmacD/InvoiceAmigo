@@ -43,15 +43,18 @@ class InvoiceController extends Controller
         //     $reciever = User::findOrFail($invoice->user_id);
         //     $invoice->user->email = $reciever->email;
         // }
-        foreach ($outgoingInvoices as $invoice) {
-            // $reciever = User::findOrFail($invoice->user_id);
-            //Return a user with the invoice
-            $invoice->user;
-        }
+        
 
 
         if(!$user->hasRole('business')){
             $outgoingInvoices = null;
+        
+        } elseif ($outgoingInvoices!=null){
+            foreach ($outgoingInvoices as $invoice) {
+                // $reciever = User::findOrFail($invoice->user_id);
+                //Return a user with the invoice
+                $invoice->user;
+            }
         }
         $jsonResponse=[
                     'outgoingInvoices' => $outgoingInvoices,
