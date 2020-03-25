@@ -1,7 +1,7 @@
 <template>
   <div class='drawer'>
     <h1>Notifications:</h1>
-    <b-nav vertical v-for='notification in notifications' :key='notification'>
+    <b-nav vertical v-for='notification in notifications' :key='notification.id'>
       <!-- <b-nav-item :disabled="!!!notification.link">{{notification.message}}</b-nav-item> -->
       <b-nav-item :disabled="!!!notification.link" :to="notification.link">{{notification.message}}</b-nav-item>
     </b-nav>

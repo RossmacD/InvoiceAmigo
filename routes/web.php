@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,10 +10,6 @@
 |
 */
 
-//Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Route::get('/redirect', 'SocialController@redirect');
-
 Route::get('/{any}', 'AppController@index')->where('any', '.*');

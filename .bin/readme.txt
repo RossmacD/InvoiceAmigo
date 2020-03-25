@@ -6,6 +6,7 @@ Logging in:
 2.  Login to stripe cli with:
 ->  stripe login --api-key sk_test_6GCDXqiEEOn52aO7XcYEX7Bk00lJswlGE1
 secret_key_here
+
 Webhooks:
 1.  Log in
 2.  Copy webhook signing into env
