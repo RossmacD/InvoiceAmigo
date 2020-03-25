@@ -1,48 +1,48 @@
 <template>
-  <div class="morrocan-bg fillScreen">
-    <b-container fluid>
-      <b-row>
-        <b-col md="3" fluid="md"></b-col>
-        <b-col md="6"	class="px-3">
-          <div class='card'>
-            <div class='card-body'>
-              <div>
-                 <b-button to="/register" variant="outline-dark" class="float-right">Register</b-button>
-                <h4>Login</h4>
-              </div>
-              <hr>
-              <b-form>
-                <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
-        
-                <b-form-group label='Password' label-for='password'>
-                  <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
-                  <b-form-invalid-feedback force-show v-if='messages.password'>{{messages.password[0]}}</b-form-invalid-feedback>
-                </b-form-group>
-        
-                <b-form-group label label-for='remember'>
-                  <b-form-checkbox id='remember' name='remember' value='remember'>Remember Me</b-form-checkbox>
-                </b-form-group>
-        
-                <b-form-group label label-for='login' class='mb-0'>
-                  <b-button id='login' v-on:click='login()' block v-if='!authLoading'>Login</b-button>
-                  <b-button v-else >
-                    <b-spinner small label='Loading...'></b-spinner>
-                  </b-button>
-                  <!--                                
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            Forgot your password
-                  </a>-->
-                </b-form-group>
-        
+  <div class="morrocan-bg fillScreen ">
+    <div class="marginScreen">
+      <b-container fluid >
+        <b-row>
+          <b-col md="8"  offset-md="2" lg="6" offset-lg="3"	class="px-3">
+            <div class='card'>
+              <div class='card-body'>
+                <div>
+                   <b-button to="/register" variant="outline-dark" class="float-right">Register</b-button>
+                  <h4>Login</h4>
+                </div>
                 <hr>
-                <b-button href="/redirect" block variant="dark" v-if='!authLoading'>Login with Google</b-button>
-              </b-form>
+                <b-form>
+                  <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
+          
+                  <b-form-group label='Password' label-for='password'>
+                    <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
+                    <b-form-invalid-feedback force-show v-if='messages.password'>{{messages.password[0]}}</b-form-invalid-feedback>
+                  </b-form-group>
+          
+                  <b-form-group label label-for='remember'>
+                    <b-form-checkbox id='remember' name='remember' value='remember'>Remember Me</b-form-checkbox>
+                  </b-form-group>
+          
+                  <b-form-group label label-for='login' class='mb-0'>
+                    <b-button id='login' v-on:click='login()' block v-if='!authLoading'>Login</b-button>
+                    <b-button v-else >
+                      <b-spinner small label='Loading...'></b-spinner>
+                    </b-button>
+                    <!--                                
+                                          <a class="btn btn-link" href="{{ route('password.request') }}">
+                                              Forgot your password
+                    </a>-->
+                  </b-form-group>
+          
+                  <hr>
+                  <b-button href="/redirect" block variant="dark" v-if='!authLoading'>Login with Google</b-button>
+                </b-form>
+              </div>
             </div>
-          </div>
-        </b-col>
-      <b-col fluid="md"></b-col>
-      </b-row>
-    </b-container>
+          </b-col>
+        </b-row>
+      </b-container>
+    </div>
   </div>
 </template>
 
