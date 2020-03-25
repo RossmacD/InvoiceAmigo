@@ -38,7 +38,18 @@ class InvoiceController extends Controller
             $outgoingInvoices = $business->outgoingInvoices()->orderBy('created_at', 'desc')->paginate(16);
         }
         $incomingInvoices = $user->incomingInvoices()->orderBy('created_at', 'desc')->paginate(16);
-        
+
+        // foreach($incomingInvoices as $invoice){
+        //     $reciever = User::findOrFail($invoice->user_id);
+        //     $invoice->user->email = $reciever->email;
+        // }
+        foreach ($outgoingInvoices as $invoice) {
+            // $reciever = User::findOrFail($invoice->user_id);
+            //Return a user with the invoice
+            $invoice->user;
+        }
+
+
         if(!$user->hasRole('business')){
             $outgoingInvoices = null;
         }
