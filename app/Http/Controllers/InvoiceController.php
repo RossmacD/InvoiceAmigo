@@ -216,9 +216,13 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
-
         $user = User::find($invoice->user_id);
+        if ($invoice->user_id == Auth::user()->id) {
+            $invoice->status = "unpaid";
+            $invoice->save();
+        }
+        $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
+        
         if(isset($user)){
             $invoice->user_email = $user->email;
         } else {
