@@ -228,7 +228,7 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $user = User::find($invoice->user_id);
-        if ($invoice->user_id == Auth::user()->id) {
+        if ($invoice->user_id == Auth::user()->id && $invoice->status=="unseen") {
             $invoice->status = "unpaid";
             $invoice->save();
         }
