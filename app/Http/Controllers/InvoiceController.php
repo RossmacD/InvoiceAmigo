@@ -130,11 +130,6 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
-        //Validate the form data
-        // $request->validate($rules, $messages);
-        //Get the arrays from the form
-        //TEMP $itemAmount = $request->input('product');
-
         //Create an Invoice
         $invoice = new Invoice;
         $invoice->invoice_number = $request->invoice_number;
@@ -142,16 +137,15 @@ class InvoiceController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->currency = $request->currency;
         $invoice->note = $request->note;
+        
         if($request->status == 'draft'){
             $invoice->draft_email = $request->user_email;
             $invoice->user_id = null;
 
         } else {
             $invoice->status = $request->status;
-
             $invoice->draft_email = null;
             $user = User::where('email', $request->user_email)->first();
-
             if(!isset($user)){
                 $user = InvoiceController::createUser($request);
             } 
@@ -174,10 +168,6 @@ class InvoiceController extends Controller
         foreach ($request->invoiceLines as $line) {
             $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
         }
-
-        //$client_id= User::where('email', $request->client_email)->firstOrFail();
-        //TEMP  $client = User::where('email', strtolower($request->client_email))->firstOrFail();
-        //TEMP   $client === null? $invoice->client_id=0 : $invoice->client_id=$client->id;
 
         $invoice->save();
 

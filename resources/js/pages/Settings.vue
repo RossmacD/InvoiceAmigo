@@ -15,14 +15,14 @@
             <b-row>
               <b-col md='3'>
                 <b-form-group label='Business Name' label-for='business_name'>
-                  <b-form-input aria-describedby='input-live-feedback' id='business_name' type='text' name='business_name' required autocomplete='business_name' autofocus v-model='business.business_name'></b-form-input>
+                  <b-form-input aria-describedby='input-live-feedback' id='business_name' type='text' name='business_name' required autocomplete='business_name'  v-model='business.business_name'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.business.business_name' force-show>{{messages.business.business_name[0]}}</b-form-invalid-feedback>
                   <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
                 </b-form-group>
               </b-col>
               <b-col md='3'>
                 <b-form-group label='Website' label-for='website'>
-                  <b-form-input id='website' type='text' name='website' required autocomplete='website' autofocus v-model='business.website'></b-form-input>
+                  <b-form-input id='website' type='text' name='website' required autocomplete='website'  v-model='business.website'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.business.website' force-show>{{messages.business.website[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -30,7 +30,7 @@
             <b-row>
               <b-col md='6'>
                 <b-form-group label='Address' label-for='address'>
-                  <b-form-input id='address' type='text' name='address' required autocomplete='address' autofocus v-model='business.address'></b-form-input>
+                  <b-form-input id='address' type='text' name='address' required autocomplete='address'  v-model='business.address'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.business.address' force-show>{{messages.business.address[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -38,13 +38,13 @@
             <b-row>
               <b-col md='3'>
                 <b-form-group label='Country' label-for='country'>
-                  <b-form-input id='country' type='text' name='country' required autocomplete='country' autofocus v-model='business.country'></b-form-input>
+                  <b-form-input id='country' type='text' name='country' required autocomplete='country'  v-model='business.country'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.business.country' force-show>{{messages.business.country[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md='3'>
                 <b-form-group label='Postcode' label-for='postcode'>
-                  <b-form-input id='postcode' type='text' name='postcode' required autocomplete='postcode' autofocus v-model='business.postcode'></b-form-input>
+                  <b-form-input id='postcode' type='text' name='postcode' required autocomplete='postcode'  v-model='business.postcode'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.business.postcode' force-show>{{messages.business.postcode[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -69,7 +69,7 @@
             <b-row>
               <b-col md='6'>
                 <b-form-group label='WHM Username' label-for='username'>
-                  <b-form-input aria-describedby='input-live-feedback' id='username' type='text' name='username' required autocomplete='username' autofocus v-model='cpanel.username'></b-form-input>
+                  <b-form-input aria-describedby='input-live-feedback' id='username' type='text' name='username' required autocomplete='username'  v-model='cpanel.username'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.cpanel.username' force-show>{{messages.cpanel.username[0]}}</b-form-invalid-feedback>
                   <!-- <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback> -->
                 </b-form-group>
@@ -78,7 +78,7 @@
             <b-row>
               <b-col md='6'>
                 <b-form-group label='API token' label-for='api_token'>
-                  <b-form-input id='api_token' type='text' name='api_token' required autocomplete='api_token' autofocus v-model='cpanel.api_token'></b-form-input>
+                  <b-form-input id='api_token' type='text' name='api_token' required autocomplete='api_token'  v-model='cpanel.api_token'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.cpanel.api_token' force-show>{{messages.cpanel.api_token[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
@@ -86,13 +86,13 @@
             <b-row>
               <b-col md='3'>
                 <b-form-group label='Hostname' label-for='hostname'>
-                  <b-form-input id='hostname' type='text' name='hostname' required autocomplete='hostname' autofocus v-model='cpanel.hostname'></b-form-input>
+                  <b-form-input id='hostname' type='text' name='hostname' required autocomplete='hostname'  v-model='cpanel.hostname'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.cpanel.hostname' force-show>{{messages.cpanel.hostname[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
               <b-col md='3'>
                 <b-form-group label='Port' label-for='port'>
-                  <b-form-input id='port' type='text' name='port' required autocomplete='port' autofocus v-model='cpanel.port'></b-form-input>
+                  <b-form-input id='port' type='text' name='port' required autocomplete='port'  v-model='cpanel.port'></b-form-input>
                   <b-form-invalid-feedback v-if='messages.cpanel.port' force-show>{{messages.cpanel.port[0]}}</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
