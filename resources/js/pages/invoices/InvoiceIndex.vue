@@ -29,7 +29,7 @@
           </template>
           <b-row>
             <b-col>
-              <h4>Invoice sent to: {{invoice.user.email}}</h4>
+              <h4>Invoice sent to: {{ invoice.draft_email||invoice.user.email}}</h4>
               <p>
                 {{invoice.note}}
               </p>

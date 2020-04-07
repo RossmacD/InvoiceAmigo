@@ -20,6 +20,8 @@ class Invoice extends Model
         return $this->hasMany('App\InvoiceItems');
     }
 
+    
+
     //Set default values
     protected $attributes = [
         'business_id' => 0,

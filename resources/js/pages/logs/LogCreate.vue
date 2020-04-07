@@ -1,11 +1,12 @@
 <template>
   <div>
     <!-- {{timeCount}} -->
-    <h3>Recipient:</h3>
+    <h3>Time Log:</h3>
     <EmailField v-on:email-update='getEmail' :messages='[]'></EmailField>
     <hr />
+    <!-- <p>Search Services</p>
     <vue-bootstrap-typeahead :data='searchResults' autocomplete='line_name' :serializer='s=>s.name' @hit='createTimer()' :minMatchingChars='1' v-model='keywords' @input='search()' />
-    <hr />
+    <hr /> -->
 
     <b-row>
       <b-col class='my-3'>
@@ -43,11 +44,17 @@
         </div>
       </b-col>
       <b-col class='my-3'>
-        <h4>Your Products & Serivces</h4>
-        <b-list-group v-for="service in services" v-bind:key="service.id" style="height:50vh;overflow-y:auto;">
-          <b-list-group-item >
+        <h4>Your Serivces</h4>
+        <b-list-group  style="height:50vh;overflow-y:auto;">
+          <b-list-group-item>
+            <vue-bootstrap-typeahead :data='searchResults' autocomplete='line_name' :serializer='s=>s.name' @hit='createTimer()' :minMatchingChars='1' v-model='keywords' @input='search()' prepend='' >
+              <template v-slot:prepend>
+                <b-input-group-text><b-icon icon="search" ></b-icon></b-input-group-text>
+              </template>
+            </vue-bootstrap-typeahead>
+          </b-list-group-item>
+          <b-list-group-item v-for="service in services" v-bind:key="service.id">
             {{service.name}}
-            <!-- <b-icon class='float-right' icon="plus" @click="timeBegan=true" /> -->
             <b-button class='float-right' style="font-size: 0.8rem;" small>+Add</b-button>
           </b-list-group-item>
         </b-list-group>

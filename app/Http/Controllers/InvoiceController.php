@@ -215,8 +215,12 @@ class InvoiceController extends Controller
                 $savedLine->save();
             }
         }
-        event(new NotificationEvent('Invoice Received from '.Auth::user()->name, $user->id));
-        event(new NotificationEvent('Invoice Sent Sucessfully',  Auth::id()));
+        
+        if($invoice->status=="unseen"){
+            event(new NotificationEvent('Invoice Received from '.Auth::user()->name, $user->id));
+            event(new NotificationEvent('Invoice Sent Sucessfully',  Auth::id()));
+        }
+        
         return response()->json(200);
     }
 

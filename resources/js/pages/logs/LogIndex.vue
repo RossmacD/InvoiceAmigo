@@ -4,8 +4,34 @@
       Your Logs
       <b-button to='/logs/create' class='float-right'>+ New</b-button>
     </h2>
-    <b-row>
-      <b-card-group deck>
+    <b-row >
+      <b-col md="6" lg="4" v-for="invoice in draftInvoices" :key="invoice.id">
+        <b-card class='my-2' style="height: 300px;">
+          <h3>{{invoice.draft_email}}</h3>
+          <b-list-group flush>
+            <b-list-group-item v-for="item in invoice.invoice_items.slice(0, 3)" :key="item.id">{{item.name}}</b-list-group-item>
+            
+          </b-list-group>
+          <template v-slot:footer>
+            <!-- <b-button  to='/invoices/edit'>Create Invoice</b-button> -->
+            <b-button to='/logs/create' variant='success' class='float-right'>Add Time</b-button>
+          </template>
+        </b-card>
+      </b-col>
+      <b-col md="6" lg="4">
+        <b-card class='my-2 text-center ' border-variant="dark"  style="border-style: dashed!important;height: 300px;" footer-border-variant="dark">
+            <div class="align-middle">
+                <h3>New Log?</h3>
+              Create a log for a new customer
+            </div>
+          <template v-slot:footer >
+            <b-button to='/logs/create' variant="dark" style="border-style: dashed;" class='float-right'>New Log</b-button>
+          </template>
+        </b-card>
+      </b-col>
+    </b-row>
+    <!-- <b-row v-for="rows in Math.ceil(draftInvoices.length + 1 / 4)" :key="draftInvoices.id"> -->
+      <!-- <b-card-group deck> -->
         <!-- <b-card class='my-2'>
           <h3>Ultan@gmail.com</h3>
           <b-list-group flush>
@@ -19,7 +45,7 @@
           </template>
         </b-card> -->
 
-        <b-card class='my-2 text-center ' border-variant="dark"  style="border-style: dashed!important;width: 294.172px;height: 288.594px;" footer-border-variant="dark">
+        <!-- <b-card class='my-2 text-center ' border-variant="dark"  style="border-style: dashed!important;width: 294.172px;height: 288.594px;" footer-border-variant="dark">
             <div class="align-middle">
                 <h3>New Log?</h3>
               Create a log for a new customer
@@ -28,13 +54,14 @@
             <b-button to='/logs/create' variant="dark" style="border-style: dashed;" class='float-right'>New Log</b-button>
           </template>
         </b-card>
-      </b-card-group>
-    </b-row>
+      </b-card-group> -->
+    <!-- </b-row> -->
   </div>
 </template>
 
 <script>
 import Vue from "vue";
+import { mapGetters, mapState } from "vuex";
 import {
   SpinnerPlugin,
   ButtonPlugin,
@@ -49,8 +76,28 @@ Vue.use(CardPlugin);
 export default {
   data() {
     return {
-      
+      draftInvoices:[]
     };
+  },
+  mounted() {
+    const app = this;
+    if (app.isAuthenticated) {
+      axios
+        .get("/api/logs")
+        .then(response => {
+          // console.log(response.data);
+          app.draftInvoices = response.data.data;
+          app.loaded=true
+        })
+        .catch(err => {
+          console.log(err);
+          app.hitError=true;
+        });
+    }
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
+    ...mapState({}),
   }
 };
 </script>
