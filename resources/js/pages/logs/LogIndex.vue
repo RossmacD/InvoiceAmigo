@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-      draftInvoices:null
+      draftInvoices: null
     };
   },
   mounted() {

@@ -4,10 +4,6 @@
     <h3>Time Log:</h3>
     <EmailField v-on:email-update='getEmail' :messages='[]'></EmailField>
     <hr />
-    <!-- <p>Search Services</p>
-    <vue-bootstrap-typeahead :data='searchResults' autocomplete='line_name' :serializer='s=>s.name' @hit='createTimer()' :minMatchingChars='1' v-model='keywords' @input='search()' />
-    <hr /> -->
-
     <b-row>
       <b-col class='my-3'>
         <h4>Timers:</h4>
@@ -58,8 +54,7 @@
             <b-button class='float-right' style="font-size: 0.8rem;" small>+Add</b-button>
           </b-list-group-item>
         </b-list-group>
-        <b-button variant='success'>Save</b-button>
-        <!-- <b-button variant='primary'>Create Invoice for {{invoice.user_email?invoice.user_email:"client"}}</b-button> -->
+        <b-button variant='success' v-on:click='submit()'>Save</b-button>
         <!-- <p>Will Round up to closet hour on save.</p> -->
       </b-col>
     </b-row>
@@ -122,11 +117,6 @@ export default {
       messages: {
         email: ""
       },
-      timeBegan: null,
-      timeStopped: null,
-      stoppedDuration: 0,
-      started: null,
-      running: false
     };
   },
   mounted() {
@@ -191,7 +181,27 @@ export default {
         type: "service",
         dropText: "Hourly"
       });
+    },
+    submit(){
+       const app = this;
+      app.submiting = true;
+      console.log(app.isAuthenticated)
+      if (app.isAuthenticated) {
+      
+      axios.post("/api/logs", app.invoice)
+      .then(response => {
+              this.$router.push("/logs");
+            })
+            .catch(err => {
+              console.log(err)
+            });
+        app.submiting = false;
+      }
     }
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
+    ...mapState({})
   }
 };
 </script>

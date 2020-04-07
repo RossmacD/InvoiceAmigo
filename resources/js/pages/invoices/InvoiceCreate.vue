@@ -292,10 +292,6 @@ Vue.directive('multi-ref', {
 })
 
 
-
-
-
-
 export default {
   name: "InvoiceCreate",
   components: {
@@ -520,7 +516,7 @@ export default {
         this.helperCart
       );
       this.updateTypeahead();
-this.totalCost();
+      this.totalCost();
       this.$bvModal.hide("helper-modal");
     },
     updateTypeahead(){
