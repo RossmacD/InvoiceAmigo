@@ -249,8 +249,8 @@ import DeleteButton from "../../components/DeleteButton";
 import LoadingPage from "../../components/LoadingPage";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
-// import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
-import VueBootstrapTypeahead from 'vue-typeahead-bootstrap'
+import VueBootstrapTypeahead from 'vue-typeahead-bootstrap';
+import { formatRateText } from '../../logic/utilities';
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
@@ -520,7 +520,7 @@ export default {
       this.$bvModal.hide("helper-modal");
     },
     updateTypeahead(){
-      //Update the Vue bootstrap typeahead - component has a bug where inputted info is not displayed
+    //Update the Vue bootstrap typeahead - component has a bug where inputted info is not displayed
     //Refs are not reactive and must be accesed on next vue tick to give proper value
       Vue.nextTick(() => {
         this.$refs.lineName.forEach(line => (line.inputValue = line.value));
@@ -543,16 +543,7 @@ export default {
       }
     },
     setDropTextForItem(item) {
-      if (item.type === "product") {
-        item.dropText = "Product";
-      } else if (unit === "day") {
-        item.dropText = "Daily";
-      } else {
-        item.dropText =
-          item.rate_unit.charAt(0).toUpperCase() +
-          item.rate_unit.slice(1) +
-          "ly";
-      }
+      item.dropText=formatRateText(item);
     },
     submit(isSending) {
       const app = this;

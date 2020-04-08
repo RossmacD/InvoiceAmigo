@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- {{timeCount}} -->
     <h3>Time Log:</h3>
     <EmailField v-on:email-update='getEmail' :messages='[]'></EmailField>
     <hr />
