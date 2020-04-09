@@ -33,16 +33,6 @@ class LogController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-    //     //
-    // }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -102,7 +92,6 @@ class LogController extends Controller
             }
             $invoice->invoiceItems()->save($invoiceItem);
         }
-        dd($invoice);
         return response()->json(200);
     }
 
@@ -114,19 +103,28 @@ class LogController extends Controller
      */
     public function show($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+        if($invoice->status!='draft'){
+            return response(402);
+        }
+        $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
+        foreach ($invoice->invoiceLines as $invoiceLine) {
+            $invoiceLine->sec = $invoiceLine->quantity * 60;
+            $invoiceLine->running=false;
+
+            //TODO Format date
+            $invoiceLine->formattedTime ="00:00:00" ; 
+        }
+        $invoice->user_email = $invoice->draft_email;
+        
+        return response()->json(
+            [
+                'invoice' => $invoice,
+            ],
+            200
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -137,17 +135,44 @@ class LogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $business = Auth::user()->business;
+
+        // $validator = Validator::make($request->all(), [
+        //     'invoice_number' => 'required|numeric|integer',
+        //     'invoice_date' => 'required|date',
+        //     'due_date' => 'required|date|after:invoice_date',
+        //     'currency' => 'in:eur,gbp,usd',
+        //     'note'  => 'nullable|string|max:1000',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
+        // }
+
+        //Update an invoice
+        $invoice =  Invoice::findOrFail($id);
+        $invoice->draft_email = $request->user_email;
+        $invoice->total_cost = 0;
+        foreach ($request->invoiceLines as $line) {
+            $invoice->total_cost += $line['cost'] * ceil($line['sec'] / 60) * 100;
+        }
+        $invoice->save(); // save it to the database.
+        //PROBABLY NOT WORKING
+        //Attach each product as invoice item
+        foreach ($request->invoiceLines as $line) {
+            $invoiceItem = new InvoiceItems([
+                'name' => $line['name'],
+                'description' => $line['description'],
+                'cost' => $line['cost'] * 100,
+                'quantity' => ceil($line['sec'] / 60),
+                'sub_total' => $line['cost'] * ceil($line['sec'] / 60) * 100
+            ]);
+            if (isset($line['rate_unit'])) {
+                $invoiceItem->rate_unit = $line['rate_unit'];
+            }
+            $invoice->invoiceItems()->save($invoiceItem);
+        }
+        //Redirect to a specified route with flash message.
+        return response(200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

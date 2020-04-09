@@ -12,6 +12,7 @@ import InvoiceUpdate from "./pages/invoices/InvoiceUpdate.vue";
 import InvoiceView from "./pages/invoices/InvoiceView.vue";
 import LogCreate from "./pages/logs/LogCreate.vue";
 import LogIndex from "./pages/logs/LogIndex.vue";
+import LogUpdate from "./pages/logs/LogUpdate.vue";
 import ProductIndex from "./pages/products/ProductIndex";
 import ProductCreate from "./pages/products/ProductsCreate.vue";
 import ProductUpdate from "./pages/products/ProductUpdate.vue";
@@ -171,6 +172,12 @@ const routes = [
         path: "/logs/create",
         name: "logcreate",
         component: LogCreate,
+        beforeEnter: onlyLoggedIn,
+    },
+    {
+        path: "/logs/edit/:id",
+        name: "logupdate",
+        component: LogUpdate,
         beforeEnter: onlyLoggedIn,
     },
     {

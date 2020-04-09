@@ -14,7 +14,7 @@
             <b-list-group-item v-for='item in invoice.invoice_items.slice(0, 3)' :key='item.id'>{{item.name}}</b-list-group-item>
           </b-list-group>
           <template v-slot:footer>
-            <b-button to='/logs/create' variant='success' class='float-right'>Add Time</b-button>
+            <b-button  :to='`/logs/edit/${invoice.id}`' variant='success' class='float-right'>Add Time</b-button>
           </template>
         </b-card>
       </b-col>

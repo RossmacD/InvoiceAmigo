@@ -9,7 +9,8 @@
         <div class='customScroll' style='position:relative; height:50vh; overflow-y:auto; background-color:#dad5dc;border-radius: 15px;padding:15px'>
           <b-card-group deck v-if="!invoice.invoiceLines[0]"><b-card>
             Add a service to begin logging
-            </b-card></b-card-group>
+            </b-card>
+          </b-card-group>
           <b-card-group  v-else deck v-for='invoiceLine in invoice.invoiceLines' :key='invoiceLine.id'>
             <b-card class='my-1'>
               <b-row no-body class no-gutters>
@@ -18,7 +19,7 @@
                     <b-icon icon='clock-fill' style='height:35%;width:35%;' />
                     <h4>{{invoiceLine.formattedTime}}</h4>
                     <div class='p-1'>
-                      <b-progress class='mx-1' variant='success' :value='invoiceLine.formattedTime.substr(6,2)' striped></b-progress>
+                      <b-progress class='mx-1' variant='success' :value='invoiceLine.formattedTime.substr(6,2)' striped></b-progress> 
                     </div>
                     <b-progress class='mx-1' variant='info' :value='invoiceLine.formattedTime.substr(3,2)' striped></b-progress>
                   </b-col>
@@ -125,16 +126,13 @@ export default {
         app.timeCount++;
         app.invoice.invoiceLines.forEach(timer => {
           timer.running ? timer.sec++ : "";
-          timer.formattedTime = new Date(timer.sec * 1000)
-            .toISOString()
-            .substr(11, 8);
+          timer.formattedTime = new Date(timer.sec * 1000).toISOString().substr(11, 8);
         });
       }, 1000);
     });
     axios
         .get("/api/services")
         .then(response => {
-          // console.log(response.data);
           app.services = response.data.services.data;
           app.loaded=true
         })
@@ -171,12 +169,10 @@ export default {
         sec: 0,
         formattedTime: "00:00:00",
         running: true,
-        // attachedItem: attachedItem[0],
         name: attachedItem[0].name,
         description: attachedItem[0].description,
         cost: attachedItem[0].cost,
         rate_unit: attachedItem[0].rate_unit,
-        // quantity: "",
         type: "service",
         dropText: "Hourly"
       });
@@ -186,15 +182,24 @@ export default {
       app.submiting = true;
       console.log(app.isAuthenticated)
       if (app.isAuthenticated) {
-      
-      axios.post("/api/logs", app.invoice)
-      .then(response => {
-              this.$router.push("/logs");
+       if (app.editing) {
+         axios.put("/api/logs/" + app.invoice.id, app.invoice)
+            .then(response => {
+              this.$router.push("/services");
             })
             .catch(err => {
-              console.log(err)
+              console.log(err.response);
             });
-        app.submiting = false;
+       }else{
+        axios.post("/api/logs", app.invoice)
+        .then(response => {
+                this.$router.push("/logs");
+              })
+              .catch(err => {
+                console.log(err)
+              });
+          app.submiting = false;
+        }
       }
     }
   },
