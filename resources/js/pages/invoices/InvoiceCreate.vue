@@ -4,7 +4,8 @@
     <div v-else>
       <h3 class='text-center'>
         <span v-if='editing'>Update</span>
-        <span v-else>Create</span> Invoice #{{ invoice.invoice_number }}
+        <span v-else>Create</span>
+        Invoice #{{ invoice.invoice_number }}
       </h3>
       <b-form>
         <b-row>
@@ -26,8 +27,8 @@
               <template>
                 <vue-bootstrap-typeahead
                   :data='invoicedUsers'
-                  :id='user_email'
-                  :name='user_email'
+                  id='user_email'
+                  name='user_email'
                   autocomplete='user_email'
                   :serializer='s=>s.user_email'
                   :value='user_email'
@@ -36,7 +37,6 @@
                   @input='searchInvoicedUsers()'
                 />
               </template>
-
             </b-form-group>
           </b-col>
         </b-row>
@@ -70,7 +70,7 @@
               <b-icon class='handle' icon='arrows-expand' style='width: 20px; height: 20px'></b-icon>
             </span>
           </template>
-          <template v-slot:cell(name)='name_data' >
+          <template v-slot:cell(name)='name_data'>
             <vue-bootstrap-typeahead
               :data='searchResults'
               :id='`line_name${name_data.index}`'
@@ -188,12 +188,24 @@
               <b-list-group-item :active='helperProducts[index].selected'>
                 {{index+1}}. {{item.name}}
                 <!-- <b-button class='float-right' @click='helperProducts[index].quantity=1;helperProducts[index].selected=true;helperCart.push(helperProducts[index]);'>Add</b-button> -->
-                <b-form-checkbox class='float-right' v-model='helperProducts[index].selected' @change='groupToggle(index)' switch name='check-button' />
+                <b-form-checkbox class='float-right' v-model='helperProducts[index].selected' @change='groupToggle(index,`Product`)' switch name='check-button' />
               </b-list-group-item>
             </b-list-group>
           </div>
           <div>
             <b-button class='mt-3' block @click='getAllServices()'>Add Service</b-button>
+            <div v-if='helperShow==`Services`'>
+              <h5 class='mt-4'>Search:</h5>
+              <vue-bootstrap-typeahead :data='helperServices' autocomplete='line_name' :serializer='s=>s.name' @hit='fillHelperResult()' v-model='helperKeyword' :minMatchingChars='1' />
+              <h3>Your {{helperShow}}</h3>
+              <b-spinner v-if='!helperServices[0]' small label='Loading...'></b-spinner>
+              <b-list-group v-for='(item,index) in helperServices' v-bind:key='item.id'>
+                <b-list-group-item :active='helperServices[index].selected'>
+                  {{index+1}}. {{item.name}}
+                  <b-form-checkbox class='float-right' v-model='helperServices[index].selected' @change='groupToggle(index,`Service`)' switch name='check-button' />
+                </b-list-group-item>
+              </b-list-group>
+            </div>
             <b-button class='mt-3' block>Add new</b-button>
           </div>
           <h3 class='mt-4'>Add Items to invoice:</h3>
@@ -366,7 +378,8 @@ export default {
       helperServices: [],
       helperCart: [],
       helperShow: null,
-      helperKeyword: ""
+      helperKeyword: "",
+      user_email:''
     };
   },
   methods: {
@@ -458,17 +471,30 @@ export default {
           console.log("CANT FETCH", err);
         });
     },
-    groupToggle(index) {
+    groupToggle(index,type) {
       const app = this;
-      //Delete Product if selected otherwise add to cart
-      if (app.helperProducts[index].selected) {
-        app.helperCart = app.helperCart.filter(item => {
-          item.id !== app.helperProducts[index].id;
-        });
-      } else {
-        app.helperProducts[index].quantity = 1;
-        app.setDropTextForItem(app.helperProducts[index]);
-        app.helperCart.push(app.helperProducts[index]);
+      if(type==='Product'){
+        //Delete Product if selected otherwise add to cart
+        if (app.helperProducts[index].selected) {
+          app.helperCart = app.helperCart.filter(item => {
+            item.id !== app.helperProducts[index].id;
+          });
+        } else {
+          app.helperProducts[index].quantity = 1;
+          app.setDropTextForItem(app.helperProducts[index]);
+          app.helperCart.push(app.helperProducts[index]);
+        }
+      }else if(type==='Service'){
+        console.log(index, app.helperServices[index])
+        if (app.helperServices[index].selected) {
+          app.helperCart = app.helperCart.filter(item => {
+            item.id !== app.helperProducts[index].id;
+          });
+      }else {
+          app.helperServices[index].quantity = 1;
+          app.setDropTextForItem(app.helperServices[index]);
+          app.helperCart.push(app.helperServices[index]);
+        }
       }
     },
     fillWithResult(index) {
@@ -497,16 +523,7 @@ export default {
       );
       newProduct[0].quantity = 1;
       newProduct[0].selected = true;
-      if (newProduct[0].type === "product") {
-        newProduct[0].dropText = "Product";
-      } else if (unit === "day") {
-        newProduct[0].dropText = "Daily";
-      } else {
-        newProduct[0].dropText =
-          newProduct[0].rate_unit.charAt(0).toUpperCase() +
-          newProduct[0].rate_unit.slice(1) +
-          "ly";
-      }
+      newProduct[0].dropText=formatRateText(newProduct[0]);
 
       this.helperCart.push(newProduct[0]);
     },

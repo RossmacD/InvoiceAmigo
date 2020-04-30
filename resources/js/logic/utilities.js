@@ -1,9 +1,9 @@
-// utitlities.js
+// utilities.js
 export function formatRateText(item) {
     let formattedText;
     if (item.type === "product") {
         formattedText = "Product";
-    } else if (unit === "day") {
+    } else if (item.rate_unit === "day") {
         formattedText = "Daily";
     } else {
         formattedText =
