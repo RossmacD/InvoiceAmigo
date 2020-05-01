@@ -477,7 +477,7 @@ export default {
         //Delete Product if selected otherwise add to cart
         if (app.helperProducts[index].selected) {
           app.helperCart = app.helperCart.filter(item => {
-            item.id !== app.helperProducts[index].id;
+           return item.id !== app.helperProducts[index].id;
           });
         } else {
           app.helperProducts[index].quantity = 1;
@@ -485,12 +485,15 @@ export default {
           app.helperCart.push(app.helperProducts[index]);
         }
       }else if(type==='Service'){
-        console.log(index, app.helperServices[index])
         if (app.helperServices[index].selected) {
+          console.log('Filtering')
           app.helperCart = app.helperCart.filter(item => {
-            item.id !== app.helperProducts[index].id;
+            console.log(item.id);
+            console.log(app.helperServices[index].id);
+            return item.id !== app.helperServices[index].id;
           });
       }else {
+          console.log(app.helperServices[index].id)
           app.helperServices[index].quantity = 1;
           app.setDropTextForItem(app.helperServices[index]);
           app.helperCart.push(app.helperServices[index]);

@@ -184,7 +184,7 @@ class InvoiceController extends Controller
                 $invoiceItem->rate_unit = $line['rate_unit'];
             }
             $invoice->invoiceItems()->save($invoiceItem);
-            if ($line['save']) {
+            if (isset($line['save'])&&$line['save']) {
                 if ($line['type'] == 'product') {
                     $savedLine = new Product([
                         'name' => $line['name'],
@@ -338,3 +338,5 @@ class InvoiceController extends Controller
         return $user;
     }
 }
+
+

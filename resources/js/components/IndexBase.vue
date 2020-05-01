@@ -1,34 +1,34 @@
 <template>
   <div>
     <h2 class='mb-4'>
-      Your <span style="text-transform: capitalize;">{{itemName}}</span>
+      Your
+      <span style='text-transform: capitalize;'>{{itemName}}</span>
       <b-button :to='pageRoute+"create"' class='float-right'>+ New</b-button>
     </h2>
-    <ErrorPage v-if="hitError"></ErrorPage>
+    <ErrorPage v-if='hitError'></ErrorPage>
     <LoadingPage v-else-if='!loaded'></LoadingPage>
     <EmptyIndex :indexType='itemName.substr(0,itemName.length-1)' v-else-if='items.length==0'></EmptyIndex>
-    <b-card v-else v-for='(item,index) in items' v-bind:key='item.id' class="my-2" footer-bg-variant="light" :footer="item.created_at">
-        <b-row>
-          <b-col>
-            <h5>{{ item.name }}</h5>
-            <p>{{ item.description }}</p>
-          </b-col>
-          <b-col>
-            <b-button class='float-right m-1' variant='secondary' :pressed='false' :to="pageRoute+item.id" size='sm'>
-              <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-            </b-button>
-            <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='item.id' :index='index'></DeleteButton>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col></b-col>
-          <b-col>
-            <h4 v-if="item.cost" class='float-right'>€{{ item.cost }} EUR</h4>
-            <h4 class='float-right' v-else>€{{ item.cost }} per {{ item.rate_unit }}</h4>
-          </b-col>
-        </b-row>
-        </b-card>
-        
+    <b-card v-else v-for='(item,index) in items' v-bind:key='item.id' class='my-2' footer-bg-variant='light' :footer='item.created_at'>
+      <b-row>
+        <b-col>
+          <h5>{{ item.name }}</h5>
+          <p>{{ item.description }}</p>
+        </b-col>
+        <b-col>
+          <b-button class='float-right m-1' variant='secondary' :pressed='false' :to='pageRoute+item.id' size='sm'>
+            <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
+          </b-button>
+          <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='item.id' :index='index'></DeleteButton>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col></b-col>
+        <b-col>
+          <h4 v-if='item.cost' class='float-right'>€{{ item.cost }} EUR</h4>
+          <h4 class='float-right' v-else>€{{ item.cost }} per {{ item.rate_unit }}</h4>
+        </b-col>
+      </b-row>
+    </b-card>
   </div>
 </template>
 
