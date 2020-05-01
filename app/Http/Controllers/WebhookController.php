@@ -42,7 +42,6 @@ class WebhookController extends Controller
                 //Get objects based on metadata
                 $seller=User::findOrFail($paymentIntent->metadata->seller_id);
                 $invoice = Invoice::findOrFail($paymentIntent->metadata->invoice_id);
-               
                 //Send event to pusher
                 event(new NotificationEvent('Invoice Payment Successful', $paymentIntent->metadata->customer_id),"/invoices",true);
                 event(new NotificationEvent('Invoice #'.$invoice->invoice_number.' paid by ' . $seller->email, $paymentIntent->metadata->seller_id,"/invoice"."/".$invoice->id));
@@ -57,6 +56,7 @@ class WebhookController extends Controller
                 $transaction->cur = "eur";
                 $transaction->stripe_payment_id= $paymentIntent->id;
                 $transaction->amount=$invoice->total_cost;
+                $transaction->business_id=$invoice->business_id;
                 $transaction->save();
                 break;
             default:

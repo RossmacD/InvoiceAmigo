@@ -96,7 +96,8 @@ export default {
           id: 'sales-data',
         },
         xaxis: {
-          categories: ['25 Feb', '26 Feb', '27 Feb', '28 Feb', '29 Feb', '1 Mar', '2 Mar'],
+          categoriesold: ['25 Feb', '26 Feb', '27 Feb', '28 Feb', '29 Feb', '1 Mar', '2 Mar'],
+          categories: []
         },
         title: {
               text: 'Weekly Sales',
@@ -110,7 +111,8 @@ export default {
       },
       salesDataSeries: [{
         name: '',
-        data: [10, 2, 8, 12, 14, 4, 7]
+        dataold: [10, 2, 8, 12, 14, 4, 7],
+        data: [0,0,0,0,0,0,0]
       }]
 
     }
@@ -121,17 +123,30 @@ export default {
     .get("/api/dashboard")
     .then(response => {
         app.dashInfo = response.data;
-        this.updateInvoiceStatusChart();
+        this.updateCharts();
         app.loaded = true;
     })
     .catch(err => {
         console.log(err);
     });
+    for(let i=6;i>=0;i--){
+      app.salesDataOptions.xaxis.categories.push(dateToDayMonth(new Date(new Date().setTime(new Date().getTime() - i * 86400000))));
+    }
+
+    function dateToDayMonth(date) {
+      var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var d = date.getDate();
+      var m = strArray[date.getMonth()];
+      return '' + (d <= 9 ? '0' + d : d) + ' ' + m;
+    }
   },
   methods: {
-    updateInvoiceStatusChart() {
+    updateCharts() {
       this.invoiceDataSeries = [{
         data: [this.dashInfo.paidCount,this.dashInfo.unseenCount]
+      }]
+      this.salesDataSeries = [{
+        data: this.dashInfo.weeklySales
       }]
     }
   },
