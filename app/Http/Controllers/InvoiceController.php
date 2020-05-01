@@ -14,6 +14,7 @@ use App\Service;
 use App\InvoicedUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 use App\Events\NotificationEvent;
 use App\Http\Controllers\Auth\PasswordResetController;
 
@@ -34,7 +35,7 @@ class InvoiceController extends Controller
         // event(new NotificationEvent('Invoice Page Opened',  Auth::id()));
         $user = Auth::user();
         $business = $user->business;
-        if($user->hasRole('business')){
+        if ($user->hasRole('business')) {
             $outgoingInvoices = $business->outgoingInvoices()->orderBy('created_at', 'desc')->paginate(16);
         }
         $incomingInvoices = $user->incomingInvoices()->orderBy('created_at', 'desc')->paginate(16);
@@ -43,30 +44,30 @@ class InvoiceController extends Controller
         //     $reciever = User::findOrFail($invoice->user_id);
         //     $invoice->user->email = $reciever->email;
         // }
-        
 
 
-        if(!$user->hasRole('business')){
+
+        if (!$user->hasRole('business')) {
             $outgoingInvoices = null;
-        
-        } elseif ($outgoingInvoices!=null){
+        } elseif ($outgoingInvoices != null) {
             foreach ($outgoingInvoices as $invoice) {
                 // $reciever = User::findOrFail($invoice->user_id);
                 //Return a user with the invoice
                 $invoice->user;
             }
         }
-        $jsonResponse=[
-                    'outgoingInvoices' => $outgoingInvoices,
-                    'incomingInvoices' => $incomingInvoices,
-                  ];
+        $jsonResponse = [
+            'outgoingInvoices' => $outgoingInvoices,
+            'incomingInvoices' => $incomingInvoices,
+        ];
 
 
         //temp - checked if the user id
         // foreach ($outgoingInvoices as $outgoingInvoice) {
         //     $user->id == $invoice->user_id ? $invoice->outgoing = true : $invoice->outgoing = false;
         // }
-        return response()->json($jsonResponse,
+        return response()->json(
+            $jsonResponse,
             200
         );
     }
@@ -128,89 +129,89 @@ class InvoiceController extends Controller
             'note'  => 'nullable|string|max:1000',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
+            return response()->json(['error' => 'Unauthorized - Validation failed', 'messages' => $validator->errors()], 422);
         }
-        //Create an Invoice
-        $invoice = new Invoice;
-        $invoice->invoice_number = $request->invoice_number;
-        $invoice->invoice_date = $request->invoice_date;
-        $invoice->due_date = $request->due_date;
-        $invoice->currency = $request->currency;
-        $invoice->note = $request->note;
-        
-        if($request->status == 'draft'){
-            $invoice->draft_email = $request->user_email;
-            $invoice->user_id = null;
+        //Tun the create operation into a transaction, if any one part of the operation fails all changes to the database will be rolled back
+        DB::transaction(function () use ($request, $user, $business) {
+            //Create an Invoice
+            $invoice = new Invoice;
+            $invoice->invoice_number = $request->invoice_number;
+            $invoice->invoice_date = $request->invoice_date;
+            $invoice->due_date = $request->due_date;
+            $invoice->currency = $request->currency;
+            $invoice->note = $request->note;
 
-        } else {
-            $invoice->status = $request->status;
-            $invoice->draft_email = null;
-            $user = User::where('email', $request->user_email)->first();
-            if(!isset($user)){
-                $user = InvoiceController::createUser($request);
-            } 
-            $invoice->user_id = $user->id;
-
-            //Add this user's email to the invoiced users table if they haven't already been invoiced
-            $invoiced_user = InvoicedUsers::where('user_email', $request->user_email)->first();
-            if(!isset($invoiced_user)){
-                $invoiced_user = new InvoicedUsers();
-                $invoiced_user->user_email = $request->user_email;
-                $invoiced_user->business_id = $business->id;
-                $invoiced_user->save();
-            }
-            
-        }
-        $invoice->business_id = $business->id;
-
-        //Calculate total cost + adjust for stripe
-        $invoice->total_cost = 0;
-        foreach ($request->invoiceLines as $line) {
-            $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
-        }
-
-        $invoice->save();
-
-        //Attach each product as invoice item
-        foreach ($request->invoiceLines as $line) {
-            $invoiceItem = new InvoiceItems([
-                'name' => $line['name'],
-                'description' => $line['description'],
-                'cost' => $line['cost'] * 100,
-                'quantity' => $line['quantity'],
-                'sub_total' => $line['cost'] * $line['quantity'] * 100
-            ]);
-            if (isset($line['rate_unit'])) {
-                $invoiceItem->rate_unit = $line['rate_unit'];
-            }
-            $invoice->invoiceItems()->save($invoiceItem);
-            if (isset($line['save'])&&$line['save']) {
-                if ($line['type'] == 'product') {
-                    $savedLine = new Product([
-                        'name' => $line['name'],
-                        'description' => $line['description'],
-                        'cost' => $line['cost'] * 100,
-                        'user_id' => Auth::id()
-                    ]);
-                } else {
-                    $savedLine = new Service([
-                        'name' => $line['name'],
-                        'description' => $line['description'],
-                        'cost' => $line['cost'] * 100,
-                        'rate_unit' => $line['rate_unit'],
-                        'user_id' => Auth::id()
-                    ]);
+            if ($request->status == 'draft') {
+                $invoice->draft_email = $request->user_email;
+                $invoice->user_id = null;
+            } else {
+                $invoice->status = $request->status;
+                $invoice->draft_email = null;
+                $user = User::where('email', $request->user_email)->first();
+                if (!isset($user)) {
+                    $user = InvoiceController::createUser($request);
                 }
+                $invoice->user_id = $user->id;
 
-                $savedLine->save();
+                //Add this user's email to the invoiced users table if they haven't already been invoiced
+                $invoiced_user = InvoicedUsers::where('user_email', $request->user_email)->first();
+                if (!isset($invoiced_user)) {
+                    $invoiced_user = new InvoicedUsers();
+                    $invoiced_user->user_email = $request->user_email;
+                    $invoiced_user->business_id = $business->id;
+                    $invoiced_user->save();
+                }
             }
-        }
-        
-        if($invoice->status=="unseen"){
-            event(new NotificationEvent('Invoice Received from '.Auth::user()->name, $user->id));
-            event(new NotificationEvent('Invoice Sent Sucessfully',  Auth::id()));
-        }
-        
+            $invoice->business_id = $business->id;
+
+            //Calculate total cost + adjust for stripe
+            $invoice->total_cost = 0;
+            foreach ($request->invoiceLines as $line) {
+                $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
+            }
+
+            $invoice->save();
+
+            //Attach each product as invoice item
+            foreach ($request->invoiceLines as $line) {
+                $invoiceItem = new InvoiceItems([
+                    'name' => $line['name'],
+                    'description' => $line['description'],
+                    'cost' => $line['cost'] * 100,
+                    'quantity' => $line['quantity'],
+                    'sub_total' => $line['cost'] * $line['quantity'] * 100
+                ]);
+                if (isset($line['rate_unit'])) {
+                    $invoiceItem->rate_unit = $line['rate_unit'];
+                }
+                $invoice->invoiceItems()->save($invoiceItem);
+                if (isset($line['save']) && $line['save']) {
+                    if ($line['type'] == 'product') {
+                        $savedLine = new Product([
+                            'name' => $line['name'],
+                            'description' => $line['description'],
+                            'cost' => $line['cost'] * 100,
+                            'user_id' => Auth::id()
+                        ]);
+                    } else {
+                        $savedLine = new Service([
+                            'name' => $line['name'],
+                            'description' => $line['description'],
+                            'cost' => $line['cost'] * 100,
+                            'rate_unit' => $line['rate_unit'],
+                            'user_id' => Auth::id()
+                        ]);
+                    }
+
+                    $savedLine->save();
+                }
+            }
+
+            if ($invoice->status == "unseen") {
+                event(new NotificationEvent('Invoice Received from ' . Auth::user()->name, $user->id));
+                event(new NotificationEvent('Invoice Sent Sucessfully',  Auth::id()));
+            }
+        });
         return response()->json(200);
     }
 
@@ -225,13 +226,13 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
         $user = User::find($invoice->user_id);
-        if ($invoice->user_id == Auth::user()->id && $invoice->status=="unseen") {
+        if ($invoice->user_id == Auth::user()->id && $invoice->status == "unseen") {
             $invoice->status = "unpaid";
             $invoice->save();
         }
         $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
-        
-        if(isset($user)){
+
+        if (isset($user)) {
             $invoice->user_email = $user->email;
         } else {
             $invoice->user_email = $invoice->draft_email;
@@ -266,35 +267,36 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
+        DB::transaction(function () use ($request, $business, $id) {
+            //Update an invoice
+            $invoice =  Invoice::findOrFail($id);
+            $invoice->invoice_number = $request->invoice_number;
+            $invoice->invoice_date = $request->invoice_date;
+            $invoice->due_date = $request->due_date;
+            $invoice->currency = $request->currency;
+            $invoice->note = $request->note;
+            if ($request->status == 'draft') {
+                $invoice->draft_email = $request->user_email;
+                $invoice->user_id = null;
+            } else {
+                $invoice->status = $request->status;
 
-        //Update an invoice
-        $invoice =  Invoice::findOrFail($id);
-        $invoice->invoice_number = $request->invoice_number;
-        $invoice->invoice_date = $request->invoice_date;
-        $invoice->due_date = $request->due_date;
-        $invoice->currency = $request->currency;
-        $invoice->note = $request->note;
-        if($request->status == 'draft'){
-            $invoice->draft_email = $request->user_email;
-            $invoice->user_id = null;
-        } else {
-            $invoice->status = $request->status;
+                $invoice->draft_email = null;
+                $user = User::where('email', $request->user_email)->first();
 
-            $invoice->draft_email = null;
-            $user = User::where('email', $request->user_email)->first();
+                if (!isset($user)) {
+                    $user = InvoiceController::createUser($request);
+                }
+                $invoice->user_id = $user->id;
 
-            if(!isset($user)){
-                $user = InvoiceController::createUser($request);
-            } 
-            $invoice->user_id = $user->id;
-
-            //Add this user's email to the invoiced users table
-            $invoiced_user = new InvoicedUsers();
-            $invoiced_user->user_email = $request->user_email;
-            $invoiced_user->business_id = $business->id;
-            $invoiced_user->save();
-        }
-        $invoice->save(); // save it to the database.
+                //Add this user's email to the invoiced users table
+                $invoiced_user = new InvoicedUsers();
+                $invoiced_user->user_email = $request->user_email;
+                $invoiced_user->business_id = $business->id;
+                $invoiced_user->save();
+            }
+            $invoice->save(); // save it to the database.
+        });
         //Redirect to a specified route with flash message.
         return response(200);
     }
@@ -312,7 +314,8 @@ class InvoiceController extends Controller
         return response()->json(200);
     }
 
-    public static function createUser($request){
+    public static function createUser($request)
+    {
         $role_user = Role::where('name', 'user')->first();
 
         $user = new User();
@@ -338,5 +341,3 @@ class InvoiceController extends Controller
         return $user;
     }
 }
-
-
