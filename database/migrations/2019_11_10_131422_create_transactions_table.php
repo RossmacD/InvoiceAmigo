@@ -19,6 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->string("cur");
             $table->bigInteger('invoice_id');
             $table->string("stripe_payment_id");
+            $table->bigInteger('business_id');
             $table->timestamps();
         });
     }

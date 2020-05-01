@@ -7,6 +7,9 @@ use Auth;
 use App\User;
 use App\Business;
 use App\Invoice;
+use Carbon\Carbon;
+use App\Transactions;
+
 
 class DashboardController extends Controller
 {
@@ -52,15 +55,20 @@ class DashboardController extends Controller
         //get unpaid count
         $unseenCount = $business->outgoingInvoices->where('status', 'unseen')->count();
 
-
-
+        //get weekly sales chart data
+        $weeklySales=[];
+        
+        for($i=6; $i>=0; $i--){
+            array_push($weeklySales, Transactions::where('business_id', $business->id)->where( 'created_at', '>=', date('Y-m-d', strtotime(-$i.' days')))->where( 'created_at', '<', date('Y-m-d', strtotime((-$i)+1 .'  days')))->sum('amount')/100);
+        }
         $jsonResponse=[
             'invoicesCreated' => $invoicesCreated,
             'totalIncome' => $totalIncome,
             'totalOutstanding' => $totalOutstanding,
             'paidCount' => $paidCount,
             'unseenCount' => $unseenCount,
-            'yData'=>$yData
+            'yData'=>$yData,
+            'weeklySales'=> $weeklySales
         ];
         return response()->json($jsonResponse,200);
     }
