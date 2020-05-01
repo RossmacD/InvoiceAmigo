@@ -8,7 +8,7 @@
     <ErrorPage v-if='hitError'></ErrorPage>
     <LoadingPage v-else-if='!loaded'></LoadingPage>
     <EmptyIndex :indexType='itemName.substr(0,itemName.length-1)' v-else-if='items.length==0'></EmptyIndex>
-    <b-card v-else v-for='(item,index) in items' v-bind:key='item.id' class='my-2' footer-bg-variant='light' :footer='item.created_at'>
+    <b-card  v-for='(item,index) in items' v-bind:key='item.id' class='my-2' footer-bg-variant='light' :footer='item.created_at' >
       <b-row>
         <b-col>
           <h5>{{ item.name }}</h5>
@@ -76,7 +76,7 @@ export default {
     return {
       deleteText: "",
       apiRoute: "/api/"+this.itemName+"/",
-      pageRoute:"/"+this.itemName+"/"
+      pageRoute:"/"+this.itemName+"/",
     };
   },
   methods: {

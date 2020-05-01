@@ -56,6 +56,12 @@ class InvoiceController extends Controller
                 $invoice->user;
             }
         }
+
+        foreach ($incomingInvoices as $invoice) {
+            // $reciever = User::findOrFail($invoice->user_id);
+            //Return a business with the invoice
+            $invoice->business;
+        }
         $jsonResponse = [
             'outgoingInvoices' => $outgoingInvoices,
             'incomingInvoices' => $incomingInvoices,
@@ -131,7 +137,7 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorized - Validation failed', 'messages' => $validator->errors()], 422);
         }
-        //Tun the create operation into a transaction, if any one part of the operation fails all changes to the database will be rolled back
+        //Run the create operation into a transaction, if any one part of the operation fails all changes to the database will be rolled back
         DB::transaction(function () use ($request, $user, $business) {
             //Create an Invoice
             $invoice = new Invoice;
@@ -267,6 +273,7 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 422);
         }
+        //If one part of the edit fails all  changes in the DB will be rolled back
         DB::transaction(function () use ($request, $business, $id) {
             //Update an invoice
             $invoice =  Invoice::findOrFail($id);

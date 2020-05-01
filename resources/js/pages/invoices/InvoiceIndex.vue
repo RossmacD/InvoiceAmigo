@@ -4,88 +4,40 @@
       Your Invoices
       <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
     </h2>
-
-    <b-tabs v-if='isBusiness' pills v-model="tabView">
-      <b-tab title='Sent' active>
-        <LoadingPage v-if='!outgoingInvoices'></LoadingPage>
-        <EmptyIndex indexType='invoice' v-else-if='outgoingInvoices.length===0'></EmptyIndex>
-        <b-card v-else v-for='(invoice,index) in outgoingInvoices' v-bind:key='invoice.id' class='my-2' footer-bg-variant='light' :footer='invoice.created_at' header header-bg-variant='dark'>
-          <template v-slot:header>
-            <b-row>
-              <b-col>
-                <b-badge :variant="invoice.status===`paid`?`success`:`danger`" class="text-dark  py-2 float-left" style="text-transform: capitalize;"><span>{{invoice.status}}</span></b-badge>
-                <h3 class='text-light float-left mx-2'>#{{ invoice.invoice_number }}:</h3>
-                
-              </b-col>
-              <b-col>
-                
-                <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
-                  <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-                </b-button>
-                <DeleteButton class='float-right mx-1' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
-                <ReversalButton class='float-right mx-1' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
-              </b-col>
-            </b-row>
-          </template>
-          <b-row>
-            <b-col>
-              <h4>Invoice sent to: {{ invoice.draft_email||invoice.user.email}}</h4>
-              <p>
-                {{invoice.note}}
-              </p>
-            </b-col>
-            <b-col>
-              <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
-                <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-tab>
-
-      <b-tab title='Received'>
-        <LoadingPage v-if='!incomingInvoices'></LoadingPage>
-        <EmptyIndex :button='false' indexType='invoice' v-else-if='incomingInvoices.length===0'></EmptyIndex>
-        <b-card v-else v-for='(invoice,index) in incomingInvoices' v-bind:key='invoice.id' class='my-2' footer-bg-variant='light' :footer='invoice.created_at' header header-bg-variant='dark'>
-          <template v-slot:header>
-            <b-row>
-              <b-col>
-                <h3 class='text-light'>#{{ invoice.invoice_number }}:</h3>
-              </b-col>
-            </b-row>
-          </template>
-          <b-row>
-            <b-col>{{invoice.note}}</b-col>
-            <b-col>
-              <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
-                <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-tab>
-    </b-tabs>
+    <div v-if='isBusiness'>
+      <b-tabs pills v-model='tabView' content-class="bg-white mt-3">
+        <!--Filters -->
+        <template v-slot:tabs-end>
+          <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
+            <b-button-group size='sm'>
+              <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
+              <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
+              <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
+              <b-button :variant='filter===`paid`?`primary`:`light`' @click="switchFilter(`paid`)">Paid</b-button>
+            </b-button-group>
+          </b-button-toolbar>
+        </template>
+        <!-- Tabs -->
+        <b-tab title='Sent' active variant='light'>
+          <InvoiceIndexTab :invoiceList='outgoingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' :recieving='false' :filter='filter'></InvoiceIndexTab>
+        </b-tab>
+        <b-tab title='Received'>
+          <InvoiceIndexTab :invoiceList='incomingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' recieving :filter='filter'></InvoiceIndexTab>
+        </b-tab>
+      </b-tabs>
+    </div>
 
     <div v-else>
-      <LoadingPage v-if='!incomingInvoices'></LoadingPage>
-      <EmptyIndex :button='false' indexType='invoice' v-else-if='incomingInvoices.length===0'></EmptyIndex>
-      <b-card v-else v-for='(invoice,index) in incomingInvoices' v-bind:key='invoice.id' class='my-2' footer-bg-variant='light' :footer='invoice.created_at' header header-bg-variant='dark'>
-        <template v-slot:header>
-          <b-row>
-            <b-col>
-              <h3 class='text-light'>#{{ invoice.invoice_number }}:</h3>
-            </b-col>
-          </b-row>
-        </template>
-        <b-row>
-          <b-col>{{invoice.note}}</b-col>
-          <b-col>
-            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
-              <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
-            </b-button>
-          </b-col>
-        </b-row>
-      </b-card>
+      <small>Filter</small>
+      <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
+            <b-button-group size='sm'>
+              <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
+              <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
+              <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
+              <b-button :variant='filter===`paid`?`primary`:`light`' @click="switchFilter(`paid`)">Paid</b-button>
+            </b-button-group>
+          </b-button-toolbar>
+      <InvoiceIndexTab :invoiceList='incomingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' recieving :filter='filter'></InvoiceIndexTab>
     </div>
   </div>
 </template>
@@ -101,6 +53,7 @@ import LoadingPage from "../../components/LoadingPage";
 import ErrorPage from "../../components/ErrorPage";
 import DeleteButton from "../../components/DeleteButton";
 import ReversalButton from "../../components/ReversalButton";
+import InvoiceIndexTab from "../../components/InvoiceIndexTab";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(CardPlugin);
@@ -112,13 +65,15 @@ export default {
     LoadingPage,
     ErrorPage,
     DeleteButton,
-    ReversalButton
+    ReversalButton,
+    InvoiceIndexTab
   },
   data() {
     return {
       incomingInvoices: null,
       outgoingInvoices: null,
-      tabView:0
+      tabView:0,
+      filter:'any'
     };
   },
   mounted() {
@@ -153,6 +108,9 @@ export default {
           console.log(error);
         });
     },
+    switchFilter(filter){
+      this.filter=filter;
+    },
     reverseInvoice(id, index) {
       const app = this;
       // app.outgoingInvoices[id].status = "reversed";
@@ -172,3 +130,20 @@ export default {
   }
 };
 </script>
+
+<style >
+.bg-white{
+  background-color: white;
+}
+
+* > .nav {
+  background-color:rgb(218, 213, 220,0.15);
+  /* background: rgb(255,255,255); */
+  border-top: 1px solid rgba(39, 35, 42, 0.1);
+  border-bottom: 1px solid rgba(39, 35, 42, 0.1);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 0.9rem 0.45rem;
+}
+
+</style>
