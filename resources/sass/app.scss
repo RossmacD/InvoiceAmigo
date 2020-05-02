@@ -349,10 +349,18 @@ main{
 .min-vh-80{
   min-height: 80vh;
 }
-
+.min-vh-95{
+  min-height: 95vh;
+}
 .custBadge{
   background-color: $red;
   border-radius: 10px;
 }
-.stripe-container{
+.myMain{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex1{
+  flex:1;
 }

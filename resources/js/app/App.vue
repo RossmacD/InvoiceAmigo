@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="min100vh">
+    <div class="myMain min-vh-95">
       <Navbar></Navbar>
       <main role='main' :class='mainClass'>
         <!-- Content -->
         <transition :name='transitionName' mode='out-in'>
-          <router-view></router-view>
+          <router-view class="flex1"></router-view>
         </transition>
       </main>
     </div>
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       transitionName: "slide-right",
-      mainClass: ""
+      mainClass: "myMain flex1"
     };
   },
   created: function() {
@@ -39,7 +39,7 @@ export default {
       this.$store.dispatch(USER_REQUEST);
     }
     if (!this.$route.meta.mainClass) {
-      this.mainClass="container mt-4";
+      this.mainClass="container mt-4 myMain flex1";
     }
     //Logout on Unauthourised
     // axios.interceptors.response.use(undefined, function(err) {
@@ -60,7 +60,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.mainClass= to.meta.mainClass? "" :"container mt-4";
+      this.mainClass= to.meta.mainClass? "myMain flex1" :"container mt-4 myMain flex1";
      
      //Choose transition based on page location or amount of partitions in url
       if (!!to.meta.depthIndex&&!!from.meta.depthIndex) {
