@@ -13,15 +13,20 @@
                 <hr>
                 <b-form>
                   <EmailField v-on:email-update="getEmail"  :messages="messages.email" ></EmailField>
-          
+                 
                   <b-form-group label='Password' label-for='password'>
+
                     <b-form-input id='password' type='password' class='form-control' name='password' required autocomplete='current-password' v-model='password' @keydown.enter.native='login()' />
+                    
                     <b-form-invalid-feedback force-show v-if='messages.password'>{{messages.password[0]}}</b-form-invalid-feedback>
+                    <small>
+                    <b-link>Forgot Password?</b-link>
+                  </small>
                   </b-form-group>
-          
-                  <b-form-group label label-for='remember'>
+           
+                  <!-- <b-form-group label label-for='remember'>
                     <b-form-checkbox id='remember' name='remember' value='remember'>Remember Me</b-form-checkbox>
-                  </b-form-group>
+                  </b-form-group> -->
           
                   <b-form-group label label-for='login' class='mb-0'>
                     <b-button id='login' v-on:click='login()' block v-if='!authLoading'>Login</b-button>
@@ -48,7 +53,7 @@
 
 <script>
 import axios from "axios";
-import { FormPlugin, ButtonPlugin, SpinnerPlugin } from "bootstrap-vue";
+import { FormPlugin, ButtonPlugin, SpinnerPlugin,LinkPlugin } from "bootstrap-vue";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
 import { AUTH_REQUEST } from "../../store/actions/auth";
@@ -56,6 +61,7 @@ import EmailField from "../../components/EmailField";
 Vue.use(SpinnerPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(FormPlugin);
+Vue.use(LinkPlugin)
 
 export default {
   name: "Login",

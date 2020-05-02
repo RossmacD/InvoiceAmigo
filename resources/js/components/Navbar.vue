@@ -41,7 +41,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <NotificationDrawer v-if='notificationDrawer'></NotificationDrawer>
+    <NotificationDrawer v-if='notificationDrawer' v-on:closeDrawer='switchDrawer'></NotificationDrawer>
   </div>
 </template>
 
@@ -64,6 +64,8 @@ Vue.use(NavbarPlugin);
 Vue.use(BadgePlugin);
 
 export default {
+  props:{
+  },
   data() {
     return {
       notificationDrawer: false
@@ -85,9 +87,13 @@ export default {
         });
     },
     switchDrawer() {
-      this.notificationDrawer = !this.notificationDrawer
-        ? (this.notificationDrawer = true)
-        : (this.notificationDrawer = false);
+        if(this.notificationDrawer){
+          this.notificationDrawer = false;
+          
+        }else{
+          this.notificationDrawer = true
+        }
+        this.$emit("drawerOpen",this.notificationDrawer);
     }
   },
   computed: {

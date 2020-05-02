@@ -1,13 +1,17 @@
 <template>
   <div>
-    <div class="myMain min-vh-95">
-      <Navbar></Navbar>
-      <main role='main' :class='mainClass'>
-        <!-- Content -->
-        <transition :name='transitionName' mode='out-in'>
-          <router-view class="flex1"></router-view>
-        </transition>
-      </main>
+    <div class='myMain min-vh-95'>
+      <Navbar  v-on:drawerOpen='handleDrawer'></Navbar>
+      <b-overlay :show='drawerOpen' variant='dark' class='myMain flex1'>
+        <main role='main' :class='mainClass'>
+          <!-- Content -->
+          <transition :name='transitionName' mode='out-in'>
+            <router-view class='flex1'></router-view>
+          </transition>
+        </main>
+        <template v-slot:overlay> <div></div>
+        </template>
+      </b-overlay>
     </div>
     <Footer></Footer>
   </div>
@@ -31,7 +35,8 @@ export default {
   data() {
     return {
       transitionName: "slide-right",
-      mainClass: "myMain flex1"
+      mainClass: "myMain flex1",
+      drawerOpen:false
     };
   },
   created: function() {
@@ -52,6 +57,15 @@ export default {
     //     throw err;
     //   });
     // });
+  },
+  methods:{
+    handleScroll(){
+      console.log('ooasdoo')
+      this.scrollPos = window.scrollY;
+    },
+    handleDrawer(drawerState){
+      this.drawerOpen=drawerState;
+    }
   },
   computed: {
     ...mapGetters(["getProfile","isAuthenticated"]),

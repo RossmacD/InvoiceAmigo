@@ -283,7 +283,9 @@ main{
   outline: 3px solid $purple;
   // border-radius: 15px;
 }
-
+.pointer:hover{
+  cursor: pointer;
+}
 .cutout:hover {
   cursor: pointer;
   // animation-name: example;
@@ -363,4 +365,22 @@ main{
 
 .flex1{
   flex:1;
+}
+
+.drawer {
+  position: fixed;
+  background-color: $white;
+  width: 40%;
+  height: 100%;
+  right: 0px;
+  top:0;
+  z-index: 99999999;
+  outline: none;
+  // box-shadow: 0px -5px 100px;
+}
+@media only screen 
+   and (max-width : 425px) {
+     .drawer {
+    width:90%;
+   }
 }
