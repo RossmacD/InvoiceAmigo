@@ -6,6 +6,7 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import PortalVue from "portal-vue";
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Vuelidate from "vuelidate";
 import App from "./app/App";
 import router from "./router.js";
 import store from './store/';
@@ -18,6 +19,9 @@ Vue.use(PortalVue);
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
+// Install Vuelidate
+Vue.use(Vuelidate);
+
 
 const token = {
     token: localStorage.getItem('token')
