@@ -8,27 +8,31 @@
     <ErrorPage v-if='hitError'></ErrorPage>
     <LoadingPage v-else-if='!loaded'></LoadingPage>
     <EmptyIndex :indexType='itemName.substr(0,itemName.length-1)' v-else-if='items.length==0'></EmptyIndex>
-    <b-card  v-for='(item,index) in items' v-bind:key='item.id' class='my-2' footer-bg-variant='light' :footer='item.created_at' >
-      <b-row>
-        <b-col>
-          <h5>{{ item.name }}</h5>
-          <p>{{ item.description }}</p>
-        </b-col>
-        <b-col>
-          <b-button class='float-right m-1' variant='secondary' :pressed='false' :to='pageRoute+item.id' size='sm'>
-            <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-          </b-button>
-          <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='item.id' :index='index'></DeleteButton>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col></b-col>
-        <b-col>
-          <h4 v-if='item.cost' class='float-right'>€{{ item.cost }} EUR</h4>
-          <h4 class='float-right' v-else>€{{ item.cost }} per {{ item.rate_unit }}</h4>
-        </b-col>
-      </b-row>
-    </b-card>
+    <b-row>
+    <b-col v-for='(item,index) in items' v-bind:key='item.id' md='6'>
+      <b-card   class='my-2' footer-bg-variant='light' :footer='item.created_at' >
+        <b-row>
+          <b-col>
+            <h5>{{ item.name }}</h5>
+            <p>{{ item.description }}</p>
+          </b-col>
+          <b-col>
+            <b-button class='float-right m-1' variant='secondary' :pressed='false' :to='pageRoute+item.id' size='sm'>
+              <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
+            </b-button>
+            <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='item.id' :index='index'></DeleteButton>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col></b-col>
+          <b-col>
+            <h4 v-if='item.cost' class='float-right'>€{{ item.cost }} EUR</h4>
+            <h4 class='float-right' v-else>€{{ item.cost }} per {{ item.rate_unit }}</h4>
+          </b-col>
+        </b-row>
+      </b-card>
+    </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -82,16 +86,6 @@ export default {
   methods: {
     deleteProduct(id, index) {
       this.$emit("on-confirm", id, index);
-      // const app = this;
-      // axios
-      //   .delete(app.apiRoute + id)
-      //   .then(function(response) {
-      //     console.log(response);
-      //     app.$delete(app.products, index);
-      //   })
-      //   .catch(function(error) {
-      //     console.log(error.response);
-      //   });
     },
     
   },

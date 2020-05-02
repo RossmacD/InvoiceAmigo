@@ -157,6 +157,10 @@ const routes = [
         path: "/invoices/:id",
         name: "invoiceview",
         component: InvoiceView,
+        meta: {
+            depthIndex: 6,
+            mainClass:true
+        },
         beforeEnter: onlyLoggedIn
     },
     {

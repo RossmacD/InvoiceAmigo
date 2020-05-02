@@ -237,12 +237,17 @@ class InvoiceController extends Controller
             $invoice->save();
         }
         $invoice->invoiceLines = InvoiceItems::where('invoice_id', $id)->get();
-
+        foreach ($invoice->invoiceLines as $line) {
+            $line->cost=ceil($line->cost/100);
+            $line->sub_total=ceil($line->sub_total/100);
+        }
+        $invoice->total_cost=ceil($invoice->total_cost/100);
         if (isset($user)) {
             $invoice->user_email = $user->email;
         } else {
             $invoice->user_email = $invoice->draft_email;
         }
+        $invoice->business;
 
         return response()->json(
             [

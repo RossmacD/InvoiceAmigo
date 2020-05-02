@@ -1,13 +1,14 @@
 <template>
-  <b-row>
-    <b-col>
-      <div ref='card'></div>
-    </b-col>
-    <b-col>
-      <b-button :disabled="intentStatus" v-on:click='purchase'><b-spinner v-if="intentStatus" variant='light' label='Loading...'></b-spinner><span v-else>Pay Now</span></b-button>
-      <h4 v-if="success">Processing...</h4>
-    </b-col>
-  </b-row>
+  <div >
+    <div class='stripe-containter my-3 mx-3'>
+      <div ref='card' ></div>
+    </div>
+    <b-button block class='my-1 ' :disabled='intentStatus' v-on:click='purchase'>
+      <b-spinner v-if='intentStatus' variant='light' label='Loading...'></b-spinner>
+      <span v-else>Pay Now</span>
+    </b-button>
+    <h4 v-if='success'>Processing...</h4>
+  </div>
 </template>
 
 <script>
@@ -27,16 +28,18 @@ var style = {
   base: {
     color: "#32325d",
     fontSmoothing: "antialiased",
-    fontSize: "16px",
+    fontFamily: '"Montserrat", Helvetica, sans-serif',
+    fontSize: "18px",
     borderStyle: "solid",
+    padding:'5px',
     borderWidth: "1px",
     "::placeholder": {
       color: "#aab7c4"
     }
   },
   invalid: {
-    color: "#fa755a",
-    iconColor: "#fa755a"
+    color: "#ef2d56",
+    iconColor: "#ef2d56"
   }
 };
 
@@ -57,7 +60,7 @@ export default {
         app.intentStatus=false;
       })
       .catch(err => console.log(err));
-    app.card = elements.create("card");
+    app.card = elements.create("card",{style: style});
     app.card.mount(app.$refs.card);
     //Add a listener to validate card
     // card.addEventListener("change", function(event) {

@@ -9,7 +9,7 @@
         <!--Filters -->
         <template v-slot:tabs-end>
           <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
-            <b-button-group size='sm'>
+            <b-button-group size='sm' >
               <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
               <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
               <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
@@ -73,12 +73,11 @@ export default {
       incomingInvoices: null,
       outgoingInvoices: null,
       tabView:0,
-      filter:'any'
+      filter:'any',
     };
   },
   mounted() {
-    const app = this;
-    
+    const app =this;
     if (app.isAuthenticated) {
       axios
         .get("/api/invoices")
@@ -122,7 +121,12 @@ export default {
         )
         .then(res => console.log(res.data))
         .catch(err => console.log(err.data));
-    }
+    },
+    handleResize () {
+        const clientWidth = window.innerWidth
+       console.log(clientWidth)
+       this.windowWidth=clientWidth;
+      }
   },
   computed: {
     ...mapGetters(["isAuthenticated", "isBusiness"]),

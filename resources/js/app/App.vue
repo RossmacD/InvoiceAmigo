@@ -37,7 +37,9 @@ export default {
   created: function() {
     if (!!localStorage.getItem("token")) {
       this.$store.dispatch(USER_REQUEST);
-      this.mainClass="container mt-4"
+    }
+    if (!this.$route.meta.mainClass) {
+      this.mainClass="container mt-4";
     }
     //Logout on Unauthourised
     // axios.interceptors.response.use(undefined, function(err) {

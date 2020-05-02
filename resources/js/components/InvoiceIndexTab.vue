@@ -74,7 +74,7 @@ export default {
     return {
       deleteText: "",
       apiRoute: "/api/"+this.itemName+"/",
-      pageRoute:"/"+this.itemName+"/"
+      pageRoute:"/"+this.itemName+"/",
     };
   },
   methods: { deleteInvoice(id, index) {
@@ -84,12 +84,15 @@ export default {
       this.$emit("on-reverse-confirm", this.id, this.index);
     }
   },
+  mounted() {
+     
+  },
   computed: {
     filteredInvoiceList: function () {
         const app=this;
         return this.invoiceList.filter((invoice)=> {
             return app.filter==='any' || invoice.status===app.filter
         })
-  }}
+  }},
   }
 </script>
