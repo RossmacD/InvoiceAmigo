@@ -57,7 +57,7 @@ class CpanelController extends Controller
         $cpanel->api_token = $request->api_token;
         $cpanel->hostname = $request->hostname;
         $cpanel->port = $request->port;
-        $cpanel->user_id = $business->id;
+        $cpanel->business_id = $business->id;
         $cpanel->save();
 
         //Redirect to a specified route with flash message.
@@ -95,7 +95,27 @@ class CpanelController extends Controller
      */
     public function update(Request $request, Cpanel $cpanel)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'whm_username' => 'required|string',
+            'api_token' => 'required|string',
+            'hostname' => 'required|string',
+            'port' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Unauthorised - Validation failed', 'messages' => $validator->errors()], 401);
+        }
+
+        $business = Auth::user()->business;
+
+        //Update cPanel details
+        $cpanel = Cpanel::where('business_id', $business->id)->firstOrFail();
+        $cpanel->whm_username = $request->whm_username;
+        $cpanel->api_token = $request->api_token;
+        $cpanel->hostname = $request->hostname;
+        $cpanel->port = $request->port;
+        $cpanel->save();
+        //Redirect to a specified route with flash message.
+        return response()->json(200);
     }
 
     /**
