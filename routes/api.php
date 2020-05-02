@@ -45,6 +45,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/pay/{id}', 'PaymentController@paySingleInvoice')->name('stripe.paySingleInvoice');
 
     //cPanel
+    Route::post('/cpanel/setdetails', 'CpanelController@store');
+    Route::put('/cpanel/setdetails/', 'CpanelController@update');
     Route::get('/cpanel', 'CpanelController@searchAccounts');
 
     //InvoicedUsers

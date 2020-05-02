@@ -22,6 +22,7 @@ class BusinessController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
+        $business->cpanel = $business->cpanel;
 
         return response()->json(
             [
