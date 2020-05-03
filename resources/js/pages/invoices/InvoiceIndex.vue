@@ -9,7 +9,7 @@
         <!--Filters -->
         <template v-slot:tabs-end>
           <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
-            <b-button-group size='sm' >
+            <b-button-group size='sm' class="filterGroup">
               <b-button disabled variant="light"><b-icon icon="funnel-fill"></b-icon></b-button>
               <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
               <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>

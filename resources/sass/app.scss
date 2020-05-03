@@ -499,14 +499,23 @@ main{
 
 
 .draft-bg-op{
-  background-color: rgba(#CC6682, 0.9);
+  background-color: rgba(#CC6682, 1);
 }
 .unseen-bg-op{
   background-color: rgba($red, 0.7);
 }
 .unpaid-bg-op{
-  background-color: rgba($red, 0.9);
+  background-color: rgba($red, 1);
 }
 .paid-bg-op{
-  background-color: rgba($green, 0.9);
+  background-color: rgba($green, 1);
+}
+
+.filterGroup{
+  border-radius: 0.45rem;
+  border: 1px solid rgba($black,0.3);
+}
+.filterGroup .btn{
+  border-left: 1px solid rgba($black,0.3);
+  border-right: 1px solid rgba($black,0.3);
 }

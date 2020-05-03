@@ -84,7 +84,7 @@
       </div>
     </b-container>
 
-    <b-container class='light-bg px-2 pt-2 pb-0 radius15 mb-1 mt-4' v-if='invoice.user_id==id&&invoice.status!=`paid`'>
+    <b-container class='light-bg px-2 pt-2 pb-0 radius15 mb-5 mt-4' v-if='invoice.user_id==id&&invoice.status!=`paid`'>
       <b-row>
         <b-col sm='4' class='px-4 text-center'>
           <h6 class='p-2 custBadge mb-2 text-light'>Invoice Unpaid</h6>
