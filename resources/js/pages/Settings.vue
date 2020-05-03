@@ -5,6 +5,33 @@
       <h1>Account Settings</h1>
       <h4>Name:</h4>
       <p>{{name}}</p>
+
+      <b-form>
+                <b-form-group label='Email' label-for='email'>
+                  <b-form-input disabled  type='text' class='form-control' name='name' required autocomplete='name' v-model='email' />
+  
+                </b-form-group>
+
+                <b-form-group label='Name' label-for='name'>
+                  <b-form-input disabled id='name' type='text' class='form-control' name='name' required autocomplete='name' v-model='name'/>
+                  
+                </b-form-group>
+        
+                <b-form-group label='Password' label-for='password'>
+                  <b-form-input type='password' class='form-control' name='password' required autocomplete='current-password' v-model='newPass' />
+                  
+                </b-form-group>
+        
+                <hr>
+                <b-form-group label label-for='login' class='mb-0'>
+               
+                    <b-button v-on:click='register()' block v-if='!authLoading||registering' class='btn btn-primary'>Update</b-button>
+                    <b-button v-else class='btn btn-info'>
+                      <b-spinner small label='Loading...'></b-spinner>
+                    </b-button>
+                </b-form-group>
+              </b-form>
+
       <span>Business Account</span>
       <b-form-checkbox v-model="checked" :disabled="checked" name="business-account-switch" switch></b-form-checkbox>
 
@@ -316,6 +343,7 @@ export default {
           port: []
         }
       },
+      newPass:"secretsecretsecret",
       bEditing: false,
       cEditing: false,
       bSubmitting: false,
@@ -383,6 +411,7 @@ export default {
     ...mapState({
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`,
+      email: state => `${state.user.profile.email}`,
       profileLoading: state => state.user.status === "loading",
       profileLoaded: state=> state.user.status === "success"
     })
