@@ -4,12 +4,16 @@
     <div v-else-if="profileLoaded">
       <h1 class="display-4">Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
-      </br>
+      <br/>
+      <div v-if="!isBusiness">
+
+      </div>
+      <div v-else>
       <h3>Business Overview: {{ business.business_name }}</h3>
       <b-row>
         <b-col md="4">
           <b-card>
-            <h4>Total Income: </h4><p>€ {{ dashInfo.totalIncome }}</p>
+            <h4>Total Income: </h4><p>€{{ dashInfo.totalIncome }}</p>
           </b-card>
         </b-col>
         <b-col md="4">
@@ -32,8 +36,9 @@
         </b-col>
            <apexchart type="bar" :options="invoiceDataOptions" :series="invoiceDataSeries" ></apexchart>
 
-        <h5>Unpaid Invoices</h5>
+        <!-- <h5>Unpaid Invoices</h5> -->
       </b-row>
+      </div>
     </div>
     <ErrorPage v-else></ErrorPage>
   </div>

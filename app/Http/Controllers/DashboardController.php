@@ -22,6 +22,8 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         $user = Auth::user();
+
+        if($user->hasRole('business')){
         $business = $user->business;
 
         //Get total income from paid invoices
@@ -61,6 +63,7 @@ class DashboardController extends Controller
         for($i=6; $i>=0; $i--){
             array_push($weeklySales, Transactions::where('business_id', $business->id)->where( 'created_at', '>=', date('Y-m-d', strtotime(-$i.' days')))->where( 'created_at', '<', date('Y-m-d', strtotime((-$i)+1 .'  days')))->sum('amount')/100);
         }
+    
         $jsonResponse=[
             'invoicesCreated' => $invoicesCreated,
             'totalIncome' => $totalIncome,
@@ -70,6 +73,9 @@ class DashboardController extends Controller
             'yData'=>$yData,
             'weeklySales'=> $weeklySales
         ];
+    } else {
+        $jsonResponse=[];
+    }
         return response()->json($jsonResponse,200);
     }
 }

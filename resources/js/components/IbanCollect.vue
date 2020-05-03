@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col md='3'>
+      <b-col md='12'>
         <b-form-group label='Account Holder Full Name' label-for='account_name'>
           <b-form-input id='account_name' type='text' name='account_name' required autocomplete='account_name' autofocus v-model='account_name'></b-form-input>
           <b-form-invalid-feedback id='input-live-feedback'>Enter at least 5 letters</b-form-invalid-feedback>
@@ -10,7 +10,7 @@
     </b-row>
 
     <b-row>
-      <b-col md='3'>
+      <b-col md='12'>
         <b-form-group>
           <label for='ibanElement'>Your IBAN</label>
           <div ref='iban'>
@@ -24,6 +24,7 @@
         <b-form-text id='mandate-acceptance'>By providing your IBAN, you are authorizing Stripe, our payment service provider, to store yout IBAN for future payouts.</b-form-text>
       </b-col>
     </b-row>
+    <br/>
   </div>
 </template>
 

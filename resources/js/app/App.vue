@@ -13,6 +13,7 @@
         </template>
       </b-overlay>
     </div>
+    <br/>
     <Footer></Footer>
   </div>
 </template>
