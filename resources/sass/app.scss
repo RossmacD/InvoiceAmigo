@@ -430,8 +430,9 @@ main{
   opacity: 0.9;
 }
 .bg-shaded{
-  background-color: rgb(168, 158, 174,0.05);
-  box-shadow: inset 0px -1px 29px 14px rgba($gray-400,0.05)
+  // background-color: rgb(168, 158, 174,0.05);
+  background-color:rgb(218, 213, 220,0.5);
+  box-shadow: inset 0px -1px 29px 14px rgba($gray-400,0.15)
 }
 
 #my-nav-dropdown > ul{
@@ -443,4 +444,19 @@ main{
 #my-nav-dropdown:hover{
   background-color: $indigo;
   border-radius: 15px;
+}
+
+
+.card.smallFooter{
+  border: 1px solid rgba($black,0.3);
+  border-radius: 0;
+}
+.smallFooter .card-footer:last-child {
+  border-radius: 0;
+}
+
+.flex1.myMain .tabs{
+  display: flex;
+  flex-direction: column;
+  flex:1;
 }

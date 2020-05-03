@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="myMain flex1">
     <LoadingPage v-if='!invoiceList'></LoadingPage>
     <EmptyIndex indexType='invoice' v-else-if='filteredInvoiceList.length===0'></EmptyIndex>
-    <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='my-4 smallFooter mx-1 shadow-sm' footer-bg-variant='light'>
+    <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='mt-3 mb-4 smallFooter shadow-sm' footer-bg-variant='light'>
             <b-row>
                 <b-col  style='display:flex;'>
                 <b-badge :variant='invoice.status===`paid`?`success`:`danger`' class='text-light flexCenter p-2 mx-1' style='text-transform: capitalize;'>
@@ -16,7 +16,7 @@
             <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
               <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
             </b-button>
-            <div v-if='!recieving' >
+            <div v-if='!recieving'>
               <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
                 <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
               </b-button>

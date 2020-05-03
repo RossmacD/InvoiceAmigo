@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h2 class='mb-4'>
-      Your Invoices
-      <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
-    </h2>
-    <div v-if='isBusiness'>
-      <b-tabs pills v-model='tabView' content-class="bg-shaded pt-3">
+  <div class="flex1 myMain">
+      <h2 class='mb-4 display-4'>
+        Your Invoices
+        <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
+      </h2>
+    <div v-if='isBusiness' class="flex1 myMain">
+      <b-tabs pills v-model='tabView' content-class="bg-shaded pb-3 pt-1 min100pc flex1 myMain">
         <!--Filters -->
         <template v-slot:tabs-end>
           <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
