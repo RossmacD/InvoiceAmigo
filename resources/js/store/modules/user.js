@@ -9,6 +9,8 @@ const getters = {
     getProfile: state => state.profile,
     isProfileLoaded: state => !!state.profile.name,
     isBusiness: state => !!state.profile.isBusiness,
+    hasCpanel: state => !!state.profile.hasCpanel,
+
 };
 
 const actions = {

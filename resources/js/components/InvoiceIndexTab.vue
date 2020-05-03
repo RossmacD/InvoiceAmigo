@@ -16,14 +16,14 @@
             </b-col>
              <b-col class="flex flexEnd bodyPadding">
             <div v-if='!recieving'>
-              <DeleteButton class='mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
+              <DeleteButton title="Delete" class='mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
               <ReversalButton class='mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
-               <b-button class=' mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
+               <b-button  v-b-tooltip.hover title="Edit invoice" class=' mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
                 <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
               </b-button>
             </div>
             <div>
-              <b-button class='mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
+              <b-button class='mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm' v-b-tooltip.hover title="View invoice">
                 <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
               </b-button>
             </div>

@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span v-b-tooltip.hover title="Delete">
     <transition name='slide-fade' mode='out-in'>
       <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class=''>
         <b-icon variant='light' icon='trash-fill' style='width: 20px; height: 20px'></b-icon>

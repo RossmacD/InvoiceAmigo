@@ -17,7 +17,7 @@
             <p>{{ item.description }}</p>
           </b-col>
           <b-col>
-            <b-button class='float-right m-1' variant='secondary' :pressed='false' :to='pageRoute+item.id' size='sm'>
+            <b-button v-b-tooltip.hover title="Edit" class='float-right m-1' variant='secondary' :pressed='false' :to='pageRoute+item.id' size='sm'>
               <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
             </b-button>
             <DeleteButton class='float-right m-1' v-on:on-confirm='deleteProduct' :id='item.id' :index='index'></DeleteButton>

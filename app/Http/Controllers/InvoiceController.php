@@ -304,10 +304,14 @@ class InvoiceController extends Controller
                 $invoice->user_id = $user->id;
 
                 //Add this user's email to the invoiced users table
-                $invoiced_user = new InvoicedUsers();
-                $invoiced_user->user_email = $request->user_email;
-                $invoiced_user->business_id = $business->id;
-                $invoiced_user->save();
+                // $invoiced_user = new InvoicedUsers();
+                $invoiced_user = InvoicedUsers::where('user_email', '=', $request->user_email);
+                if($invoiced_user === null) {
+                    $invoiced_user->user_email = $request->user_email;
+                    $invoiced_user->business_id = $business->id;
+                    $invoiced_user->save();
+                }
+                
             }
             $invoice->save(); // save it to the database.
         });
