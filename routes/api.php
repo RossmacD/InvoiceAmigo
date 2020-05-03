@@ -48,6 +48,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/cpanel/setdetails', 'CpanelController@store');
     Route::put('/cpanel/setdetails/', 'CpanelController@update');
     Route::get('/cpanel', 'CpanelController@searchAccounts');
+    Route::post('/cpanel/suspend', 'CpanelController@suspendAccount');
+    Route::post('/cpanel/unsuspend', 'CpanelController@unsuspendAccount');
+    Route::post('/cpanel/terminate', 'CpanelController@terminateAccount');
+
 
     //InvoicedUsers
     Route::get('/search/invoicedusers', 'SearchController@searchInvoicedUsers')->name('invoicedUsers.search');

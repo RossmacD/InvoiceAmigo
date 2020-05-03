@@ -151,7 +151,6 @@ class CpanelController extends Controller
         $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
         $accounts = new Accounts($whmClient);
 
-        
         // $options=['searchmethod' => "exact","page" => 1,"limit" => 20,"want" => "username"];
         // $options=[];
         // $options->searchmethod="exact";
@@ -159,13 +158,53 @@ class CpanelController extends Controller
         // $options->limit=15;
         // $options->want="username";
 
-
+        $options = array(
+            'limit' => '20',
+            'searchmethod' => 'exact'
+        );
 
         $jsonResp = [
-            'accounts' => $accounts->searchAccounts()
+            'accounts' => $accounts->searchAccounts(null,null,$options)
         ];
+        // var_dump($jsonResp);
+
         return response()->json($jsonResp,
             200
         );
     }
+
+    public function suspendAccount(Request $request){
+        $user = Auth::user();
+        $business = $user->business;
+        $cpanel = $business->cpanel;
+
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $account = new Accounts($whmClient);
+
+        $account->suspend($request->userToSuspend, $request->suspendReason, false);
+    }
+
+    public function unsuspendAccount(Request $request){
+        $user = Auth::user();
+        $business = $user->business;
+        $cpanel = $business->cpanel;
+
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $account = new Accounts($whmClient);
+
+        $account->unsuspend($request->userToSuspend);
+    }
+
+    public function terminateAccount(Request $request){
+        $user = Auth::user();
+        $business = $user->business;
+        $cpanel = $business->cpanel;
+
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $account = new Accounts($whmClient);
+
+        $account->remove($request->userToTerminate);
+    }
+
+
 }
