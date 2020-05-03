@@ -465,3 +465,16 @@ main{
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+.lowOp{
+  opacity: 0.8;
+
+}
+
+.flex{
+  display: flex;
+}
+
+.flexEnd{
+  justify-content: flex-end;
+}

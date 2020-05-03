@@ -2,7 +2,7 @@
   <div>
     <LoadingPage v-if="profileLoading"></LoadingPage>
     <div v-else-if="profileLoaded">
-      <h1>Your Dashboard</h1>
+      <h1 class="display-4">Your Dashboard</h1>
       <h2>Welcome back, {{name}}!</h2>
       </br>
       <h3>Business Overview: {{ business.business_name }}</h3>

@@ -1,10 +1,10 @@
 <template>
   <span>
     <transition name='slide-fade' mode='out-in'>
-      <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class='mb-2'>
+      <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class=''>
         <b-icon variant='light' icon='trash-fill' style='width: 20px; height: 20px'></b-icon>
       </b-button>
-      <b-button v-else variant='warning' @mouseleave='reset' @click='clickHandler' size='sm' class='mb-2'>
+      <b-button v-else variant='warning' @mouseleave='reset' @click='clickHandler' size='sm' class=''>
         <b-icon variant='light' icon='alert-circle-fill' style='width: 20px; height: 20px'></b-icon>
         <!-- <transition name='slide-fade'> -->
         <span style='color:#FFF'>{{text}}</span>
