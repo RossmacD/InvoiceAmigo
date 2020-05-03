@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2 class='mb-4'>
+    <h1 class='mb-4 display-4'>
       Your Logs
       <b-button to='/logs/create' class='float-right'>+ New</b-button>
-    </h2>
+    </h1>
     <LoadingPage v-if='!draftInvoices'></LoadingPage>
     <EmptyIndex :button='false' indexType='invoice' v-else-if='draftInvoices.length===0'></EmptyIndex>
     <b-row v-else>

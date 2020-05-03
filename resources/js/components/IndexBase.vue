@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2 class='mb-4'>
+    <h1 class='mb-4 display-4'>
       Your
       <span style='text-transform: capitalize;'>{{itemName}}</span>
       <b-button :to='pageRoute+"create"' class='float-right'>+ New</b-button>
-    </h2>
+    </h1>
     <ErrorPage v-if='hitError'></ErrorPage>
     <LoadingPage v-else-if='!loaded'></LoadingPage>
     <EmptyIndex :indexType='itemName.substr(0,itemName.length-1)' v-else-if='items.length==0'></EmptyIndex>

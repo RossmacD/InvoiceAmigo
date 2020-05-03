@@ -1,5 +1,5 @@
 <template>
-  <div class="myMain flex1">
+  <div class="myMain flex1 ">
     <LoadingPage v-if='!invoiceList'></LoadingPage>
     <EmptyIndex indexType='invoice' v-else-if='filteredInvoiceList.length===0'></EmptyIndex>
     <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='mt-3 mb-4 smallFooter shadow-sm' footer-bg-variant='light'>
@@ -33,7 +33,7 @@
                     <small class="my-0 mx-1 op05">Due: <strong>{{invoice.due_date}}</strong></small>
                 </b-col>
                 <b-col class='text-right'>
-                    <h5 class="my-0 mx-1"><strong>€{{invoice.total_cost}}</strong></h5>
+                    <h5 class="my-0 mx-1">Amount: <strong>€{{invoice.total_cost}}</strong></h5>
                 </b-col>
             </b-row>
           </template>

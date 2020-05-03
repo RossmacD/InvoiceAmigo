@@ -54,6 +54,7 @@ class InvoiceController extends Controller
                 // $reciever = User::findOrFail($invoice->user_id);
                 //Return a user with the invoice
                 $invoice->user;
+                $invoice->total_cost=ceil($invoice->total_cost/100);
             }
         }
 
@@ -61,6 +62,7 @@ class InvoiceController extends Controller
             // $reciever = User::findOrFail($invoice->user_id);
             //Return a business with the invoice
             $invoice->business;
+            $invoice->total_cost=ceil($invoice->total_cost/100);
         }
         $jsonResponse = [
             'outgoingInvoices' => $outgoingInvoices,

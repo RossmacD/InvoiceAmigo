@@ -460,3 +460,8 @@ main{
   flex-direction: column;
   flex:1;
 }
+
+.scroll{    
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
