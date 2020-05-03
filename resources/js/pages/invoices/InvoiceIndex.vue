@@ -5,11 +5,12 @@
       <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
     </h2>
     <div v-if='isBusiness'>
-      <b-tabs pills v-model='tabView' content-class="bg-white mt-3">
+      <b-tabs pills v-model='tabView' content-class="bg-shaded pt-3">
         <!--Filters -->
         <template v-slot:tabs-end>
           <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
             <b-button-group size='sm' >
+              <b-button disabled variant="light"><b-icon icon="funnel-fill"></b-icon></b-button>
               <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
               <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
               <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
@@ -31,6 +32,7 @@
       <small>Filter</small>
       <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
             <b-button-group size='sm'>
+              <b-button disabled variant="light"><b-icon icon="funnel-fill"></b-icon></b-button>
               <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
               <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
               <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
@@ -47,7 +49,7 @@
 import axios from "axios";
 import Vue from "vue";
 import { mapGetters, mapState } from "vuex";
-import { SpinnerPlugin, ButtonPlugin, CardPlugin,BadgePlugin } from "bootstrap-vue";
+import { SpinnerPlugin, ButtonPlugin, CardPlugin,BadgePlugin,BIcon } from "bootstrap-vue";
 import EmptyIndex from "../../components/EmptyIndex";
 import LoadingPage from "../../components/LoadingPage";
 import ErrorPage from "../../components/ErrorPage";
@@ -66,7 +68,8 @@ export default {
     ErrorPage,
     DeleteButton,
     ReversalButton,
-    InvoiceIndexTab
+    InvoiceIndexTab,
+    BIcon
   },
   data() {
     return {

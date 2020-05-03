@@ -1,9 +1,9 @@
 <template>
-    <div class='drawer shadow-lg ' ref="drawer"  @focusout="closeDrawer"
-        tabindex="0">
+    <div class='drawer shadow-lg ' >
       <b-container>
         <b-row class='py-3 px-2'>
-          <b-col>
+          <b-col ref="drawer"  @focusout="closeDrawer"
+        tabindex="0" class="outline">
             <h1 >Notifications:</h1>
           </b-col>
           <b-col @click='closeDrawer' class='text-right pointer'>

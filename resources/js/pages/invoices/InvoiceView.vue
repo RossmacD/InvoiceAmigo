@@ -1,70 +1,102 @@
 <template>
- <div class='invoice-fillscreen py-2' >
+  <div class='invoice-fillscreen py-2'>
     <!-- <b-container class="light-bg px-2 pt-2 pb-2 radius15 mb-1">
       <h2 class='centerVert'>Invoice from ultan@gmail.com</h2>
-    </b-container> -->
-    <b-container class='light-bg radius15 min-vh-80 p-5' >
-    <LoadingPage v-if='!loaded'></LoadingPage>
-    <div v-else>
-       <!-- <b-badge pill class="mx-3 px-1 py-1" variant='success' v-if="invoice.status==`paid`"><h6 >Invoice Paid</h6></b-badge> -->
-       <b-row class="my-2">
-         <b-col>
-           <h1 class='display-3'>INVOICE</h1>
-          <div class="mx-1">
-            <small>Invoice Date:</small>
-              <p>{{invoice.invoice_date}}</p>
-            <small>Issue Date:</small>
-              <p>{{invoice.due_date}}</p>
-          </div>
-        </b-col>
-         <b-col class="text-right">
-          <h3>Invoice #{{invoice.invoice_number}}</h3>
-           <h3 >{{invoice.business.business_name}}</h3>
-           <p>{{invoice.business.address}}</p>
-           <p>{{invoice.business.country}}</p>
-           <p>{{invoice.business.postcode}}</p>
-         </b-col>
-       </b-row>
-      <!-- <hr /> -->
-      <h5>Invoice Items</h5>
-      <b-table responsive='md' striped hover :fields='fields' :items='invoice.invoiceLines' foot-clone foot-variant='light'>
-       
-        <template v-slot:cell(cost)='data'>
-          <span>{{curPrefix + invoice.invoiceLines[data.index].cost}} {{ 
-              invoice.invoiceLines[data.index].rate_unit&&invoice.invoiceLines[data.index].rate_unit!=="day"?invoice.invoiceLines[data.index].rate_unit+"ly":
-              invoice.invoiceLines[data.index].rate_unit==="day"?'Daily':'' 
-            }}</span>
-        </template>
-
-        <template v-slot:cell(sub_total)='data'>
-          <span>{{curPrefix + invoice.invoiceLines[data.index].sub_total }}</span>
-        </template>
-
-        <template v-slot:foot(sub_total)>Total Cost: €{{invoice.total_cost}}</template>
-        <template v-slot:foot()>
-          <br />
-        </template>
-      </b-table>
-      <div v-if="invoice.notes">
-        <h5>Notes:</h5>
-        <p>{{invoice.notes}}</p>
+    </b-container>-->
+    <!-- <div class='stickyMenuContainer'>
+      <div class='stickyMenu shadow px-2 py-4' v-if="loaded">
+        <div >
+          <b-row>
+            <b-col>
+               <b-badge :variant='invoice.status===`paid`?`success`:`danger`' class='text-light py-2 float-left' style='text-transform: capitalize;'>
+                <span>{{invoice.status==='unseen'&&recieving?'Unopened':invoice.status}}</span>
+              </b-badge><h5>Invoice Summary</h5>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+             
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <p>Sent by {{invoice.business.user.name}}</p>
+              <p>From {{invoice.business.user.email}}</p>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <p>Total Cost  €{{invoice.total_cost}}</p>
+            </b-col>
+          </b-row>
+        </div>
+        <div class="float-left stickyHandle"></div>
       </div>
-     
-    </div> 
+      
+    </div> -->
+
+    <b-container class='light-bg radius15 min-vh-80 p-5'>
+      <LoadingPage v-if='!loaded'></LoadingPage>
+      <div v-else>
+        <!-- <b-badge pill class="mx-3 px-1 py-1" variant='success' v-if="invoice.status==`paid`"><h6 >Invoice Paid</h6></b-badge> -->
+        <b-row class='my-2'>
+          <b-col>
+            <h1 class='display-3'>INVOICE</h1>
+            <div class='mx-1'>
+              <small>Invoice Date:</small>
+              <p>{{invoice.invoice_date}}</p>
+              <small>Issue Date:</small>
+              <p>{{invoice.due_date}}</p>
+            </div>
+          </b-col>
+          <b-col class='text-right'>
+            <h3>Invoice #{{invoice.invoice_number}}</h3>
+            <h3>{{invoice.business.business_name}}</h3>
+            <p>{{invoice.business.address}}</p>
+            <p>{{invoice.business.country}}</p>
+            <p>{{invoice.business.postcode}}</p>
+          </b-col>
+        </b-row>
+        <!-- <hr /> -->
+        <h5>Invoice Items</h5>
+        <b-table responsive='md' striped hover :fields='fields' :items='invoice.invoiceLines' foot-clone foot-variant='light'>
+          <template v-slot:cell(cost)='data'>
+            <span>
+              {{curPrefix + invoice.invoiceLines[data.index].cost}} {{
+              invoice.invoiceLines[data.index].rate_unit&&invoice.invoiceLines[data.index].rate_unit!=="day"?invoice.invoiceLines[data.index].rate_unit+"ly":
+              invoice.invoiceLines[data.index].rate_unit==="day"?'Daily':''
+              }}
+            </span>
+          </template>
+
+          <template v-slot:cell(sub_total)='data'>
+            <span>{{curPrefix + invoice.invoiceLines[data.index].sub_total }}</span>
+          </template>
+
+          <template v-slot:foot(sub_total)>Total Cost: €{{invoice.total_cost}}</template>
+          <template v-slot:foot()>
+            <br />
+          </template>
+        </b-table>
+        <div v-if='invoice.notes'>
+          <h5>Notes:</h5>
+          <p>{{invoice.notes}}</p>
+        </div>
+      </div>
     </b-container>
-    
-     <b-container class="light-bg px-2 pt-2 pb-0 radius15 mb-1 mt-4" v-if="invoice.user_id==id&&invoice.status!=`paid`">
-       <b-row >
-          <b-col sm='4' class="px-4 text-center" >
-              <h6 class="p-2 custBadge mb-2 text-light">Invoice Unpaid</h6>
-          </b-col>
-          <b-col class="px-4 text-center">
-            <h5 class="p-2 text-right align-middle mb-2 px-3">Total Cost: €{{invoice.total_cost}} </h5>
-          </b-col>
+
+    <b-container class='light-bg px-2 pt-2 pb-0 radius15 mb-1 mt-4' v-if='invoice.user_id==id&&invoice.status!=`paid`'>
+      <b-row>
+        <b-col sm='4' class='px-4 text-center'>
+          <h6 class='p-2 custBadge mb-2 text-light'>Invoice Unpaid</h6>
+        </b-col>
+        <b-col class='px-4 text-center'>
+          <h5 class='p-2 text-right align-middle mb-2 px-3'>Total Cost: €{{invoice.total_cost}}</h5>
+        </b-col>
       </b-row>
-      <b-row class="px-1" >
-        <b-col class="med-bg radius15">
-          <StripePayment class='my-2' :id="invoice.id"/>
+      <b-row class='px-1'>
+        <b-col class='med-bg radius15'>
+          <StripePayment class='my-2' :id='invoice.id' />
         </b-col>
       </b-row>
     </b-container>

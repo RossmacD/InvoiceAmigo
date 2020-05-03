@@ -2,39 +2,44 @@
   <div>
     <LoadingPage v-if='!invoiceList'></LoadingPage>
     <EmptyIndex indexType='invoice' v-else-if='filteredInvoiceList.length===0'></EmptyIndex>
-    <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='my-2' footer-bg-variant='light' :footer='invoice.created_at' header header-bg-variant='dark'>
-      <template v-slot:header>
-        <b-row>
-          <b-col>
-            <b-badge :variant='invoice.status===`paid`?`success`:`danger`' class='text-dark py-2 float-left' style='text-transform: capitalize;'>
-              <span>{{invoice.status==='unseen'&&recieving?'Unopened':invoice.status}}</span>
-            </b-badge>
-            <h3 class='text-light float-left mx-2'>#{{ invoice.invoice_number }}:</h3>
-          </b-col>
-          <b-col>
-            <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
+    <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='my-4 smallFooter mx-1 shadow-sm' footer-bg-variant='light'>
+            <b-row>
+                <b-col  style='display:flex;'>
+                <b-badge :variant='invoice.status===`paid`?`success`:`danger`' class='text-light flexCenter p-2 mx-1' style='text-transform: capitalize;'>
+                <span>{{invoice.status==='unseen'&&recieving?'Unopened':invoice.status}}</span>
+                </b-badge>
+                <h5 class='flexCenter mx-1'>#{{ invoice.invoice_number }}:</h5>
+                <h5 v-if='recieving'  class='flexCenter mx-1'>{{invoice.business_name}}</h5>
+                <h5 class='flexCenter mx-1' v-else-if='invoice.draft_email ||invoice.user'>{{ invoice.draft_email || invoice.user.email}}</h5>
+            </b-col>
+             <b-col>
+            <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
               <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
             </b-button>
-            <div v-if='!recieving'>
-              <b-button class='float-right mx-1' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
+            <div v-if='!recieving' >
+              <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
                 <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
               </b-button>
-              <DeleteButton class='float-right mx-1' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
-              <ReversalButton class='float-right mx-1' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
+              <DeleteButton class='float-right mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
+              <ReversalButton class='float-right mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
             </div>
           </b-col>
-        </b-row>
-      </template>
-      <b-row>
-        <b-col>
-          <h4 v-if='recieving'>Recieved from: {{invoice.business_name}}</h4>
-          <h4 v-else-if='invoice.draft_email ||invoice.user'>Invoice sent to: {{ invoice.draft_email || invoice.user.email}}</h4>
-
-          <p>{{invoice.note}}</p>
-        </b-col>
-        <b-col></b-col>
-      </b-row>
+            </b-row>
+            
+            <template v-slot:footer >
+            <b-row class=''>
+                <b-col style="display: flex;flex-direction: row;">
+                    <small class="my-0 mx-1 op05">Sent: <strong>{{invoice.invoice_date}}</strong></small>
+                    <small class="my-0 mx-1 op05">Due: <strong>{{invoice.due_date}}</strong></small>
+                </b-col>
+                <b-col class='text-right'>
+                    <h5 class="my-0 mx-1"><strong>€{{invoice.total_cost}}</strong></h5>
+                </b-col>
+            </b-row>
+          </template>
     </b-card>
+
+
   </div>
 </template>
 

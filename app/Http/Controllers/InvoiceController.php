@@ -247,7 +247,7 @@ class InvoiceController extends Controller
         } else {
             $invoice->user_email = $invoice->draft_email;
         }
-        $invoice->business;
+        $invoice->business->user;
 
         return response()->json(
             [

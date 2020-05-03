@@ -367,6 +367,26 @@ main{
   flex:1;
 }
 
+.stickyMenu{
+  position: sticky;
+  background-color: $white;
+  top:0px;
+  left: 5px;
+  // z-index: 99999999;
+  // width: 320px;
+  // height: 150px;
+ margin-top: 0;
+  outline: none;
+  border: rgb(0,0,0,0.3) solid 1px;
+}
+
+.stickyMenuContainer{
+  position: absolute;
+  height: 100%;
+  z-index: 99999999;
+
+}
+
 .drawer {
   position: fixed;
   background-color: $white;
@@ -383,4 +403,44 @@ main{
      .drawer {
     width:90%;
    }
+}
+
+.outline{
+  outline: none;
+}
+
+.stickyHandle{
+  height: 100%;
+  width: 5px;
+  background-color: black;
+  display: inline-block;
+}
+
+
+.flexCenter{
+  display: flex;
+  margin: 0;
+  align-self: center;
+}
+
+.smallFooter .card-footer{
+  padding: 0.45rem 0.9rem!important;
+}
+.op05{
+  opacity: 0.9;
+}
+.bg-shaded{
+  background-color: rgb(168, 158, 174,0.05);
+  box-shadow: inset 0px -1px 29px 14px rgba($gray-400,0.05)
+}
+
+#my-nav-dropdown > ul{
+  background-color: $indigo;
+  margin: 0!important;
+  padding: 0.45rem 0;
+}
+
+#my-nav-dropdown:hover{
+  background-color: $indigo;
+  border-radius: 15px;
 }
