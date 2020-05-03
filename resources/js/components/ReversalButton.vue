@@ -1,8 +1,8 @@
 <template>
-  <span>
+  <span v-b-tooltip.hover title="Reverse">
     <transition name='slide-fade' mode='out-in'>
       <b-button v-if='!text' variant='danger' :pressed='false' @click='clickHandler' size='sm' class=''>
-        <b-icon variant='light' icon='reply-all-fill' style='width: 20px; height: 20px; transform: scaleX(-1)'></b-icon> Reverse
+        <b-icon variant='light' icon='reply-all-fill' style='width: 20px; height: 20px; transform: scaleX(-1)'></b-icon>
       </b-button>
       <b-button v-else variant='warning' @mouseleave='reset' @click='clickHandler' size='sm' class=''>
         <b-icon variant='light' icon='alert-circle-fill' style='width: 20px; height: 20px'></b-icon>
