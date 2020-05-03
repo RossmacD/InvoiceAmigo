@@ -67,8 +67,15 @@ class PassportController extends Controller
             $user->isBusiness = true;
             // $user->business = Auth::user()->business();
             $user->business = auth()->user()->business;
+            if(isset(Auth::user()->business->cpanel)){
+                $user->hasCpanel = true;
+            } else {
+                $user->hasCpanel = false;
+            }
         } else {
             $user->isBusiness = false;
+            $user->hasCpanel = false;
+
         };
         return response()->json(['user' => $user], 200);
     }

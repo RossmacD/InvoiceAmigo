@@ -1,11 +1,22 @@
 <template>
   <div>
-    <b-row>
+    <h2 class='mb-4 display-4'>
+      cPanel/WHM
+    </h2>
+    <b-row v-if="!hasCpanel">
+      <p>Please set your cPanel/WHM details here to use this feature.</p>
+    </b-row>
+    <b-row v-else>
       <b-col md="5">
         <b-form>
           <h3>Create cPanel Account</h3>
           <b-row>
-            <b-col md="6">
+            <b-col md="10">
+              <hr style="margin-top: 0px;">
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="9">
               <b-form-group label="Username" label-for="username">
                 <b-form-input
                   aria-describedby="input-live-feedback"
@@ -16,6 +27,7 @@
                   autocomplete="username"
                   autofocus
                   v-model="cpanel.username"
+                  placeholder="Enter username"
                 ></b-form-input>
                 <b-form-invalid-feedback
                   v-if="messages.cpanel.username"
@@ -26,7 +38,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col md="6">
+            <b-col md="9">
               <b-form-group label="Domain" label-for="domain">
                 <b-form-input
                   id="domain"
@@ -36,6 +48,7 @@
                   autocomplete="domain"
                   autofocus
                   v-model="cpanel.domain"
+                  placeholder="Enter domain"
                 ></b-form-input>
                 <b-form-invalid-feedback
                   v-if="messages.cpanel.domain"
@@ -45,26 +58,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col md="6">
-              <b-form-group label="Plan" label-for="plan">
-                <b-form-input
-                  id="plan"
-                  type="text"
-                  name="plan"
-                  required
-                  autocomplete="plan"
-                  autofocus
-                  v-model="cpanel.plan"
-                ></b-form-input>
-                <b-form-invalid-feedback
-                  v-if="messages.cpanel.plan"
-                  force-show
-                >{{messages.cpanel.plan[0]}}</b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col md="6">
+            <b-col md="9">
               <b-form-group label="Password" label-for="password">
                 <b-form-input
                   id="password"
@@ -74,11 +68,68 @@
                   autocomplete="password"
                   autofocus
                   v-model="cpanel.password"
+                  placeholder="Enter password"
                 ></b-form-input>
                 <b-form-invalid-feedback
                   v-if="messages.cpanel.password"
                   force-show
                 >{{messages.cpanel.password[0]}}</b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="9">
+              <b-form-group label="Email" label-for="email">
+                <b-form-input
+                  id="email"
+                  type="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  autofocus
+                  v-model="cpanel.email"
+                  placeholder="Enter email"
+                ></b-form-input>
+                <b-form-invalid-feedback
+                  v-if="messages.cpanel.email"
+                  force-show
+                >{{messages.cpanel.email[0]}}</b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col md="9">
+              <b-form-group label="Plan" label-for="plan">
+                <b-form-select
+                plain
+                required
+                v-model="cpanel.plan"
+                aria-describedby="input-plan-live-feedback"
+                >
+                <template v-slot:first>
+                  <b-form-select-option :value="null">Select a plan</b-form-select-option>
+                </template>
+                <!-- <b-form-select-option
+                  v-for="course in courses"
+                  :key="course.id"
+                  :value="course.id"
+                >{{ course.title }}</b-form-select-option> -->
+
+                <!-- <b-form-input
+                  id="plan"
+                  type="text"
+                  name="plan"
+                  required
+                  autocomplete="plan"
+                  autofocus
+                  v-model="cpanel.plan"
+                ></b-form-input> -->
+                </b-form-select>
+                
+                <b-form-invalid-feedback
+                  v-if="messages.cpanel.plan"
+                  force-show
+                >{{messages.cpanel.plan[0]}}</b-form-invalid-feedback>
               </b-form-group>
             </b-col>
           </b-row>
@@ -251,7 +302,7 @@ export default {
         username: "",
         domain: "",
         password: "",
-        plan: ""
+        plan: null
       },
       messages: {
         cpanel: {
@@ -278,7 +329,7 @@ export default {
     };
   },
     computed: {
-    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded", "isBusiness"]),
+    ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded", "isBusiness", "hasCpanel"]),
     ...mapState({
       authLoading: state => state.auth.status === "loading",
       name: state => `${state.user.profile.name}`,
@@ -403,12 +454,12 @@ export default {
         autoHideDelay: 3000,
         appendToast: append
       });
+      this.$store.dispatch("ADD_NOTIFICATIONS", {id:1,message:`Account ${msg} successfully`});
     },
   },
   mounted() {
     const app = this;
     if (true) {
-      app.checked = true;
       app.loadingAccts = true;
       axios
         .get("/api/cpanel")

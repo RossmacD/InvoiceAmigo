@@ -5,7 +5,7 @@
       <b-button to='/logs/create' class='float-right'>+ New</b-button>
     </h1>
     <LoadingPage v-if='!draftInvoices'></LoadingPage>
-    <EmptyIndex :button='false' indexType='invoice' v-else-if='draftInvoices.length===0'></EmptyIndex>
+    <!-- <EmptyIndex :button='false' indexType='invoice' v-else-if='draftInvoices.length===0'></EmptyIndex> -->
     <b-row v-else>
       <b-col md='6' lg='4' v-for='invoice in draftInvoices' :key='invoice.id'>
         <b-card class='my-2' style='height: 300px;'>

@@ -21,7 +21,7 @@
 
           <b-nav-item-dropdown v-if='isAuthenticated' id='my-nav-dropdown' text='Account' toggle-class='nav-link-custom' right>
             <b-dropdown-item active to='/settings'>Settings</b-dropdown-item>
-            <b-dropdown-item active to='/cpanel'>cPanel</b-dropdown-item>
+            <b-dropdown-item v-if='isBusiness' active to='/cpanel'>cPanel/WHM</b-dropdown-item>
             <b-dropdown-item active @click='logout()'>Log Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <!-- <b-nav-item active> -->

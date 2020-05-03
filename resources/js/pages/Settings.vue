@@ -2,7 +2,8 @@
   <div>
     <LoadingPage v-if="profileLoading"></LoadingPage>
     <div v-else-if="profileLoaded">
-      <h1>Account Settings</h1>
+      <h2 class='mb-4 display-4'>
+      Account Settings</h2>
       <h4>Name:</h4>
       <p>{{name}}</p>
       <span>Business Account</span>
@@ -154,7 +155,7 @@
               role="tab"
             >
               <b-button variant="btn" href="#">
-                <h2>cPanel Settings</h2>
+                <h2>cPanel/WHM Settings</h2>
               </b-button>
               <b-button class="float-right p-3" variant="btn">
                 <b-icon icon="chevron-down"></b-icon>
@@ -247,7 +248,7 @@
                         class="btn btn-primary"
                       >
                         <span v-if="cEditing">Update</span>
-                        <span v-else>Create</span>
+                        <span v-else>Set</span>
                       </b-button>
                       <b-button v-else variant="info">
                         <b-spinner small label="Loading..."></b-spinner>
@@ -367,6 +368,7 @@ export default {
               // this.$router.push("/settings");
               app.cpanelSubmitLoading = false;
               app.cEditing = true; //set cEditing to true as we have now have a cpanel and will be editing it from now on
+              this.$store.dispatch('USER_REQUEST'); //make sure getProfile is reloaded to show that the user now has a cPanel account
             })
             .catch(err => {
                 app.cpanelSubmitLoading = false;

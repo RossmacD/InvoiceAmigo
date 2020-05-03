@@ -118,7 +118,7 @@
           </template>
           <template v-slot:cell(type)='type_data'>
             <!-- <b-form-select v-model="invoice.invoiceLines[type_data.index]"  options="{product}"></b-form-select> -->
-            <b-dropdown id='dropdown-1' :text='invoice.invoiceLines[type_data.index].dropText'>
+            <b-dropdown id='dropdown-1' :text='invoice.invoiceLines[type_data.index].dropText'  v-b-tooltip.hover title="Type of product/service">
               <b-dropdown-group id='dropdown-product'>
                 <b-dropdown-item @click='setDropText(type_data.index,`product`,null)'>Product</b-dropdown-item>
               </b-dropdown-group>
@@ -153,7 +153,7 @@
           </template>
           <template v-slot:cell(options)='options_data'>
             <b-row>
-              <b-form-group description='Save' label-for='line_options0'>
+              <b-form-group description='Save' label-for='line_options0'  v-b-tooltip.hover title="Save line as product/service">
                 <b-form-checkbox
                   :id='`line_save${options_data.index}`'
                   type='number'
@@ -174,7 +174,7 @@
           </template>
         </b-table>
         <b-button v-on:click='addRow()' variant='success'>Add Line</b-button>
-        <b-button v-b-modal.helper-modal variant='success'>Add Line with helper</b-button>
+        <b-button v-b-modal.helper-modal variant='success' v-b-tooltip.hover title="Add line using the mobile friendly helper">Add Line with helper</b-button>
 
         <!-- Modals -->
         <b-modal hide-footer id='helper-modal' title='Add Invoice Line'>
@@ -227,15 +227,16 @@
         </b-form-group>
         <b-form-group class='mb-0'>
           <div class='col-md-4'>
-            <b-button v-on:click='submit(false)' v-if='!submiting' class='btn btn-primary'>
-              <span v-if='editing'>Update Draft</span>
+            <b-button v-on:click='submit(false)' v-if='!drafting' class='btn btn-primary' v-b-tooltip.hover title="Draft invoice without sending to recipient">
+              <span v-if='editing' >Update Draft</span>
               <span v-else>Save Draft</span>
             </b-button>
             <b-button v-else class='btn btn-info'>
               <b-spinner small label='Loading...'></b-spinner>
             </b-button>
-            <b-button v-on:click='submit(true)' v-if='!submiting' class='btn btn-primary' variant='success'>
-              <span>Send</span>
+            <b-button v-on:click='submit(true)' class='btn btn-primary' variant='success'  v-b-tooltip.hover title="Send and email invoice to recipient">
+              <span v-if='!submiting'>Send</span>
+              <b-spinner v-else small label='Loading...'></b-spinner>
             </b-button>
           </div>
         </b-form-group>
@@ -373,6 +374,7 @@ export default {
         }
       },
       submiting: false,
+      drafting: false,
       total: 0,
       helperProducts: [],
       helperServices: [],
@@ -567,31 +569,40 @@ export default {
     },
     submit(isSending) {
       const app = this;
-      app.submiting = true;
       if (app.isAuthenticated) {
         if(isSending){
+          app.submiting = true;
           app.invoice.status = 'unseen';
         } else {
+          app.drafting = true;
           app.invoice.status = 'draft';
         }
         if (app.editing) {
           axios
             .put("/api/invoices/" + app.invoice.id, app.invoice)
             .then(response => {
+              app.submiting = false;
+              app.drafting = false;
               this.$router.push("/invoices");
             })
             .catch(err => {
               console.log(err.response);
+              app.submiting = false;
+              app.drafting = false;
             });
         } else {
           axios
             .post("/api/invoices", app.invoice)
             .then(response => {
+              app.submiting = false;
+              app.drafting = false;
               this.$router.push("/invoices");
             })
-            .catch(err => {});
+            .catch(err => {
+              app.submiting = false;
+              app.drafting = false;
+            });
         }
-        app.submiting = false;
       }
     }
   },
