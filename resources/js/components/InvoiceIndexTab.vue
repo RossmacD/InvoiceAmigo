@@ -4,31 +4,23 @@
     <EmptyIndex indexType='invoice' v-else-if='filteredInvoiceList.length===0'></EmptyIndex>
     <b-card v-else v-for='(invoice,index) in filteredInvoiceList' v-bind:key='invoice.id' class='mt-3 mb-4 smallFooter shadow-sm' footer-bg-variant='light'>
             <b-row>
-                <b-col  style='display:flex;'>
-                <b-badge :variant='invoice.status===`paid`?`success`:`danger`' class='text-light flexCenter p-2 mx-1 lowOp' style='text-transform: capitalize;'>
-                <span>{{invoice.status==='unseen'&&recieving?'Unopened':invoice.status}}</span>
-                </b-badge>
-                <h5 class='flexCenter mx-1'>#{{ invoice.invoice_number }}:</h5>
-                <h5 v-if='recieving'  class='flexCenter mx-1'>{{invoice.business_name}}</h5>
-                <h5 class='flexCenter mx-1' v-else-if='invoice.draft_email ||invoice.user'>{{ invoice.draft_email || invoice.user.email}}</h5>
+              <b-col sm='2' style='display:flex;flex-direction: column;' :class="`bodyPadding myInvoiceBadge ${invoice.status}-bg-op`">
+                <p class="text-light  px-2 mx-1 mb-0" style='text-transform: capitalize;'>{{invoice.status==='unseen'&&recieving?'Unopened':invoice.status}}</p>
+                <h4 class=' mx-1 px-2 text-light'>#{{ invoice.invoice_number }}</h4>
+                
             </b-col>
-             <b-col class="flex flexEnd">
-            <!-- <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
-              <b-icon variant='light' icon='eye-fill' style='width: 20px; height: 20px'></b-icon>
-            </b-button>
+            <b-col  style='display:flex;flex-direction: column;' class="bodyPadding">
+                <p class="mb-0">{{recieving?`From:`:`Sent to:`}}</p>
+                <h4 v-if='recieving'  class=' ' style='text-transform: capitalize;'>{{invoice.business.business_name}}</h4>
+                <h4 class=' ' v-else-if='invoice.draft_email ||invoice.user'>{{ invoice.draft_email || invoice.user.email}}</h4>
+            </b-col>
+             <b-col class="flex flexEnd bodyPadding">
             <div v-if='!recieving'>
-              <b-button class='float-right mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
-                <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-              </b-button>
-              <DeleteButton class='float-right mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
-              <ReversalButton class='float-right mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
-            </div> -->
-            <div v-if='!recieving'>
-              <b-button class=' mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
-                <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
-              </b-button>
               <DeleteButton class='mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
               <ReversalButton class='mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
+               <b-button class=' mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
+                <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
+              </b-button>
             </div>
             <div>
               <b-button class='mx-1 ' variant='secondary' :pressed='false' :to='`invoices/`+invoice.id' size='sm'>
@@ -99,7 +91,7 @@ export default {
     },
     reverseInvoice(id, index) {
       this.$emit("on-reverse-confirm", this.id, this.index);
-    }
+    },
   },
   mounted() {
      

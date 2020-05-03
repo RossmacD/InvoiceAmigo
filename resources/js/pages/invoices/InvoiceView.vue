@@ -38,7 +38,6 @@
     <b-container class='light-bg radius15 min-vh-80 p-5'>
       <LoadingPage v-if='!loaded'></LoadingPage>
       <div v-else>
-        <!-- <b-badge pill class="mx-3 px-1 py-1" variant='success' v-if="invoice.status==`paid`"><h6 >Invoice Paid</h6></b-badge> -->
         <b-row class='my-2'>
           <b-col>
             <h1 class='display-3'>INVOICE</h1>

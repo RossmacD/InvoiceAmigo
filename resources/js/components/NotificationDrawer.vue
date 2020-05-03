@@ -55,6 +55,6 @@ export default {
       name: state => `${state.user.profile.name}`,
       id: state => `${state.user.profile.id}`
     })
-  }
+  },
 };
 </script>

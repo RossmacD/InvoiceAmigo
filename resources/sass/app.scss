@@ -431,8 +431,8 @@ main{
 }
 .bg-shaded{
   // background-color: rgb(168, 158, 174,0.05);
-  background-color:rgb(218, 213, 220,0.5);
-  box-shadow: inset 0px -1px 29px 14px rgba($gray-400,0.15)
+  // background-color:rgb(218, 213, 220,0.5);
+  // box-shadow: inset 0px -1px 29px 14px rgba($gray-400,0.15)
 }
 
 #my-nav-dropdown > ul{
@@ -449,10 +449,13 @@ main{
 
 .card.smallFooter{
   border: 1px solid rgba($black,0.3);
-  border-radius: 0;
+  // border-radius: 0;
+  border-right: 0;
+  border-left: 0;
+  
 }
 .smallFooter .card-footer:last-child {
-  border-radius: 0;
+  // border-radius: 0;
 }
 
 .flex1.myMain .tabs{
@@ -468,7 +471,6 @@ main{
 
 .lowOp{
   opacity: 0.8;
-
 }
 
 .flex{
@@ -477,4 +479,34 @@ main{
 
 .flexEnd{
   justify-content: flex-end;
+}
+
+.smallFooter  div.card-body{
+  padding: 0px!important;
+}
+
+.bodyPadding{
+  padding: 1.25rem;
+}
+
+.myInvoiceBadge{
+  // opacity: 0.8;
+  
+  padding-left: 0!important;
+  margin-left: 0.95rem!important;
+  border-top-left-radius:0.75rem;
+}
+
+
+.draft-bg-op{
+  background-color: rgba(#CC6682, 0.9);
+}
+.unseen-bg-op{
+  background-color: rgba($red, 0.7);
+}
+.unpaid-bg-op{
+  background-color: rgba($red, 0.9);
+}
+.paid-bg-op{
+  background-color: rgba($green, 0.9);
 }
