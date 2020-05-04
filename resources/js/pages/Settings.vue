@@ -119,6 +119,7 @@
                               required
                               autocomplete="business_name"
                               v-model="business.business_name"
+                              placeholder="Enter business name"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.business.business_name"
@@ -136,6 +137,7 @@
                               required
                               autocomplete="website"
                               v-model="business.website"
+                              placeholder="Enter websites"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.business.website"
@@ -154,6 +156,7 @@
                               required
                               autocomplete="address"
                               v-model="business.address"
+                              placeholder="Enter address"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.business.address"
@@ -172,6 +175,7 @@
                               required
                               autocomplete="country"
                               v-model="business.country"
+                              placeholder="Enter country"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.business.country"
@@ -188,6 +192,7 @@
                               required
                               autocomplete="postcode"
                               v-model="business.postcode"
+                              placeholder="Enter postcode"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.business.postcode"
