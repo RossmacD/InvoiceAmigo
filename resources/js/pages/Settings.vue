@@ -257,6 +257,7 @@
                               required
                               autocomplete="whm_username"
                               v-model="cpanel.whm_username"
+                              placeholder="Enter WHM username"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.cpanel.whm_username"
@@ -271,11 +272,12 @@
                           <b-form-group label="API token" label-for="api_token">
                             <b-form-input
                               id="api_token"
-                              type="text"
+                              type="password"
                               name="api_token"
                               required
                               autocomplete="api_token"
                               v-model="cpanel.api_token"
+                              placeholder="Enter API token"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.cpanel.api_token"
@@ -294,6 +296,7 @@
                               required
                               autocomplete="hostname"
                               v-model="cpanel.hostname"
+                              placeholder="Enter hostname"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.cpanel.hostname"
@@ -310,6 +313,7 @@
                               required
                               autocomplete="port"
                               v-model="cpanel.port"
+                              placeholder="Enter port"
                             ></b-form-input>
                             <b-form-invalid-feedback
                               v-if="messages.cpanel.port"

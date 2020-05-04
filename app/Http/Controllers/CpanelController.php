@@ -134,7 +134,7 @@ class CpanelController extends Controller
         $business = $user->business;
         $cpanel = $business->cpanel;
 
-        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $accounts = new Accounts($whmClient);
 
         $account->name = $request->cpanelUsername;
@@ -148,7 +148,7 @@ class CpanelController extends Controller
         $business = $user->business;
         $cpanel = $business->cpanel;
 
-        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $accounts = new Accounts($whmClient);
 
         // $options=['searchmethod' => "exact","page" => 1,"limit" => 20,"want" => "username"];
@@ -178,7 +178,7 @@ class CpanelController extends Controller
         $business = $user->business;
         $cpanel = $business->cpanel;
 
-        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $account = new Accounts($whmClient);
 
         $account->suspend($request->userToSuspend, $request->suspendReason, false);
@@ -189,7 +189,7 @@ class CpanelController extends Controller
         $business = $user->business;
         $cpanel = $business->cpanel;
 
-        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $account = new Accounts($whmClient);
 
         $account->unsuspend($request->userToSuspend);
@@ -200,7 +200,7 @@ class CpanelController extends Controller
         $business = $user->business;
         $cpanel = $business->cpanel;
 
-        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, 2087);
+        $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $account = new Accounts($whmClient);
 
         $account->remove($request->userToTerminate);
