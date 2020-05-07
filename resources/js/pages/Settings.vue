@@ -362,6 +362,7 @@ import { CardPlugin, ButtonPlugin, LayoutPlugin } from "bootstrap-vue";
 import ErrorPage from "../components/ErrorPage";
 import LoadingPage from "../components/LoadingPage";
 import IbanCollect from "../components/IbanCollect";
+import { USER_REQUEST } from "../store/actions/user";
 Vue.use(CardPlugin);
 Vue.use(ButtonPlugin);
 Vue.use(LayoutPlugin);
@@ -430,6 +431,8 @@ export default {
           axios
             .post("/api/businesses/", app.business)
             .then(response => {
+              this.$store.dispatch(USER_REQUEST);
+              app.businessSubmitLoading = false;
               // this.$router.push("/settings");
             })
             .catch(err => {});

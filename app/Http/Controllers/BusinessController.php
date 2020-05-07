@@ -76,9 +76,44 @@ class BusinessController extends Controller
         $account = Stripe\Account::create([
             'country' => 'IE',
             'type' => 'custom',
-            'requested_capabilities' => ['card_payments', 'transfers'],
-            'email'=>$user->email
+            'requested_capabilities' => ['transfers','card_payments'],
+            'email'=>$user->email,
+            'business_profile' => [
+                'mcc' => '5045',
+              ],
         ]);
+        $names = explode(" ", $user->name);
+        Stripe\Account::update(
+            $account->id,
+            [
+              'tos_acceptance' => [
+                'date' => time(),
+                'ip' => $_SERVER['REMOTE_ADDR'], 
+              ],
+              'business_type'=> 'individual',
+              'business_profile' => [
+                    'url' => $business->website
+              ],
+              'individual'=>[
+                'first_name'=>$names[0],
+                'last_name'=>$names[1],
+                'email'=>$user->email,
+                'phone'=>'+353851795523',
+                'dob'=>[
+                    'day'=>'01',
+                    'month'=>'01',
+                    'year'=>'1901',
+                ],
+                'address'=>[
+                    'line1'=>'address_full_match',
+                    'line2'=>'',
+                    'postal_code'=>$business->postcode,
+                    'state'=>'Co. Wicklow',
+                    'city'=>'Greystones',
+                    'country'=>'IE'
+                ],
+              ]
+            ]);
         // $externalAccount=Stripe\Account::createExternalAccount(
         //     $account->id,
         //     [

@@ -61,6 +61,9 @@ class PaymentController extends Controller
                 'seller_id' => $business->user_id,
                 'customer_id' => $user->id
             ],
+            'transfer_data' => [
+                'destination' => $business->stripe_id,
+              ],
         ]);
 
         return  response()->json([

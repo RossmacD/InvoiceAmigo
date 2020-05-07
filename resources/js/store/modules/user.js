@@ -3,7 +3,7 @@ import Vue from "vue";
 import { AUTH_LOGOUT } from "../actions/auth";
 import { USER_ERROR, USER_REQUEST, USER_SUCCESS } from "../actions/user";
 
-const state = { status: "", profile: {}, pusher:null };
+const state = { status: "", profile: {}, pusher: null };
 
 const getters = {
     getProfile: state => state.profile,
@@ -19,15 +19,17 @@ const actions = {
         axios({ url: '/api/user', method: 'GET' })
             .then(res => {
                 commit(USER_SUCCESS, res);
-                state.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
-                    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                    forceTLS: false
-                });
-                console.log("CONNECTION MADE")
-                let channel = state.pusher.subscribe("notifications." + res.data.user.id);
-                channel.bind("notification", function (data) {
-                    dispatch("ADD_NOTIFICATIONS", data);
-                });
+                if (state.pusher === null) {
+                    state.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                        cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                        forceTLS: false
+                    });
+                    console.log("CONNECTION MADE")
+                    let channel = state.pusher.subscribe("notifications." + res.data.user.id);
+                    channel.bind("notification", function (data) {
+                        dispatch("ADD_NOTIFICATIONS", data);
+                    });
+                }
                 console.log("Done Request")
             })
             .catch(err => {
@@ -50,7 +52,7 @@ const mutations = {
     },
     [AUTH_LOGOUT]: state => {
         state.pusher.disconnect();
-        state.pusher=null;
+        state.pusher = null;
         state.profile = {};
     }
 };

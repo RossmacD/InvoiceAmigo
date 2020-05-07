@@ -352,7 +352,7 @@ class InvoiceController extends Controller
 
         $invoiceItem = new InvoiceItems([
             'name' => 'Credit',
-            'description' => '',
+            'description' => 'Invoice #'.$id.' reversed',
             'cost' => $note->total_cost,
             'quantity' => 1,
             'sub_total' => $note->total_cost
