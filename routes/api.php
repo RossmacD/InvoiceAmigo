@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function () {
     //Invoices
     Route::apiResource('/invoices', 'InvoiceController');
     Route::get('/invoice/create','InvoiceController@create');
+    Route::get('/invoice/reverse/{id}','InvoiceController@generateNote');
 
     //Businesses
     Route::apiResource('/businesses', 'BusinessController');

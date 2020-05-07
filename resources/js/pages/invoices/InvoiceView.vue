@@ -40,7 +40,7 @@
       <div v-else>
         <b-row class='my-2'>
           <b-col>
-            <h1 class='display-3'>INVOICE</h1>
+            <h1 class='display-3'>{{invoice.status==='credit_note'?'CREDIT NOTE':'INVOICE'}}</h1>
             <div class='mx-1'>
               <small>Invoice Date:</small>
               <p>{{invoice.invoice_date}}</p>
@@ -72,7 +72,7 @@
             <span>{{curPrefix + invoice.invoiceLines[data.index].sub_total }}</span>
           </template>
 
-          <template v-slot:foot(sub_total)>Total Cost: €{{invoice.total_cost}}</template>
+          <template v-slot:foot(sub_total)>Total Cost: {{invoice.status===`credit_note`?'-':''}}€{{invoice.total_cost}}</template>
           <template v-slot:foot()>
             <br />
           </template>
@@ -84,7 +84,7 @@
       </div>
     </b-container>
 
-    <b-container class='light-bg px-2 pt-2 pb-0 radius15 mb-5 mt-4' v-if='invoice.user_id==id&&invoice.status!=`paid`'>
+    <b-container class='light-bg px-2 pt-2 pb-0 radius15 mb-5 mt-4' v-if='invoice.user_id==id&&invoice.status!=`paid`&&invoice.status!=`credit_note`'>
       <b-row>
         <b-col sm='4' class='px-4 text-center'>
           <h6 class='p-2 custBadge mb-2 text-light'>Invoice Unpaid</h6>

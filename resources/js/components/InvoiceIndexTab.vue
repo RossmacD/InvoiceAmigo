@@ -17,7 +17,7 @@
              <b-col class="flex flexEnd bodyPadding">
             <div v-if='!recieving'>
               <DeleteButton title="Delete" class='mx-1 ' v-on:on-confirm='deleteInvoice' :id='invoice.id' :index='index' v-if='invoice.status==`draft`'></DeleteButton>
-              <ReversalButton class='mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else></ReversalButton>
+              <ReversalButton class='mx-1 ' v-on:on-confirm='reverseInvoice' :id='invoice.id' :index='index' v-else-if='invoice.status!==`credit_note`'></ReversalButton>
                <b-button  v-b-tooltip.hover title="Edit invoice" class=' mx-1 ' variant='secondary' :pressed='false' :to='`invoices/edit/`+invoice.id' v-if='invoice.status==`draft`' size='sm'>
                 <b-icon variant='light' icon='pen' style='width: 20px; height: 20px'></b-icon>
               </b-button>
@@ -37,7 +37,7 @@
                     <small class="my-0 mx-1 op05">Due: <strong>{{invoice.due_date}}</strong></small>
                 </b-col>
                 <b-col class='text-right'>
-                    <h5 class="my-0 mx-1">Amount: <strong>€{{invoice.total_cost}}</strong></h5>
+                    <h5 class="my-0 mx-1">Amount: <strong> {{invoice.status===`credit_note`?'-':''}}€{{invoice.total_cost}}</strong></h5>
                 </b-col>
             </b-row>
           </template>
@@ -87,10 +87,11 @@ export default {
     };
   },
   methods: { deleteInvoice(id, index) {
-      this.$emit("on-delete-confirm", this.id, this.index);
+      this.$emit("on-delete-confirm", id, index);
     },
     reverseInvoice(id, index) {
-      this.$emit("on-reverse-confirm", this.id, this.index);
+         console.log(this.id)
+      this.$emit("on-reverse-confirm", id, index);
     },
   },
   mounted() {

@@ -67,21 +67,7 @@ export default {
     };
   },
   mounted() {
-    const app =this;
-    if (app.isAuthenticated) {
-      axios
-        .get("/api/invoices")
-        .then(response => {
-          app.incomingInvoices = response.data.incomingInvoices.data;
-          if (app.isBusiness) {
-            app.outgoingInvoices = response.data.outgoingInvoices.data;
-            app.tabView=0;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+   this.getInvoices();
   },
   methods: {
     deleteInvoice(id, index) {
@@ -104,20 +90,35 @@ export default {
     reverseInvoice(id, index) {
       const app = this;
       // app.outgoingInvoices[id].status = "reversed";
-      
       axios
-        .put(
-          "/api/invoices/" + app.outgoingInvoices[id].id,
-          app.outgoingInvoices[id]
+        .get(
+          "/api/invoice/reverse/" + id
         )
-        .then(res => console.log(res.data))
+        .then(res => app.getInvoices())
         .catch(err => console.log(err.data));
     },
     handleResize () {
         const clientWidth = window.innerWidth
        console.log(clientWidth)
        this.windowWidth=clientWidth;
-      }
+      },
+    getInvoices(){
+    const app =this;
+    if (app.isAuthenticated) {
+      axios
+        .get("/api/invoices")
+        .then(response => {
+          app.incomingInvoices = response.data.incomingInvoices.data;
+          if (app.isBusiness) {
+            app.outgoingInvoices = response.data.outgoingInvoices.data;
+            app.tabView=0;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    }
   },
   computed: {
     ...mapGetters(["isAuthenticated", "isBusiness"]),

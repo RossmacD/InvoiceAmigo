@@ -332,6 +332,35 @@ class InvoiceController extends Controller
         return response()->json(200);
     }
 
+    public function generateNote($id){
+        $invoice = Invoice::findOrFail($id);
+        $note = new Invoice;
+        $note->invoice_date=date('Y-m-d', time());
+        $note->due_date=$note->invoice_date;
+        $note->status='credit_note';
+        $note->currency=$invoice->currency;
+        $note->total_cost=$invoice->total_cost;
+        $note->user_id=$invoice->user_id;
+        $note->business_id=$invoice->business_id;
+        $invoiceNum = Auth::user()->business->outgoingInvoices()->orderBy('invoice_number', 'desc')->first();
+        if (isset($invoiceNum)) { 
+            $note->invoice_number=$invoiceNum->invoice_number + 1;
+        }else{
+            $note->invoice_number=0;
+        }
+        $note->save();
+
+        $invoiceItem = new InvoiceItems([
+            'name' => 'Credit',
+            'description' => '',
+            'cost' => $note->total_cost,
+            'quantity' => 1,
+            'sub_total' => $note->total_cost
+        ]);
+        $note->invoiceItems()->save($invoiceItem);
+        return response()->json(200);
+    }
+
     public static function createUser($request)
     {
         $role_user = Role::where('name', 'user')->first();
