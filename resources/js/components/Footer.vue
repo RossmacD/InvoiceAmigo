@@ -4,20 +4,20 @@
       <b-row>
         <b-col md='12' class='py-4 mt-1'>
           <div class='mb-5 flex flexEnd'>
-            <b-button variant="outline-success ">
+            <b-button variant="outline-success " to="/invoices/create">
               <b-icon icon="pencil-square" class=''> </b-icon><p class=" m-0">
                 Create Invoice
               </p>
             </b-button>
 
-            <b-button variant="outline-light mx-1">
+            <b-button variant="outline-light mx-1" to="/settings">
               <b-icon icon="gear-fill" class=''> </b-icon><p class="m-0">
                 Settings
               </p>
             </b-button>
 
-            <b-button variant="outline-light mx-1" style="self-align:flex-start">
-              <b-icon icon="cloud-fill" class=''> </b-icon><p class=" m-0">
+            <b-button variant="outline-light mx-1" style="self-align:flex-start" to="/cpanel">
+              <b-icon icon="cloud-fill" class='' > </b-icon><p class=" m-0">
                 cPanel Admin
               </p>
             </b-button>

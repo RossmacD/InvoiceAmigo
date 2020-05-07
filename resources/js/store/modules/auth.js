@@ -75,8 +75,8 @@ const actions = {
                     
                     reject(err);
                 });
-            pusher.disconnect()
-            resolve(resp);
+            // pusher.disconnect()
+            // resolve(resp);
         });
     }
 };

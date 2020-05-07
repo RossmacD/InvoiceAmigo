@@ -3,7 +3,7 @@ import Vue from "vue";
 import { AUTH_LOGOUT } from "../actions/auth";
 import { USER_ERROR, USER_REQUEST, USER_SUCCESS } from "../actions/user";
 
-const state = { status: "", profile: {} };
+const state = { status: "", profile: {}, pusher:null };
 
 const getters = {
     getProfile: state => state.profile,
@@ -19,15 +19,16 @@ const actions = {
         axios({ url: '/api/user', method: 'GET' })
             .then(res => {
                 commit(USER_SUCCESS, res);
-                let pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+                state.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
                     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
                     forceTLS: false
                 });
                 console.log("CONNECTION MADE")
-                let channel = pusher.subscribe("notifications." + res.data.user.id);
+                let channel = state.pusher.subscribe("notifications." + res.data.user.id);
                 channel.bind("notification", function (data) {
                     dispatch("ADD_NOTIFICATIONS", data);
                 });
+                console.log("Done Request")
             })
             .catch(err => {
                 commit(USER_ERROR);
@@ -48,6 +49,8 @@ const mutations = {
         state.status = "error";
     },
     [AUTH_LOGOUT]: state => {
+        state.pusher.disconnect();
+        state.pusher=null;
         state.profile = {};
     }
 };
