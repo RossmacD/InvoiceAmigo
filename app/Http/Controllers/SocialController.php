@@ -27,6 +27,7 @@ class SocialController extends Controller
     public function callback(SocialGoogleAccountService $service)
     {
         $user = $service->createOrGetUser(Socialite::driver('google')->stateless()->user());
+        
         // return $user;
         auth()->login($user);
         $token = $user->createToken('InvoiceAmigo')->accessToken;

@@ -7,6 +7,9 @@ let state = {
 let getters = {
     notifications: state => {
         return state.notifications
+    },
+    notificationsLength:state=>{
+        return state.notifications.length
     }
 }
 

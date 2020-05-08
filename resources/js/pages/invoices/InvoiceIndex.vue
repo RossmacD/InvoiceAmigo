@@ -121,8 +121,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["isAuthenticated", "isBusiness"]),
+    ...mapGetters(["isAuthenticated", "isBusiness",'notificationsLength']),
     ...mapState({})
+  },
+  watch: {
+    notificationsLength (newCount, oldCount) {
+      console.log(newCount,oldCount)
+      if(newCount!==oldCount){
+        console.log(`We have ${newCount} notifications now, yay!`)
+        this.getInvoices();
+      }
+    }
   }
 };
 </script>
