@@ -48,6 +48,7 @@ Route::middleware('auth:api')->group(function () {
     //cPanel
     Route::post('/cpanel/setdetails', 'CpanelController@store');
     Route::put('/cpanel/setdetails/', 'CpanelController@update');
+    Route::post('/cpanel/create/', 'CpanelController@createAccount');
     Route::get('/cpanel', 'CpanelController@searchAccounts');
     Route::post('/cpanel/suspend', 'CpanelController@suspendAccount');
     Route::post('/cpanel/unsuspend', 'CpanelController@unsuspendAccount');

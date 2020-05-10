@@ -100,10 +100,11 @@
                 plain
                 required
                 v-model="cpanel.plan"
+                :options="plans"
                 aria-describedby="input-plan-live-feedback"
                 >
                 <template v-slot:first>
-                  <b-form-select-option :value="null">Select a plan</b-form-select-option>
+                  <b-form-select-option :value="null" hidden disabled selected>Select a plan</b-form-select-option>
                 </template>
                 <!-- <b-form-select-option
                   v-for="course in courses"
@@ -130,7 +131,7 @@
           </b-row>
           <b-form-group class="mb-0">
             <div>
-              <b-button v-on:click="submit()" v-if="!cpanelSubmitLoading" class="btn btn-primary">
+              <b-button v-on:click="createAccount()" v-if="!creating" class="btn btn-primary">
                 <span v-if="editing">Update</span>
                 <span v-else>Create</span>
               </b-button>
@@ -171,12 +172,14 @@
           <template class="text-nowrap" v-slot:cell(storage)="data">
             <div class="text-nowrap">
               <b-progress
+                v-if="data.item.diskLimit !==-1"
                 :value="data.item.diskUsed"
                 :max="data.item.diskLimit"
                 animated
                 v-b-tooltip.hover
                 :title="(data.item.diskUsed/1000) + ' GB / ' + (data.item.diskLimit/1024) + ' GB'"
               ></b-progress>
+              <span v-else v-b-tooltip.hover :title="(data.item.diskUsed/1000) + ' GB / ∞'">Unlimited</span>
             </div>
           </template>
 
@@ -291,23 +294,26 @@ export default {
           { key: 'storage', sortable: false },
           { key: 'actions', sortable: false }
       ],
-      cpanelSubmitLoading: false,
       cpanel: {
         username: "",
         domain: "",
         password: "",
+        email: "",
         plan: null
       },
+      plans: ['default', 'Red Plan', 'Green Plan', 'Blue Plan'],
       messages: {
         cpanel: {
           username: [],
           domain: [],
           password: [],
+          email: [],
           plan: []
         }
       },
       editing: false,
       submiting: false,
+      creating: false,
       loadingAccts: false,
       suspending: false,
       unsuspending: false,
@@ -332,14 +338,49 @@ export default {
     })
   },
   methods: {
-      accountStatus(item, type) {
-        if (!item || type !== 'row') return
-        if (item.suspensionReason !== 'not suspended'){
-          return 'table-warning'
-        } else {
-          return 'table-transition'
-        }
-      },
+    createAccount(){
+      const app = this;
+      app.creating = true;
+      axios
+        .post("/api/cpanel/create/", app.cpanel)
+        .then(response => {
+          app.creating = false;
+          app.loadAccounts();
+          app.makeSuccessToast(4);
+          app.cpanel.username = '';
+          app.cpanel.domain = '';
+          app.cpanel.password = '';
+          app.cpanel.email = '';
+          app.cpanel.plan = null;
+        })
+        .catch(err => {
+          console.log(err);
+          app.creating = false;
+        });
+
+    },
+    loadAccounts(){
+        const app = this;
+        app.loadingAccts = true;
+        axios
+          .get("/api/cpanel")
+          .then(response => {
+            app.accounts = response.data.accounts.accounts;
+            app.loadingAccts = false;
+          })
+          .catch(err => {
+            console.log(err);
+            app.loadingAccts = false;
+          });
+    },
+    accountStatus(item, type) {
+      if (!item || type !== 'row') return
+      if (item.suspensionReason !== 'not suspended'){
+        return 'table-warning'
+      } else {
+        return 'table-transition'
+      }
+    },
     showSuspendAcctModal(account_user, id){
       const app = this;
       app.accountId = id;
@@ -438,6 +479,9 @@ export default {
         case 3:
           msg=app.terminationPayload.userToTerminate + " terminated"
           break;
+        case 4:
+          msg=app.cpanel.username + " created"
+          break;
         default:
           break;
       }
@@ -453,19 +497,7 @@ export default {
   },
   mounted() {
     const app = this;
-    if (true) {
-      app.loadingAccts = true;
-      axios
-        .get("/api/cpanel")
-        .then(response => {
-          app.accounts = response.data.accounts.accounts;
-          app.loadingAccts = false;
-        })
-        .catch(err => {
-          console.log(err);
-          app.loadingAccts = false;
-        });
-    }
+    app.loadAccounts();
   }
 }
 </script>

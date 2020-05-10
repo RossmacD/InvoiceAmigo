@@ -7,6 +7,7 @@ use Validator;
 use App\Cpanel;
 use Illuminate\Http\Request;
 use PreviewTechs\cPanelWHM\WHM\Accounts;
+use PreviewTechs\cPanelWHM\Entity\Account;
 use PreviewTechs\cPanelWHM\WHMClient;
 
 class CpanelController extends Controller
@@ -137,9 +138,13 @@ class CpanelController extends Controller
         $whmClient = new WHMClient($cpanel->whm_username, $cpanel->api_token, $cpanel->hostname, $cpanel->port);
         $accounts = new Accounts($whmClient);
 
-        $account->name = $request->cpanelUsername;
+        $account = new Account();
+        $account->user = $request->username;
         $account->domain = $request->domain;
-        $account->plan_name = $request->planName;
+        $account->password = $request->password;
+        $account->email = $request->email;
+        // $account->planName = 'Red Plan';
+        $account->planName = $request->plan;
         $accounts->create($account);
     }
 
@@ -158,10 +163,11 @@ class CpanelController extends Controller
         // $options->limit=15;
         // $options->want="username";
 
-        $options = array(
-            'limit' => '20',
-            'searchmethod' => 'exact'
-        );
+        // $options = array(
+        //     'limit' => '20',
+        //     'searchmethod' => 'exact'
+        // );
+        $options = [];
 
         $jsonResp = [
             'accounts' => $accounts->searchAccounts(null,null,$options)
