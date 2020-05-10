@@ -135,7 +135,10 @@ class PasswordResetController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         $passwordReset->delete();
-        $user->notify(new PasswordResetSuccess($passwordReset));
+        $job = function() use ($user) {
+            $user->notify(new PasswordResetSuccess($passwordReset))->onQueue('emails');
+        };
+        dispatch($job);
         return response()->json($user);
     }
 }
