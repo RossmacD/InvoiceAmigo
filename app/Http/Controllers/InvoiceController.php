@@ -313,6 +313,86 @@ class InvoiceController extends Controller
                 }
                 
             }
+
+            foreach ($request->invoiceLines as $line) {
+                //check if we have added a new line
+                if(isset($line['id'])){
+                    $invoiceItem = InvoiceItems::find($line['id']);
+                } else {
+                    $invoiceItem = new InvoiceItems();
+                }
+
+                $invoiceItem->name = $line['name'];
+                $invoiceItem->description = $line['description'];
+                $invoiceItem->cost = $line['cost'] * 100;
+                $invoiceItem->quantity = $line['quantity'];
+                $invoiceItem->sub_total = $line['cost'] * $line['quantity'] * 100;
+
+                if (isset($line['rate_unit'])) {
+                    $invoiceItem->rate_unit = $line['rate_unit'];
+                }
+                $invoice->invoiceItems()->save($invoiceItem);
+                if (isset($line['save']) && $line['save']) {
+                    if ($line['type'] == 'product') {
+                        $savedLine = new Product([
+                            'name' => $line['name'],
+                            'description' => $line['description'],
+                            'cost' => $line['cost'] * 100,
+                            'user_id' => Auth::id()
+                        ]);
+                    } else {
+                        $savedLine = new Service([
+                            'name' => $line['name'],
+                            'description' => $line['description'],
+                            'cost' => $line['cost'] * 100,
+                            'rate_unit' => $line['rate_unit'],
+                            'user_id' => Auth::id()
+                        ]);
+                    }
+                    $savedLine->save();
+                }
+            }
+
+            //get all invoicelines for invoice
+            $invoiceItems = $invoice->invoiceItems()->get()->all();
+
+            // foreach($invoiceItems as $invoiceItem){
+            //     foreach($request->invoiceLines as $line){
+            //         while($invoiceItem->id !== $line['id']){
+            //             error_log($invoiceItem->id);
+            //             break;
+            //         }
+            //     }
+            // }
+            
+            // foreach($invoiceItems as $invoiceItem){
+            //  error_log($invoiceItem);
+            // }
+            // $merged = array_merge($invoiceItems, $request->invoiceLines);
+            // $merged = array_map("unserialize", array_unique(array_map("serialize", $merged)));
+            
+            // if(count($merged) != 0){
+            //     error_log(count($merged)." ".$merged[0]->id);
+            // }
+
+            // $found = false;
+            // foreach($invoiceItems as $invoiceItem){
+            //     foreach($request->invoiceLines as $line){
+            //         if($invoiceItem->id == $line['id']){
+            //             $found = true;
+            //             // break;
+            //         }
+            //     }
+            // }
+            // if($found){
+            //     error_log("Item removed");
+            // }
+
+            //Calculate total cost + adjust for stripe
+            $invoice->total_cost = 0;
+            foreach ($request->invoiceLines as $line) {
+                $invoice->total_cost += ($line['cost'] * $line['quantity']) * 100;
+            }
             $invoice->save(); // save it to the database.
         });
         //Redirect to a specified route with flash message.

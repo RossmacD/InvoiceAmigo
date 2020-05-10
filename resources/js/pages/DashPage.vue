@@ -101,8 +101,7 @@ export default {
           id: 'sales-data',
         },
         xaxis: {
-          categoriesold: ['25 Feb', '26 Feb', '27 Feb', '28 Feb', '29 Feb', '1 Mar', '2 Mar'],
-          categories: []
+          categories: [0,0,0,0,0,0,0]
         },
         title: {
               text: 'Weekly Sales',
@@ -134,25 +133,28 @@ export default {
     .catch(err => {
         console.log(err);
     });
-    for(let i=6;i>=0;i--){
-      app.salesDataOptions.xaxis.categories.push(dateToDayMonth(new Date(new Date().setTime(new Date().getTime() - i * 86400000))));
-    }
-
-    function dateToDayMonth(date) {
-      var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      var d = date.getDate();
-      var m = strArray[date.getMonth()];
-      return '' + (d <= 9 ? '0' + d : d) + ' ' + m;
-    }
   },
   methods: {
     updateCharts() {
+      const app = this;
       this.invoiceDataSeries = [{
         data: [this.dashInfo.paidCount,this.dashInfo.unseenCount]
       }]
       this.salesDataSeries = [{
         data: this.dashInfo.weeklySales
       }]
+
+      app.salesDataOptions.xaxis.categories.length = 0;
+
+      for(let i=6;i>=0;i--){
+        app.salesDataOptions.xaxis.categories.push(app.dateToDayMonth(new Date(new Date().setTime(new Date().getTime() - i * 86400000))));
+      }
+    },
+    dateToDayMonth(date) {
+      const strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const d = date.getDate();
+      const m = strArray[date.getMonth()];
+      return '' + (d <= 9 ? '0' + d : d) + ' ' + m;
     }
   },
   computed: {

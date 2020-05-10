@@ -25,7 +25,6 @@
                   name="username"
                   required
                   autocomplete="username"
-                  autofocus
                   v-model="cpanel.username"
                   placeholder="Enter username"
                 ></b-form-input>
@@ -46,7 +45,6 @@
                   name="domain"
                   required
                   autocomplete="domain"
-                  autofocus
                   v-model="cpanel.domain"
                   placeholder="Enter domain"
                 ></b-form-input>
@@ -66,7 +64,6 @@
                   name="password"
                   required
                   autocomplete="password"
-                  autofocus
                   v-model="cpanel.password"
                   placeholder="Enter password"
                 ></b-form-input>
@@ -86,7 +83,6 @@
                   name="email"
                   required
                   autocomplete="email"
-                  autofocus
                   v-model="cpanel.email"
                   placeholder="Enter email"
                 ></b-form-input>
@@ -121,7 +117,6 @@
                   name="plan"
                   required
                   autocomplete="plan"
-                  autofocus
                   v-model="cpanel.plan"
                 ></b-form-input> -->
                 </b-form-select>
@@ -233,7 +228,6 @@
         name="reason"
         required
         autocomplete="reason"
-        autofocus
         v-model="suspensionPayload.suspendReason"
       ></b-form-input>
       <br />
