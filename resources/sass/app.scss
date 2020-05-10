@@ -398,12 +398,7 @@ main{
   outline: none;
   // box-shadow: 0px -5px 100px;
 }
-@media only screen 
-   and (max-width : 425px) {
-     .drawer {
-    width:90%;
-   }
-}
+
 
 .outline{
   outline: none;
@@ -496,6 +491,22 @@ main{
   margin-left: 0.95rem!important;
   border-top-left-radius:0.75rem;
 }
+@media (max-width: 576px) { 
+  .myInvoiceBadge{
+    // opacity: 0.8;
+    
+    padding-right: 0!important;
+    margin-right: 0.95rem!important;
+    border-top-right-radius:0.75rem;
+  }
+  .drawer {
+    width:90%!important;
+   }
+}
+
+@media (min-width: 768px) { 
+  
+ }
 
 
 .draft-bg-op{
@@ -524,3 +535,4 @@ main{
   border-left: 1px solid rgba($black,0.3);
   border-right: 1px solid rgba($black,0.3);
 }
+

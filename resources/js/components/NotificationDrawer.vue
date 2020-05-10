@@ -3,10 +3,10 @@
       <b-container>
         <b-row class='py-3 px-2'>
           <b-col ref="drawer"  @focusout="closeDrawer"
-        tabindex="0" class="outline">
+        tabindex="0" class="outline" order-md="0" order="1">
             <h1 >Notifications:</h1>
           </b-col>
-          <b-col @click='closeDrawer' class='text-right pointer'>
+          <b-col @click='closeDrawer' class='text-right pointer' order-md="1" order="0">
             <!-- style='width: 1rem; height: 1rem' -->
             <h1>
               <b-icon variant='dark' icon='x' ></b-icon>

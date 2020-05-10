@@ -1,33 +1,41 @@
 <template>
   <div class="flex1 myMain">
-      <h2 class='mb-4 display-4'>
-        Your Invoices
-        <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
-      </h2>
-    <div class="flex1 myMain">
-      <b-tabs pills v-model='tabView' content-class="bg-shaded pb-3 pt-1 min100pc flex1 myMain">
-        <!--Filters -->
-        <template v-slot:tabs-end>
-          <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
-            <b-button-group size='sm' class="filterGroup">
-              <b-button disabled variant="light"><b-icon icon="funnel-fill"></b-icon></b-button>
-              <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
-              <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
-              <b-button :variant='filter===`unseen`?`primary`:`light`' @click="switchFilter(`unseen`)">{{isBusiness&&tabView===0?`Unseen`:`Unopened`}}</b-button>
-              <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
-              <b-button :variant='filter===`paid`?`primary`:`light`' @click="switchFilter(`paid`)">Paid</b-button>
-            </b-button-group>
-          </b-button-toolbar>
-        </template>
-        <!-- Tabs -->
-        <b-tab title='Sent' active variant='light'  v-if='isBusiness'>
-          <InvoiceIndexTab :invoiceList='outgoingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' :recieving='false' :filter='filter'></InvoiceIndexTab>
-        </b-tab>
-        <b-tab title='Received'>
-          <InvoiceIndexTab :invoiceList='incomingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' recieving :filter='filter'></InvoiceIndexTab>
-        </b-tab>
-      </b-tabs>
-    </div>
+      <b-container class="flex1 myMain">
+        <b-row class='mb-4'>
+          <b-col md='6' xs="12">
+            <h2 class='display-4'>
+              Your Invoices
+            </h2>
+          </b-col>
+          <b-col>
+             <b-button v-if='isBusiness' to='/invoices/create' class='float-right'>+ New</b-button>
+          </b-col>
+        </b-row>
+      <div class="flex1 myMain">
+        <b-tabs pills v-model='tabView' content-class="bg-shaded pb-3 pt-1 min100pc flex1 myMain">
+          <!--Filters -->
+          <template v-slot:tabs-end>
+            <b-button-toolbar aria-label='Filters' style='align-self:center;margin-left:auto'>
+              <b-button-group size='sm' class="filterGroup">
+                <b-button disabled variant="light"><b-icon icon="funnel-fill"></b-icon></b-button>
+                <b-button :variant='filter===`any`?`primary`:`light`' @click="switchFilter(`any`)">All</b-button>
+                <b-button v-if='isBusiness&&tabView===0' :variant='filter===`draft`?`primary`:`light`' @click="switchFilter(`draft`)">Draft</b-button>
+                <b-button :variant='filter===`unseen`?`primary`:`light`' @click="switchFilter(`unseen`)">{{isBusiness&&tabView===0?`Unseen`:`Unopened`}}</b-button>
+                <b-button :variant='filter===`unpaid`?`primary`:`light`' @click="switchFilter(`unpaid`)">Unpaid</b-button>
+                <b-button :variant='filter===`paid`?`primary`:`light`' @click="switchFilter(`paid`)">Paid</b-button>
+              </b-button-group>
+            </b-button-toolbar>
+          </template>
+          <!-- Tabs -->
+          <b-tab title='Sent' active variant='light'  v-if='isBusiness'>
+            <InvoiceIndexTab :invoiceList='outgoingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' :recieving='false' :filter='filter'></InvoiceIndexTab>
+          </b-tab>
+          <b-tab title='Received'>
+            <InvoiceIndexTab :invoiceList='incomingInvoices' v-on:on-delete-confirm='deleteInvoice' v-on:on-reverse-confirm='reverseInvoice' recieving :filter='filter'></InvoiceIndexTab>
+          </b-tab>
+        </b-tabs>
+      </div>
+      </b-container>
   </div>
 </template>
 
@@ -126,9 +134,8 @@ export default {
   },
   watch: {
     notificationsLength (newCount, oldCount) {
-      console.log(newCount,oldCount)
+      // When there is a new notification refresh the list of invoices
       if(newCount!==oldCount){
-        console.log(`We have ${newCount} notifications now, yay!`)
         this.getInvoices();
       }
     }
